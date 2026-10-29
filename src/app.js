@@ -1,6 +1,6 @@
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -187,11 +187,12 @@
       const hung = pl.stars.filter((s) => s.kind === 'hung');
       const isDh = pl.chi === tb.daiHanCung, isTh = pl.chi === tb.tieuHanCung;
       const found = state.found && pl.stars.some((s) => s.name === state.found);
+      const ccOn = ccCung(state.ccPin).includes(pl.chi);
       const isMonth = now && now.year === tb.namXem && !now.leap && pl.luuNguyet === now.month;
       const marks = [isDh ? '<span class="mark mk-dh">Đại hạn</span>' : '', isTh ? `<span class="mark mk-th">Tiểu hạn ${tb.namXem}</span>` : '', isMonth ? `<span class="mark mk-th">Tháng ${now.month} này</span>` : ''].join('');
       const dv = tb.daiHanCung !== null ? 'ĐV.' + CUNG_TAT[mod(pl.chi - tb.daiHanCung)] : '';
       const ln = 'LN.' + CUNG_TAT[mod(pl.chi - tb.tieuHanCung)];
-      const cls = ['cell', padOf(pl.chi), pl.chi === sel ? 'is-sel' : '', (rel.xung === pl.chi || rel.tamHop.includes(pl.chi)) ? 'is-rel' : '', found ? 'is-found' : ''].join(' ');
+      const cls = ['cell', padOf(pl.chi), pl.chi === sel ? 'is-sel' : '', (rel.xung === pl.chi || rel.tamHop.includes(pl.chi)) ? 'is-rel' : '', found ? 'is-found' : '', ccOn ? 'is-cc' : ''].join(' ');
       return `<button type="button" class="${cls}" data-chi="${pl.chi}" style="grid-row:${r + 1};grid-column:${c + 1};--i:${i}" aria-pressed="${pl.chi === sel}" aria-label="Cung ${pl.cung}, ${pl.canTen} ${pl.chiTen}${chinh.length ? ', ' + chinh.map((s) => s.name).join(', ') : ', vô chính diệu'}">
         <div class="c-head">
           <span class="c-cc"><span class="sg ${HANH_CLASS[pl.hanh]}" title="Cung ${pl.amDuong > 0 ? 'dương' : 'âm'}, hành ${pl.hanh}">${SIGN(pl.amDuong)}</span>${CAN_TAT[pl.can]}.${pl.chiTen}</span>
@@ -337,6 +338,27 @@
   }
 
   // ---------- Tổng quan ----------
+  // ---------- Cách cục ----------
+  const CC_TAG = { khung: 'Khung', cat: 'Cát', hung: 'Hung', bien: 'Biến' };
+  const ccAll = () => (state.cc ? [...state.cc.khung, ...state.cc.cach] : []);
+  const ccCung = (id) => { const h = id && ccAll().find((x) => x.id === id); return h ? h.cung : []; };
+  function ccSection() {
+    const items = ccAll().map((h) => `<li><button type="button" class="cc-item" data-cc="${h.id}" aria-pressed="${state.ccPin === h.id}">
+        <span class="cc-tag t-${h.nhom}">${CC_TAG[h.nhom]}</span><b>${esc(h.ten)}</b>${h.chuaChac ? '<span class="cc-q" title="Các sách còn nói khác nhau">?</span>' : ''}
+        <span class="cc-nghia">${esc(h.nghia)}</span>
+        ${h.pha.length ? `<span class="cc-pha">Bị phá bởi ${esc(h.pha.join(', '))} ở Mệnh: sức tốt của cách giảm đi.</span>` : ''}
+        <small>Căn cứ: ${esc(h.canCu)}</small>
+        ${h.chuaChac ? `<small>Còn tranh cãi: ${esc(h.chuaChac)}</small>` : ''}
+      </button></li>`).join('');
+    const none = state.cc && !state.cc.cach.length ? '<p>Lá số không rơi vào cách cục đặc biệt nào trong danh sách. Chuyện này bình thường: khoảng một phần năm lá số như vậy.</p>' : '';
+    return `<section><h3>Cách cục</h3>
+      <p class="muted">Bấm vào một cách để tô các cung liên quan trên lá số.</p>
+      <ul class="cc-list">${items}</ul>${none}
+    </section>`;
+  }
+  // Tô các cung của một cách (không vẽ lại cả lá số)
+  const paintCc = (id) => $$('#chart .cell').forEach((x) => x.classList.toggle('is-cc', ccCung(id).includes(+x.getAttribute('data-chi'))));
+
   function renderSummary() {
     const ch = state.chart, tb = ch.thienBan, P = ch.palaces;
     const menh = P[tb.menhCung], than = P[tb.thanCung];
@@ -368,6 +390,7 @@
         ${hungIn(menh).length ? `<p>Sát tinh tại Mệnh: ${hungIn(menh).join(', ')}. Nên giữ bình tĩnh, tránh quyết định vội.</p>` : ''}
         ${tt(menh) ? `<p>Mệnh gặp ${tt(menh)}: thời trẻ thường chậm hoặc trắc trở, càng về sau càng nhẹ.</p>` : ''}
       </section>
+      ${ccSection()}
       <section><h3>Tam phương tứ chính</h3>
         <p>${tam.map((p) => `${p.cung} (${p.chiTen}): ${nameList(p)}`).join('; ')}.</p>
         <p>Bốn cung Mệnh, Tài, Quan, Di có ${cat.length} sao lục cát${cat.length ? ` (${cat.join(', ')})` : ''} và ${sat.length} sao lục sát${sat.length ? ` (${sat.join(', ')})` : ''}. ${cat.length > sat.length ? 'Cát nhiều hơn sát: thuận lợi, dễ được nâng đỡ.' : cat.length < sat.length ? 'Sát nhiều hơn cát: đời nhiều thử thách, thành công nhờ bản lĩnh.' : 'Cát và sát cân bằng.'}</p>
@@ -394,9 +417,10 @@
       const f = (k) => p.stars.filter((s) => s.kind === k).map((s) => s.name + (s.bright ? `(${s.bright})` : '')).join(', ') || '—';
       lines.push(`- ${p.cung}${p.isThan ? ' [Thân]' : ''} | ${p.canTen} ${p.chiTen} | ĐH ${p.daiHan}-${p.daiHanEnd} | Chính: ${f('chinh')} | Cát: ${f('cat')} | Hung: ${f('hung')} | ${p.trangSinh}${p.tuan ? ' | Tuần' : ''}${p.triet ? ' | Triệt' : ''}${p.luuNien.length ? ' | Lưu: ' + p.luuNien.join(', ') : ''}`);
     });
+    if (state.cc) lines.push('Cách cục (máy nhận diện theo cung Mệnh): ' + (ccAll().map((h) => `${h.ten} [${CC_TAG[h.nhom]}${h.pha.length ? ', bị phá bởi ' + h.pha.join(', ') : ''}] (${h.canCu})`).join('; ') || 'không có'));
     return lines.join('\n');
   }
-  const chartJson = () => JSON.stringify({ version: 1, school: 'vn', input: state.chart.input, thien_ban: state.chart.thienBan, dia_ban: state.chart.palaces }, null, 2);
+  const chartJson = () => JSON.stringify({ version: 1, school: 'vn', input: state.chart.input, thien_ban: state.chart.thienBan, dia_ban: state.chart.palaces, cach_cuc: state.cc }, null, 2);
 
   // ---------- AI ----------
   const rules = () => 'Bạn là người luận giải Tử Vi Đẩu Số theo phái Việt Nam. Lá số dưới đây đã được an sẵn bằng phần mềm; dùng đúng dữ liệu này, không tự an lại.\n'
@@ -513,6 +537,7 @@
     try {
       const chart = E.compute(inp);
       state.input = inp; state.chart = chart; state.thangNay = thangNay(); state.isSample = !!isSample; state.found = null;
+      state.cc = K.detect(chart); state.ccPin = null;
       state.selected = chart.thienBan.menhCung;
       $('#form-error').hidden = true;
       renderWho(); renderChart(true); renderInspector(); renderTrack(); renderSummary();
@@ -601,6 +626,20 @@
     $('#find').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); findStar(e.target.value); } });
 
     $$('[role=tab]').forEach((t) => t.addEventListener('click', () => setTab(t.getAttribute('data-tab'))));
+    // Cách cục: rê chuột để xem tạm, bấm để giữ; lá số đang khuất thì cuộn lên cho thấy
+    $('#summary').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-cc]'); if (!b) return;
+      const id = b.getAttribute('data-cc');
+      state.ccPin = state.ccPin === id ? null : id;
+      $$('#summary [data-cc]').forEach((x) => x.setAttribute('aria-pressed', String(x.getAttribute('data-cc') === state.ccPin)));
+      paintCc(state.ccPin);
+      const g = $('#chart').getBoundingClientRect();
+      if (state.ccPin && (g.bottom < 120 || g.top > innerHeight - 120)) {
+        $('#chart').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+      }
+    });
+    $('#summary').addEventListener('mouseover', (e) => { const b = e.target.closest('[data-cc]'); paintCc(b ? b.getAttribute('data-cc') : state.ccPin); });
+    $('#summary').addEventListener('mouseleave', () => paintCc(state.ccPin));
     $('#topics').addEventListener('click', (e) => {
       const b = e.target.closest('[data-topic]'); if (!b) return;
       state.topic = b.getAttribute('data-topic');

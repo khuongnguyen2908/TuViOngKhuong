@@ -21,6 +21,7 @@ const parts = {
   LUNAR: stripExports(read('lunar.js')),
   ENGINE: stripExports(read('engine.js')),
   CONTENT: stripExports(read('content.js')),
+  CACHCUC: stripExports(read('cachcuc.js')),
   AI: stripExports(read('ai.js')),
   APP: read('app.js'),
 };

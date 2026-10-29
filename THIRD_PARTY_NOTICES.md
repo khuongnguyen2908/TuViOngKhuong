@@ -28,6 +28,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
 
+## TuViMCP (Apache-2.0)
+
+Tên và điều kiện nhận diện một số cách cục trong `src/cachcuc.js` tham khảo danh sách cách cục của [TuViMCP](https://github.com/nmhaaa3218/TuViMCP) (© 2026 nmhaaa3218, Apache License 2.0). Không chép mã hay lời bình; điều kiện được viết lại và sửa theo phái Việt (xem `docs/cach-cuc.md`), lời giải nghĩa tự biên soạn.
+
 ## html-to-image (MIT)
 
 Tải từ CDN jsDelivr (`html-to-image@1.11.11`) để xuất ảnh PNG. Mã không nằm trong repo này. Xem https://github.com/bubkoo/html-to-image

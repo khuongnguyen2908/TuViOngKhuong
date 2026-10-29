@@ -3,7 +3,7 @@
 :root {
   --bg: #ecebe6; --surface: #f8f7f3; --panel: #fdfcf9; --ink: #221a16; --muted: #6e6458;
   --gold: #9c7a33; --gold-soft: rgba(156, 122, 51, 0.38); --cinnabar: #a8311f; --on-cinnabar: #fff8f2;
-  --rule: #dcd5c7; --tint: #f2ede3; --sel: #f7e5dd; --shadow: 0 1px 0 rgba(34, 26, 22, 0.04), 0 10px 30px -18px rgba(34, 26, 22, 0.35);
+  --rule: #dcd5c7; --tint: #f2ede3; --sel: #f7e5dd; --cc-fill: rgba(156, 122, 51, 0.12); --shadow: 0 1px 0 rgba(34, 26, 22, 0.04), 0 10px 30px -18px rgba(34, 26, 22, 0.35);
   --tam: #5b4fa0; --kim: #6f757d; --moc: #23794a; --thuy: #1f3150; --hoa: #bf3a2a; --tho: #b46c0f;
   --f-display: "Cormorant Garamond", "Noto Serif", Georgia, serif;
   --f-ui: "Be Vietnam Pro", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -11,12 +11,12 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #15100d; --surface: #1d1612; --panel: #1a1310; --ink: #eee5d3; --muted: #a6977f;
   --gold: #c9a35a; --gold-soft: rgba(201, 163, 90, 0.34); --cinnabar: #d6533f; --on-cinnabar: #fff6ef;
-  --rule: #3a2e25; --tint: #251c16; --sel: #3a1f18; --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 18px 40px -20px rgba(0, 0, 0, 0.8);
+  --rule: #3a2e25; --tint: #251c16; --sel: #3a1f18; --cc-fill: rgba(201, 163, 90, 0.14); --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 18px 40px -20px rgba(0, 0, 0, 0.8);
   --tam: #a898ea; --kim: #c7ccd3; --moc: #72c792; --thuy: #94b7e6; --hoa: #f07a66; --tho: #e5aa50; color-scheme: dark; } }
 :root[data-theme="dark"] {
   --bg: #15100d; --surface: #1d1612; --panel: #1a1310; --ink: #eee5d3; --muted: #a6977f;
   --gold: #c9a35a; --gold-soft: rgba(201, 163, 90, 0.34); --cinnabar: #d6533f; --on-cinnabar: #fff6ef;
-  --rule: #3a2e25; --tint: #251c16; --sel: #3a1f18; --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 18px 40px -20px rgba(0, 0, 0, 0.8);
+  --rule: #3a2e25; --tint: #251c16; --sel: #3a1f18; --cc-fill: rgba(201, 163, 90, 0.14); --shadow: 0 1px 0 rgba(0, 0, 0, 0.3), 0 18px 40px -20px rgba(0, 0, 0, 0.8);
   --tam: #a898ea; --kim: #c7ccd3; --moc: #72c792; --thuy: #94b7e6; --hoa: #f07a66; --tho: #e5aa50; color-scheme: dark; }
 
 * { box-sizing: border-box; }
@@ -82,6 +82,8 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .cell.is-rel { background: var(--tint); }
 .cell.is-sel { background: var(--sel); box-shadow: inset 0 0 0 2px var(--cinnabar); z-index: 1; }
 .cell.is-found .star.hit { background: var(--gold-soft); border-radius: 3px; }
+/* Cung thuộc cách cục đang chọn: phủ vàng nhạt + viền vàng (không đè viền đỏ của cung đang chọn) */
+.cell.is-cc { background-image: linear-gradient(var(--cc-fill), var(--cc-fill)); outline: 2px solid var(--gold); outline-offset: -2px; z-index: 1; }
 .c-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 6px; align-items: start; }
 .c-cc { font-size: 11.5px; color: var(--gold); font-weight: 600; }
 .c-name { text-align: center; font: 700 15.5px/1.1 var(--f-display); letter-spacing: 0.02em; }
@@ -218,6 +220,19 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .prose ul { padding-left: 20px; margin: 6px 0; }
 .prose section + section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
 .note { font-size: 12.5px; color: var(--muted); }
+/* Cách cục */
+.prose ul.cc-list { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.cc-item { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); cursor: pointer; line-height: 1.55; transition: border-color 0.12s, background-color 0.12s; }
+.cc-item:hover { border-color: var(--gold); }
+.cc-item[aria-pressed=true] { border-color: var(--gold); background: var(--tint); box-shadow: inset 3px 0 0 var(--gold); }
+.cc-item:focus-visible { outline: 2px solid var(--cinnabar); outline-offset: 1px; }
+.cc-item b { font-weight: 700; }
+.cc-tag { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; padding: 1px 7px; margin-right: 7px; border-radius: 999px; border: 1px solid currentColor; vertical-align: 1px; }
+.t-khung { color: var(--tam); } .t-cat { color: var(--moc); } .t-hung { color: var(--cinnabar); } .t-bien { color: var(--tho); }
+.cc-q { display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 5px; font-size: 10.5px; font-weight: 700; border-radius: 50%; background: var(--gold-soft); color: var(--ink); vertical-align: 1px; }
+.cc-nghia { display: block; margin-top: 3px; }
+.cc-pha { display: block; margin-top: 3px; color: var(--cinnabar); font-size: 13.5px; }
+.cc-item small { display: block; margin-top: 3px; color: var(--muted); font-size: 12.5px; }
 .topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .topic { all: unset; cursor: pointer; display: grid; gap: 2px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--rule); background: var(--panel); }
 .topic b { font: 700 17px/1.15 var(--f-display); }

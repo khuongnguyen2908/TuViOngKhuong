@@ -8,6 +8,7 @@ const L = require('../src/lunar.js');
 globalThis.LunarVN = L;
 const E = require('../src/engine.js');
 const AI = require('../src/ai.js');
+const K = require('../src/cachcuc.js');
 const cal = L.makeCalendar(7);
 
 test('Tết âm lịch Việt Nam, kể cả những năm lệch với lịch Trung Quốc', () => {
@@ -106,4 +107,47 @@ test('Cân lượng, lai nhân, âm dương cung khớp lá số tracuutuvi.com'
   const tham = r.palaces[3].stars.find((s) => s.name === 'Tham Lang');
   assert.equal(tham.amDuong, -1); assert.equal(tham.hanh, 'Mộc');
   assert.equal(r.palaces[8].stars.find((s) => s.name === 'Thiên Mã').bright, 'H');
+});
+
+// Lá số ngẫu nhiên có seed (mulberry32) cho các bài thử cách cục
+function laSoNgauNhien(n, seed = 2026) {
+  let s = seed;
+  const rnd = (k) => { s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) % k; };
+  return Array.from({ length: n }, () => E.compute({ gender: rnd(2) ? 'nam' : 'nu', calendar: 'duong', day: 1 + rnd(28), month: 1 + rnd(12), year: 1940 + rnd(80), hour: rnd(24), minute: rnd(60), namXem: 2026 }));
+}
+
+test('Cách cục: lá số mẫu ra khung Cự Nhật', () => {
+  const r = K.detect(E.compute({ gender: 'nam', calendar: 'duong', day: 29, month: 8, year: 1998, hour: 15, minute: 30, namXem: 2026 }));
+  assert.deepEqual(r.khung.map((x) => x.ten), ['Cự Nhật']);
+  assert.equal(r.khung[0].canCu, 'Mệnh (Tý): Thái Dương; Quan Lộc (Thìn): Cự Môn');
+  assert.deepEqual(r.cach, []);
+});
+
+test('Cách cục: mỗi cách đều gặp được, không cách nào quá phổ biến, căn cứ đầy đủ', () => {
+  const charts = laSoNgauNhien(3000);
+  const dem = Object.fromEntries(K.RULES.map((r) => [r.id, 0]));
+  let coKhung = 0;
+  charts.forEach((ch) => {
+    const r = K.detect(ch), m = ch.thienBan.menhCung, ids = r.cach.map((h) => h.id);
+    if (r.khung.length) coKhung++;
+    [...r.khung, ...r.cach].forEach((h) => {
+      assert.ok(h.cung.includes(m), `${h.ten}: thiếu cung Mệnh trong danh sách tô sáng`);
+      assert.ok(h.canCu.length > 0, `${h.ten}: thiếu căn cứ`);
+      assert.ok(h.nghia.length > 0, `${h.ten}: thiếu nghĩa`);
+    });
+    ids.forEach((id) => { dem[id]++; });
+    // Cách lớn che cách nhỏ
+    assert.ok(!(ids.includes('tamKyGiaHoi') && ids.includes('quyenLocHoiMenh')));
+    assert.ok(!(ids.includes('minhChauXuatHai') && ids.includes('menhVoChinhDieu')));
+    // Cách đòi không có tứ sát thì không bị ghi "phá" bởi tứ sát
+    r.cach.filter((h) => ['cucHuongLyMinh', 'hungTuTrieuVien'].includes(h.id))
+      .forEach((h) => assert.ok(!h.pha.some((n) => ['Kình Dương', 'Đà La', 'Hỏa Tinh', 'Linh Tinh'].includes(n))));
+  });
+  // Hình Tù giáp Ấn hiếm (~0,2 %) nên không bắt buộc gặp trong 3.000 lá số
+  Object.entries(dem).forEach(([id, n]) => {
+    if (id !== 'hinhTuGiapAn') assert.ok(n > 0, `Không lá số nào có cách ${id}`);
+    assert.ok(n / charts.length < 0.2, `Cách ${id} quá phổ biến: ${(100 * n / charts.length).toFixed(1)} %`);
+  });
+  // Mệnh có chính tinh thì luôn có khung (bộ chính tinh hoặc khung pha); vô chính diệu thì mượn cung xung chiếu
+  assert.equal(coKhung, charts.length);
 });

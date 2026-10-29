@@ -13,8 +13,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 ## Tính năng (theo thứ tự ưu tiên)
 
-1. [ ] **Nhận diện cách cục**: Tử Phủ Vũ Tướng, Sát Phá Tham, Cơ Nguyệt Đồng Lương, Nhật Nguyệt tịnh minh, Mệnh vô chính diệu đắc tam không, Kình Đà giáp Mệnh… (tham khảo 51 cách cục của TuViMCP, Apache-2.0).
-2. [ ] **Đổi năm xem ngay trên lá số**: nút lùi/tới năm, sao lưu niên và tiểu hạn đổi tức thì. Thêm lưu tứ hóa của đại hạn.
+1. [x] **Nhận diện cách cục** (xong 30/10, xem `docs/cach-cuc.md`). Còn: người am hiểu xác nhận 5 điểm ❓ (Nhật Nguyệt tịnh minh, Hùng tú triều viên, Thạch trung ẩn ngọc, Thất Sát ngưỡng đẩu, Vô chính diệu đắc tam không).
+2. [ ] **Đổi năm xem ngay trên lá số**: nút lùi/tới năm, sao lưu niên và tiểu hạn đổi tức thì. Thêm lưu tứ hóa của đại hạn. Kèm cách cục theo đại hạn / lưu niên.
 3. [ ] **Kho nghĩa sao đầy đủ**: 14 chính tinh × 12 cung, phụ tinh theo cung, viết lời tự biên soạn và ghi nguồn.
 4. [ ] **Ảnh chia sẻ mạng xã hội** tỉ lệ 4:5 và 9:16, có dòng "Ông Khương phán rằng" và tóm tắt Mệnh.
 5. [ ] **So sánh hai lá số**: hợp tuổi, vợ chồng, đối tác.
@@ -29,6 +29,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 - [ ] Đóng gói `src/lunar.js` + `src/engine.js` thành gói npm riêng nếu muốn dùng cho app mobile.
 
 ## Đã xong gần đây
+
+- [x] Cách cục: 4 bộ chính tinh + 48 cách (cát / hung / biến), phá cách, cách lớn che cách nhỏ, bấm để tô cung trên lá số, gửi kèm AI và JSON.
 
 - [x] Trang đã lên GitHub Pages: https://khuongnguyen2908.github.io/TuViOngKhuong/ (workflow `.github/workflows/pages.yml`: mỗi lần đẩy lên `main` chạy kiểm thử → ghép → đăng).
 - [x] Đưa code ra gốc repo (trước nằm trong `tu-vi-ong-khuong/`), thêm `.gitattributes` (xuống dòng LF), `.gitignore`.
