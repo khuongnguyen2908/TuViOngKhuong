@@ -22,7 +22,6 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 ## Kỹ thuật
 
-- [ ] Bật GitHub Pages: Settings → Pages → Source = **GitHub Actions** (workflow `.github/workflows/pages.yml` đã có; bản tải lên qua web lúc đầu bị mất thư mục `.github`).
 - [ ] Chọn giấy phép cho mã của dự án (repo **đang công khai** mà chưa có giấy phép).
 - [ ] Bật Luận giải AI trên GitHub Pages: deploy `worker/ai-proxy.js`, đặt `ANTHROPIC_API_KEY`, `ALLOWED_ORIGINS`, giới hạn số lần gọi, hạn mức chi tiêu; gọi thử Claude API thật lần đầu (hiện mới thử với dữ liệu giả lập).
 - [ ] Chạy `tests/browser/layout-qa.cjs` có font Google thật, và thử trên điện thoại thật (iOS Safari, Android Chrome).
@@ -31,7 +30,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 ## Đã xong gần đây
 
-- [x] Đưa code ra gốc repo (trước nằm trong `tu-vi-ong-khuong/`), thêm workflow đăng trang, `.gitattributes` (xuống dòng LF), `.gitignore`.
+- [x] Trang đã lên GitHub Pages: https://khuongnguyen2908.github.io/TuViOngKhuong/ (workflow `.github/workflows/pages.yml`: mỗi lần đẩy lên `main` chạy kiểm thử → ghép → đăng).
+- [x] Đưa code ra gốc repo (trước nằm trong `tu-vi-ong-khuong/`), thêm `.gitattributes` (xuống dòng LF), `.gitignore`.
 
 - [x] Lịch âm Việt Nam UTC+7, khớp lịch Hồ Ngọc Đức 1900–2199.
 - [x] Engine an sao phái Việt, khớp lá số mẫu 12/12 cung và tracuutuvi 96/97 sao.
