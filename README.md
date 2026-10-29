@@ -6,7 +6,8 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 - Engine an sao phái Việt với 9 tùy chọn trường phái.
 - Luận giải cơ bản ghép từ nghĩa sao và cung; luận giải AI theo chủ đề khi có cấu hình.
 - Nhận diện cách cục của cung Mệnh (bộ chính tinh, cát cách, hung cách, phá cách); bấm vào một cách để tô các cung liên quan.
-- Mỗi lá số có link riêng (`#la-so-...`), chỉ chứa ngày giờ và tùy chọn, không chứa họ tên.
+- Đổi năm xem ngay trên lá số (nút ‹ ›, nút Năm nay, dải 10 năm của từng đại hạn); có sao lưu niên (L.) và sao lưu đại hạn (ĐV.), bật tắt riêng.
+- Mỗi lá số có link riêng (`#la-so-...`), chỉ chứa ngày giờ, năm xem và tùy chọn, không chứa họ tên.
 - Lá số gần đây lưu trong trình duyệt của từng người, có nút xóa.
 - Nền sáng hoặc tối, có nút bật tắt; lựa chọn được nhớ theo trình duyệt.
 - Nút (i) giải thích cạnh các khái niệm khó; bấm vào sao trên lá số để xem nghĩa.

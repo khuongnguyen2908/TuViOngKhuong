@@ -9,12 +9,13 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 - [ ] **Màu ngũ hành 3 sao** đang lệch giữa các trang: Tam Thai, Thai Phụ, Hóa Quyền. Chốt theo một sách.
 - [ ] **Độ sáng phụ tinh**: Hóa Lộc (H) chỉ tracuutuvi có; Bạch Hổ, Thiên Khốc, Thiên Hư (H) chỉ aituvi có. Chốt bảng.
 - [ ] **Chốt mặc định các tùy chọn trường phái**: Tứ hóa năm Canh, Khoa năm Nhâm, Hỏa Linh tuổi Tỵ Dậu Sửu, Khôi Việt năm Canh, Tràng Sinh Thổ cục, tháng nhuận, giờ Tý muộn.
+- [ ] **Bộ sao lưu đại hạn (ĐV.)**: đang dùng Tứ hóa + Lộc Tồn, Kình Dương, Đà La theo can cung đại hạn, Thiên Mã theo chi cung đại hạn. Có trang thêm Khôi, Việt, Xương, Khúc; có trang chỉ dùng Tứ hóa. Cần đối chiếu một lá số của trang / thầy mình tin.
 - [ ] Đối chiếu thêm 5–10 lá số thật của người quen với một trang hoặc thầy mình tin.
 
 ## Tính năng (theo thứ tự ưu tiên)
 
 1. [x] **Nhận diện cách cục** (xong 30/10, xem `docs/cach-cuc.md`). Còn: người am hiểu xác nhận 5 điểm ❓ (Nhật Nguyệt tịnh minh, Hùng tú triều viên, Thạch trung ẩn ngọc, Thất Sát ngưỡng đẩu, Vô chính diệu đắc tam không).
-2. [ ] **Đổi năm xem ngay trên lá số**: nút lùi/tới năm, sao lưu niên và tiểu hạn đổi tức thì. Thêm lưu tứ hóa của đại hạn. Kèm cách cục theo đại hạn / lưu niên.
+2. [x] **Đổi năm xem ngay trên lá số** (xong 30/10): thanh ‹ năm › + Năm nay, dải 10 năm dưới đại hạn, sao lưu đại hạn ĐV. Còn: **cách cục theo đại hạn / lưu niên** (làm sau khi chốt bộ sao ĐV.).
 3. [ ] **Kho nghĩa sao đầy đủ**: 14 chính tinh × 12 cung, phụ tinh theo cung, viết lời tự biên soạn và ghi nguồn.
 4. [ ] **Ảnh chia sẻ mạng xã hội** tỉ lệ 4:5 và 9:16, có dòng "Ông Khương phán rằng" và tóm tắt Mệnh.
 5. [ ] **So sánh hai lá số**: hợp tuổi, vợ chồng, đối tác.
@@ -29,6 +30,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 - [ ] Đóng gói `src/lunar.js` + `src/engine.js` thành gói npm riêng nếu muốn dùng cho app mobile.
 
 ## Đã xong gần đây
+
+- [x] Đổi năm xem ngay trên lá số: nút ‹ › (bấm giữ để lướt, phím ← →), nút Năm nay, dải 10 năm của đại hạn (bấm đại hạn để mở), link tự cập nhật năm; sao lưu đại hạn ĐV. (công tắc riêng, màu tím) trong cung, bảng chi tiết, AI và JSON.
 
 - [x] Cách cục: 4 bộ chính tinh + 48 cách (cát / hung / biến), phá cách, cách lớn che cách nhỏ, bấm để tô cung trên lá số, gửi kèm AI và JSON.
 

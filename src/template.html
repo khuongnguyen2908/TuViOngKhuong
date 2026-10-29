@@ -88,7 +88,14 @@
   <section class="work">
     <div class="board">
       <div class="toolbar">
+        <div class="yearbar" role="group" aria-label="Năm xem hạn">
+          <button type="button" class="yb-step" id="y-prev" aria-label="Năm trước">‹</button>
+          <div class="yb-now" aria-live="polite"><b class="num" id="y-num"></b><span id="y-sub"></span></div>
+          <button type="button" class="yb-step" id="y-next" aria-label="Năm sau">›</button>
+        </div>
+        <button type="button" class="btn btn-sm" id="y-today">Năm nay</button>
         <span class="tool"><label class="switch"><input type="checkbox" id="t-luu" checked> Sao lưu niên</label><button type="button" class="info" data-info="luuNien" aria-label="Giải thích: Sao lưu niên" aria-expanded="false">i</button></span>
+        <span class="tool"><label class="switch"><input type="checkbox" id="t-dv" checked> Sao lưu đại hạn</label><button type="button" class="info" data-info="daiVan" aria-label="Giải thích: Sao lưu đại hạn" aria-expanded="false">i</button></span>
         <span class="tool"><label class="switch"><input type="checkbox" id="t-lines" checked> Đường tam phương</label><button type="button" class="info" data-info="tamPhuong" aria-label="Giải thích: Đường tam phương" aria-expanded="false">i</button></span>
         <div class="find"><input type="search" id="find" list="star-list" placeholder="Tìm sao, ví dụ Hóa Kỵ" aria-label="Tìm sao" autocomplete="off"><datalist id="star-list"></datalist></div>
       </div>
@@ -100,6 +107,7 @@
   <section class="decades" aria-label="Đại hạn">
     <div class="decades-head"><h2>Đại hạn theo tuổi <button type="button" class="info" data-info="daiHan" aria-label="Giải thích: Đại hạn" aria-expanded="false">i</button></h2><span class="muted" id="dec-note"></span></div>
     <div class="track" id="track"></div>
+    <div class="years" id="years"></div>
   </section>
 
   <section class="reading" aria-label="Luận giải">

@@ -85,6 +85,7 @@ const TuViContent = (() => {
   // Giải thích ngắn cho nút (i)
   const INFO = {
     luuNien: ['Sao lưu niên', 'Các sao có chữ L. đứng trước là sao của riêng năm đang xem, an theo can chi của năm đó. Dùng để xem vận trong năm, không thay đổi lá số gốc.'],
+    daiVan: ['Sao lưu đại hạn', 'Các sao có chữ ĐV. đứng trước là sao của riêng đại hạn (10 năm) đang chạy: Tứ hóa, Lộc Tồn, Kình Dương, Đà La an theo can của cung đại hạn; Thiên Mã theo chi của cung đó. Các trường phái còn khác nhau về bộ sao này (có nơi thêm Khôi, Việt, Xương, Khúc; có nơi chỉ dùng Tứ hóa).'],
     tamPhuong: ['Đường tam phương', 'Nối cung đang chọn với hai cung tam hợp (cách 4 cung, đường liền) và cung xung chiếu (đối diện, đường đứt). Bốn cung này cùng chi phối cung đang xem.'],
     timSao: ['Tìm sao', 'Gõ tên một sao, chọn trong danh sách gợi ý, web sẽ nhảy tới cung có sao đó và tô sáng nó.'],
     doSang: ['Độ sáng của sao', 'Cho biết sao đứng ở cung hợp hay không. Miếu và Vượng mạnh nhất, Đắc là tốt, Bình hòa trung tính, Hãm là yếu hoặc dễ gây xấu.'],

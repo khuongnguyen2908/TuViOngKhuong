@@ -334,6 +334,19 @@ const TuViEngine = (() => {
     TU_HOA[xem.can].forEach((star, i) => putL(pos[star], 'L.' + HOA[i]));
     palaces.forEach((pl, p) => { pl.luuNien = luu[p]; });
 
+    // Sao lưu đại hạn (ĐV.): an theo can và chi của cung đại hạn đang chạy, cùng cách an với sao lưu niên
+    const dv = Array.from({ length: 12 }, () => []);
+    const putD = (p, n) => dv[mod(p)].push(n);
+    let daiVanCanChi = null;
+    if (daiHanHienTai) {
+      const dCan = canCung(daiHanHienTai.chi), dChi = daiHanHienTai.chi, ltD = LOC_TON[dCan];
+      putD(ltD, 'ĐV.Lộc Tồn'); putD(ltD + 1, 'ĐV.Kình Dương'); putD(ltD - 1, 'ĐV.Đà La');
+      putD([2, 11, 8, 5][dChi % 4], 'ĐV.Thiên Mã');
+      TU_HOA[dCan].forEach((star, i) => putD(pos[star], 'ĐV.' + HOA[i]));
+      daiVanCanChi = CAN[dCan] + ' ' + CHI[dChi];
+    }
+    palaces.forEach((pl, p) => { pl.daiVan = dv[p]; });
+
     const menhChu = opt.menhChu === 'cungMenh' ? MENH_CHU[menh] : MENH_CHU[z];
     const thanChu = THAN_CHU[z];
     const menhDuong = menh % 2 === 0;
@@ -358,7 +371,7 @@ const TuViEngine = (() => {
         amDuongLy, menhChu, thanChu,
         menhCung: menh, thanCung: than, thanCu: CUNG[mod(than - menh)],
         namXem, namXemCanChi: CAN[xem.can] + ' ' + CHI[xem.chi], tuoi,
-        tieuHanCung: tieuHanPalace, daiHanCung: daiHanHienTai ? daiHanHienTai.chi : null,
+        tieuHanCung: tieuHanPalace, daiHanCung: daiHanHienTai ? daiHanHienTai.chi : null, daiVanCanChi,
         thuanNghich: ad === 1 ? 'thuận' : 'nghịch',
         banMenhNghia: banMenh.nghia, hanhCuc: menhNA.hanh,
         laiNhan: laiNhanChi === undefined ? null : CUNG[mod(laiNhanChi - menh)], laiNhanChi: laiNhanChi === undefined ? null : laiNhanChi,

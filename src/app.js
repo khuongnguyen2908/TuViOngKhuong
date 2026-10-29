@@ -50,7 +50,7 @@
   ];
 
   const SAMPLE = { name: '', gender: 'nam', calendar: 'duong', day: 29, month: 8, year: 1998, leap: false, gio: 'than', exact: false, hour: 16, minute: 0, clockTz: 7, namXem: new Date().getFullYear(), options: {} };
-  const state = { input: null, chart: null, selected: null, found: null, showLuu: true, showLines: true, sample: null, downloads: null, topic: 'tongquan', isSample: true, formSample: true, ai: { turns: [], ctl: null, lastAnswer: '' } };
+  const state = { input: null, chart: null, selected: null, found: null, showLuu: true, showDv: true, showLines: true, yearsOf: null, sample: null, downloads: null, topic: 'tongquan', isSample: true, formSample: true, ai: { turns: [], ctl: null, lastAnswer: '' } };
   const IN_CLAUDE = !!(window.claude && window.claude.use);
   const CFG = (typeof TUVI_CONFIG !== 'undefined' && TUVI_CONFIG) || {};
   const OPT_KEYS = Object.keys(OPTION_LABELS);
@@ -203,6 +203,7 @@
         <div class="c-compact"><span class="num ${isDh ? 'dh-now' : ''}">${pl.daiHan}</span><span>${pl.chiTen}</span></div>
         <div class="c-minor"><div class="col-cat">${cat.map((s) => starHtml(s)).join('')}</div><div class="col-hung">${hung.map((s) => starHtml(s)).join('')}</div></div>
         ${state.showLuu && pl.luuNien.length ? `<div class="c-luu">${pl.luuNien.map((n) => `<span>${esc(n)}</span>`).join('')}</div>` : ''}
+        ${state.showDv && pl.daiVan.length ? `<div class="c-luu c-dv">${pl.daiVan.map((n) => `<span>${esc(n)}</span>`).join('')}</div>` : ''}
         ${marks ? `<div class="c-marks">${marks}</div>` : ''}
         <div class="c-foot"><span title="Tên cung khi lấy đại hạn đang chạy làm Mệnh">${dv}</span><span class="ts">${pl.trangSinh}</span><span title="Tên cung khi lấy tiểu hạn năm ${tb.namXem} làm Mệnh">${ln}</span></div>
       </button>`;
@@ -279,10 +280,12 @@
     return `${inf[0]} ${tail}`;
   }
   function starMeaning(name) {
-    const base = name.replace(/^L\./, '');
-    const isLuu = base !== name;
+    const base = name.replace(/^(L|ĐV)\./, '');
+    const isLuu = name.startsWith('L.'), isDv = name.startsWith('ĐV.');
     const txt = C.CHINH[base] ? C.CHINH[base][0] : (C.PHU[base] || 'Chưa có diễn giải cho sao này.');
-    return { title: (isLuu ? 'Lưu ' : '') + base, text: (isLuu ? `Sao lưu của năm ${state.chart.thienBan.namXem}. ` : '') + txt };
+    const tb = state.chart.thienBan, dh = tb.daiHanCung !== null ? state.chart.palaces[tb.daiHanCung] : null;
+    const pre = isLuu ? `Sao lưu của năm ${tb.namXem}. ` : isDv && dh ? `Sao lưu của đại hạn ${dh.daiHan}–${dh.daiHanEnd} (cung ${dh.cung}, ${tb.daiVanCanChi}). ` : '';
+    return { title: (isLuu ? 'Lưu ' : isDv ? 'Lưu đại hạn ' : '') + base, text: pre + txt };
   }
   function showStarNote(name) {
     const m = starMeaning(name);
@@ -295,7 +298,7 @@
     const ch = state.chart, p = ch.palaces[state.selected], P = ch.palaces, tb = ch.thienBan;
     const rel = relations(p.chi);
     const chinh = p.stars.filter((s) => s.kind === 'chinh');
-    const chip = (name, s) => `<button type="button" class="chip" data-star="${esc(name)}" aria-pressed="false"><span class="dot ${s && HANH_CLASS[s.hanh] || ''}"></span>${esc(name.replace(/^L\./, ''))}${s && s.bright ? `<i>${s.bright}</i>` : ''}</button>`;
+    const chip = (name, s) => `<button type="button" class="chip" data-star="${esc(name)}" aria-pressed="false"><span class="dot ${s && HANH_CLASS[s.hanh] || ''}"></span>${esc(name.replace(/^(L|ĐV)\./, ''))}${s && s.bright ? `<i>${s.bright}</i>` : ''}</button>`;
     const chips = (k) => p.stars.filter((s) => s.kind === k).map((s) => chip(s.name, s)).join('');
     const opp = P[rel.xung];
     const relBtn = (c) => `<button type="button" data-goto="${c}">${P[c].cung}</button>`;
@@ -320,6 +323,7 @@
       <div class="group"><h4>Cát tinh ${info('catTinh')}</h4><div class="chips">${chips('cat') || '<span class="muted">Không có</span>'}</div></div>
       <div class="group"><h4>Hung tinh ${info('hungTinh')}</h4><div class="chips">${chips('hung') || '<span class="muted">Không có</span>'}</div></div>
       ${p.luuNien.length ? `<div class="group"><h4>Sao lưu năm ${tb.namXem} ${info('luuNien')}</h4><div class="chips">${p.luuNien.map((n) => chip(n, null)).join('')}</div></div>` : ''}
+      ${p.daiVan.length ? `<div class="group"><h4>Sao lưu đại hạn ${info('daiVan')}</h4><div class="chips">${p.daiVan.map((n) => chip(n, null)).join('')}</div></div>` : ''}
       <div class="star-note" id="star-note" hidden></div>
       <div class="rel"><span>Tam hợp</span>${relBtn(rel.tamHop[0])}${relBtn(rel.tamHop[1])}<span>Xung chiếu</span>${relBtn(rel.xung)}${info('tamPhuong')}</div>`;
   }
@@ -335,6 +339,38 @@
       return `<button type="button" class="seg${now ? ' now' : ''}${p.chi === state.selected ? ' sel' : ''}" data-goto="${p.chi}" style="${pos}" title="${esc(chinh)}"><span class="age">${p.daiHan}–${p.daiHanEnd} tuổi</span><b>${p.cung}</b><span>${esc(chinh)}</span></button>`;
     }).join('');
     $('#dec-note').textContent = tb.daiHanCung !== null ? `Năm ${tb.namXem}, ${tb.tuoi} tuổi âm, đang ở đại hạn cung ${ch.palaces[tb.daiHanCung].cung}. Đại hạn đi chiều ${tb.thuanNghich}.` : `Đại hạn đầu tiên bắt đầu từ ${tb.cuc} tuổi.`;
+    // Dải 10 năm của đại hạn đang mở (bấm một đại hạn để mở; mặc định là đại hạn đang chạy, chưa vào thì đại hạn đầu tiên)
+    const open = ch.palaces[state.yearsOf ?? tb.daiHanCung ?? list[0].chi];
+    const years = Array.from({ length: 10 }, (_, i) => {
+      const age = open.daiHan + i, y = yearOfAge(age);
+      if (y > MAX_YEAR) return '';
+      return `<button type="button" class="yr${y === tb.namXem ? ' now' : ''}" data-year="${y}" aria-pressed="${y === tb.namXem}" title="Năm ${canChiNam(y)}, ${age} tuổi"><b class="num">${y}</b><span>${age} tuổi</span></button>`;
+    }).join('');
+    $('#years').innerHTML = `<span class="yr-lbl">Các năm của đại hạn ${open.cung} (${open.daiHan}–${open.daiHanEnd} tuổi)</span><div class="yr-row">${years}</div>`;
+  }
+
+  // ---------- Năm xem hạn ----------
+  // Đổi năm = an lại lá số với năm mới (lá số gốc giữ nguyên, chỉ phần hạn và sao lưu đổi). Link cập nhật theo năm, không thêm bước lịch sử.
+  const MAX_YEAR = 2199;
+  const yearOfAge = (age) => state.chart.thienBan.amLich.year + age - 1;
+  const canChiNam = (y) => `${E.CAN[(y + 6) % 10]} ${E.CHI[(y + 8) % 12]}`;
+  function renderYearbar() {
+    const tb = state.chart.thienBan, now = new Date().getFullYear();
+    $('#y-num').textContent = tb.namXem;
+    $('#y-sub').textContent = `${tb.namXemCanChi} · ${tb.tuoi} tuổi`;
+    $('#y-prev').disabled = tb.namXem <= yearOfAge(1);
+    $('#y-next').disabled = tb.namXem >= MAX_YEAR;
+    $('#y-today').hidden = tb.namXem === now || now < yearOfAge(1);
+  }
+  function setYear(y) {
+    y = Math.min(MAX_YEAR, Math.max(yearOfAge(1), y));
+    if (!state.input || y === state.input.namXem) return;
+    const inp = { ...state.input, namXem: y };
+    state.input = inp; state.chart = E.compute(inp); state.yearsOf = null;
+    renderWho(); renderYearbar(); renderChart(false); renderInspector(); renderTrack(); renderSummary();
+    $('#json-out').textContent = chartJson();
+    $('#ai-out').innerHTML = ''; $('#ai-ask').hidden = true; $('#ai-note').textContent = '';
+    history.replaceState(null, '', '#' + toHash(inp));
   }
 
   // ---------- Tổng quan ----------
@@ -409,13 +445,13 @@
       `Giới tính: ${tb.gender} (${tb.amDuong}); sinh ${tb.duongLich.day}/${tb.duongLich.month}/${tb.duongLich.year} ${pad(tb.duongLich.hour)}:${pad(tb.duongLich.minute)} giờ Việt Nam`,
       `Âm lịch: ngày ${tb.amLich.day} tháng ${tb.amLich.month}${tb.amLich.leap ? ' nhuận' : ''} năm ${tb.canChi.nam}; tháng ${tb.canChi.thang}, ngày ${tb.canChi.ngay}, giờ ${tb.canChi.gio}`,
       `Bản mệnh: ${tb.banMenh}; ${tb.cucTen}; ${tb.quanHeMenhCuc}; ${tb.amDuongLy}; Mệnh chủ ${tb.menhChu}, Thân chủ ${tb.thanChu}; Thân cư ${tb.thanCu}`,
-      `Năm xem: ${tb.namXem} (${tb.namXemCanChi}), ${tb.tuoi} tuổi âm; đại hạn hiện tại: ${tb.daiHanCung !== null ? ch.palaces[tb.daiHanCung].cung : 'chưa vào'}; tiểu hạn: cung ${ch.palaces[tb.tieuHanCung].cung}`,
+      `Năm xem: ${tb.namXem} (${tb.namXemCanChi}), ${tb.tuoi} tuổi âm; đại hạn hiện tại: ${tb.daiHanCung !== null ? `${ch.palaces[tb.daiHanCung].cung} (can chi cung ${tb.daiVanCanChi})` : 'chưa vào'}; tiểu hạn: cung ${ch.palaces[tb.tieuHanCung].cung}`,
       'Mười hai cung (tên cung, can chi, đại hạn, chính tinh, cát tinh, hung tinh, Tràng Sinh, sao lưu năm xem):',
     ];
     Array.from({ length: 12 }, (_, i) => mod(tb.menhCung + i)).forEach((chi) => {
       const p = ch.palaces[chi];
       const f = (k) => p.stars.filter((s) => s.kind === k).map((s) => s.name + (s.bright ? `(${s.bright})` : '')).join(', ') || '—';
-      lines.push(`- ${p.cung}${p.isThan ? ' [Thân]' : ''} | ${p.canTen} ${p.chiTen} | ĐH ${p.daiHan}-${p.daiHanEnd} | Chính: ${f('chinh')} | Cát: ${f('cat')} | Hung: ${f('hung')} | ${p.trangSinh}${p.tuan ? ' | Tuần' : ''}${p.triet ? ' | Triệt' : ''}${p.luuNien.length ? ' | Lưu: ' + p.luuNien.join(', ') : ''}`);
+      lines.push(`- ${p.cung}${p.isThan ? ' [Thân]' : ''} | ${p.canTen} ${p.chiTen} | ĐH ${p.daiHan}-${p.daiHanEnd} | Chính: ${f('chinh')} | Cát: ${f('cat')} | Hung: ${f('hung')} | ${p.trangSinh}${p.tuan ? ' | Tuần' : ''}${p.triet ? ' | Triệt' : ''}${p.luuNien.length ? ' | Lưu: ' + p.luuNien.join(', ') : ''}${p.daiVan.length ? ' | Lưu đại hạn: ' + p.daiVan.join(', ') : ''}`);
     });
     if (state.cc) lines.push('Cách cục (máy nhận diện theo cung Mệnh): ' + (ccAll().map((h) => `${h.ten} [${CC_TAG[h.nhom]}${h.pha.length ? ', bị phá bởi ' + h.pha.join(', ') : ''}] (${h.canCu})`).join('; ') || 'không có'));
     return lines.join('\n');
@@ -537,10 +573,10 @@
     try {
       const chart = E.compute(inp);
       state.input = inp; state.chart = chart; state.thangNay = thangNay(); state.isSample = !!isSample; state.found = null;
-      state.cc = K.detect(chart); state.ccPin = null;
+      state.cc = K.detect(chart); state.ccPin = null; state.yearsOf = null;
       state.selected = chart.thienBan.menhCung;
       $('#form-error').hidden = true;
-      renderWho(); renderChart(true); renderInspector(); renderTrack(); renderSummary();
+      renderWho(); renderYearbar(); renderChart(true); renderInspector(); renderTrack(); renderSummary();
       $('#json-out').textContent = chartJson();
       $('#ai-out').innerHTML = ''; $('#ai-ask').hidden = true; $('#ai-note').textContent = '';
       $('#find').value = '';
@@ -619,7 +655,26 @@
       const chip = e.target.closest('[data-star]'); if (!chip) return;
       showStarNote(chip.getAttribute('data-star'));
     });
-    $('#track').addEventListener('click', (e) => { const b = e.target.closest('[data-goto]'); if (b) select(+b.getAttribute('data-goto')); });
+    $('#track').addEventListener('click', (e) => { const b = e.target.closest('[data-goto]'); if (b) { state.yearsOf = +b.getAttribute('data-goto'); select(state.yearsOf); } });
+    $('#years').addEventListener('click', (e) => { const b = e.target.closest('[data-year]'); if (b) setYear(+b.getAttribute('data-year')); });
+    // Nút ‹ ›: bấm một lần lùi/tới 1 năm, bấm giữ thì lướt liên tục; phím ← → khi đang ở thanh năm
+    let hold = null;
+    const stopHold = () => { clearTimeout(hold); clearInterval(hold); hold = null; };
+    [['#y-prev', -1], ['#y-next', 1]].forEach(([id, d]) => {
+      const b = $(id);
+      b.addEventListener('pointerdown', (e) => {
+        if (e.button !== 0) return;
+        setYear(state.input.namXem + d);
+        stopHold(); hold = setTimeout(() => { hold = setInterval(() => setYear(state.input.namXem + d), 110); }, 420);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel', 'blur'].forEach((ev) => b.addEventListener(ev, stopHold));
+      b.addEventListener('click', (e) => { if (e.detail === 0) setYear(state.input.namXem + d); }); // Enter / Space từ bàn phím
+    });
+    $('.yearbar').addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); setYear(state.input.namXem + (e.key === 'ArrowLeft' ? -1 : 1)); }
+    });
+    $('#y-today').addEventListener('click', () => setYear(new Date().getFullYear()));
+    $('#t-dv').addEventListener('change', (e) => { state.showDv = e.target.checked; renderChart(false); });
     $('#t-luu').addEventListener('change', (e) => { state.showLuu = e.target.checked; renderChart(false); });
     $('#t-lines').addEventListener('change', (e) => { state.showLines = e.target.checked; renderChart(false); });
     $('#find').addEventListener('change', (e) => findStar(e.target.value));

@@ -151,3 +151,29 @@ test('Cách cục: mỗi cách đều gặp được, không cách nào quá ph�
   // Mệnh có chính tinh thì luôn có khung (bộ chính tinh hoặc khung pha); vô chính diệu thì mượn cung xung chiếu
   assert.equal(coKhung, charts.length);
 });
+
+test('Sao lưu đại hạn: lá số mẫu năm 2026 (đại hạn Phúc Đức, Giáp Dần)', () => {
+  const r = E.compute({ gender: 'nam', calendar: 'duong', day: 29, month: 8, year: 1998, hour: 15, minute: 30, namXem: 2026 });
+  assert.equal(r.thienBan.daiVanCanChi, 'Giáp Dần');
+  const dv = Object.fromEntries(r.palaces.filter((p) => p.daiVan.length).map((p) => [p.chiTen, p.daiVan.join(', ')]));
+  assert.deepEqual(dv, {
+    'Tý': 'ĐV.Hóa Kỵ', 'Sửu': 'ĐV.Đà La', 'Dần': 'ĐV.Lộc Tồn', 'Mão': 'ĐV.Kình Dương',
+    'Mùi': 'ĐV.Hóa Lộc', 'Thân': 'ĐV.Thiên Mã', 'Hợi': 'ĐV.Hóa Quyền, ĐV.Hóa Khoa',
+  });
+});
+
+test('Đổi năm xem: lá số gốc giữ nguyên, sao lưu đại hạn đổi theo đại hạn', () => {
+  const base = { gender: 'nu', calendar: 'duong', day: 3, month: 2, year: 1985, hour: 7, minute: 10 };
+  const goc = (r) => JSON.stringify(r.palaces.map((p) => [p.cung, p.daiHan, p.trangSinh, p.stars]));
+  const first = E.compute({ ...base, namXem: 1990 });
+  for (let y = 1985; y <= 2080; y++) {
+    const r = E.compute({ ...base, namXem: y }), tb = r.thienBan;
+    assert.equal(goc(r), goc(first), `Lá số gốc đổi khi xem năm ${y}`);
+    const n = r.palaces.reduce((s, p) => s + p.daiVan.length, 0);
+    if (tb.daiHanCung === null) { assert.equal(n, 0); assert.equal(tb.daiVanCanChi, null); continue; }
+    assert.equal(n, 8, `Năm ${y}: cần đủ 8 sao ĐV.`);
+    // Cùng một đại hạn thì sao ĐV. giống hệt nhau
+    const cungNam = E.compute({ ...base, namXem: y - (tb.tuoi - r.palaces[tb.daiHanCung].daiHan) });
+    assert.deepEqual(r.palaces.map((p) => p.daiVan), cungNam.palaces.map((p) => p.daiVan));
+  }
+});
