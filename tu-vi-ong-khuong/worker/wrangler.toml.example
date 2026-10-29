@@ -1,0 +1,20 @@
+# Đổi tên file này thành wrangler.toml rồi chạy:  npx wrangler deploy
+name = "tuvi-ai-proxy"
+main = "ai-proxy.js"
+compatibility_date = "2025-06-01"
+
+[vars]
+# Domain GitHub Pages của bạn, nhiều domain cách nhau bằng dấu phẩy
+ALLOWED_ORIGINS = "https://TEN-TAI-KHOAN.github.io"
+MODEL = "claude-sonnet-5-5"
+MAX_TOKENS = "1800"
+
+# Giới hạn số lần gọi mỗi IP (tùy chọn). Kiểm tra cú pháp mới nhất trong tài liệu
+# Cloudflare Workers Rate Limiting trước khi bật.
+# [[ratelimits]]
+# name = "RATE_LIMITER"
+# namespace_id = "1001"
+# simple = { limit = 10, period = 60 }
+
+# Khóa API đặt bằng lệnh (không ghi vào file):
+#   npx wrangler secret put ANTHROPIC_API_KEY
