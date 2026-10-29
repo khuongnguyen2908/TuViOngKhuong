@@ -16,6 +16,7 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 
 ```
 index.html              Bản đã ghép sẵn, mở trực tiếp được
+TODO.md                 Việc còn nợ và cần làm
 src/
   template.html         Khung trang
   styles.css            Giao diện
@@ -28,7 +29,7 @@ src/
 scripts/build.mjs       Ghép src/ thành một file HTML
 tests/core.test.mjs     Kiểm thử âm lịch, lá số mẫu, proxy AI
 worker/ai-proxy.js      Cloudflare Worker gọi Claude API
-.github/workflows/      Kiểm thử và đưa lên GitHub Pages
+.github/workflows/      Kiểm thử và đưa lên GitHub Pages (pages.yml)
 ```
 
 Không có thư viện cần cài. Cần Node.js 20 trở lên để chạy kiểm thử và ghép trang.

@@ -1,0 +1,4 @@
+# Giữ kiểu xuống dòng LF cho mọi file chữ (tránh Windows đổi sang CRLF làm file trông như bị sửa)
+* text=auto eol=lf
+*.png binary
+*.jpg binary

@@ -1,0 +1,53 @@
+# Mỗi lần đẩy lên main: chạy kiểm thử, ghép index.html rồi đăng lên GitHub Pages.
+# Cần bật: Settings → Pages → Source = GitHub Actions.
+# Bật Luận giải AI: Settings → Secrets and variables → Actions → Variables → AI_ENDPOINT = URL proxy.
+name: Kiểm thử và đăng trang
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Kiểm thử
+        run: npm test
+      - name: Ghép trang
+        env:
+          AI_ENDPOINT: ${{ vars.AI_ENDPOINT }}
+        run: |
+          npm run build
+          mkdir -p _site
+          cp index.html _site/index.html
+          touch _site/.nojekyll
+      - if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
