@@ -22,6 +22,7 @@ const parts = {
   ENGINE: stripExports(read('engine.js')),
   CONTENT: stripExports(read('content.js')),
   CACHCUC: stripExports(read('cachcuc.js')),
+  NGHIASAO: stripExports(read('nghiasao.js')),
   AI: stripExports(read('ai.js')),
   APP: read('app.js'),
 };

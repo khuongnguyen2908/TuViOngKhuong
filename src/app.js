@@ -1,6 +1,6 @@
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -272,12 +272,29 @@
   }
 
   // ---------- Bảng chi tiết cung ----------
-  function starLine(s) {
+  // Câu theo thế sáng / hãm của chính tinh
+  function brightLine(s) {
     const inf = C.CHINH[s.name];
     if (!inf) return '';
     const sang = s.bright && ['M', 'V', 'Đ'].includes(s.bright);
-    const tail = sang ? `Ở thế ${C.BRIGHT_TEN[s.bright]}: ${inf[1]}.` : s.bright === 'H' ? `Ở thế hãm: ${inf[2]}.` : 'Ở thế bình hòa: tốt xấu tùy sao đi kèm.';
-    return `${inf[0]} ${tail}`;
+    return sang ? `Ở thế ${C.BRIGHT_TEN[s.bright]}: ${inf[1]}.` : s.bright === 'H' ? `Ở thế hãm: ${inf[2]}.` : 'Ở thế bình hòa: tốt xấu tùy sao đi kèm.';
+  }
+  // Nghĩa chính tinh: có cung thì lấy nghĩa theo cung (kho nghĩa sao), không thì lấy tính chất chung
+  function starLine(s, cung) {
+    const inf = C.CHINH[s.name];
+    if (!inf) return '';
+    return `${(cung && N.cungOf(s.name, cung)) || inf[0]} ${brightLine(s)}`;
+  }
+  // Thẻ chính tinh trong bảng chi tiết cung; muon = cung xung chiếu khi cung đang xem vô chính diệu
+  function majorCard(s, cung, muon) {
+    const inf = C.CHINH[s.name];
+    const o = N.cungOf(s.name, cung);
+    return `<div class="major">
+      <h3><span class="${HANH_CLASS[s.hanh] || ''}">${s.amDuong ? SIGN(s.amDuong) + ' ' : ''}${s.name}<small class="o-cung"> ở ${cung}${muon ? ` (mượn từ ${muon})` : ''}</small></span><span class="badge ${['M', 'V', 'Đ'].includes(s.bright) ? 'good' : s.bright === 'H' ? 'bad' : ''}">${s.bright ? BRIGHT_WORD[s.bright] : 'Không xét'}${s.hoa ? ', ' + s.hoa : ''}</span></h3>
+      <p>${o || inf[0]}</p>
+      <p class="bright-line">${brightLine(s)}</p>
+      ${o ? `<p class="gen">Tính chất chung: ${inf[0]}</p>` : ''}
+    </div>`;
   }
   function starMeaning(name) {
     const base = name.replace(/^(L|ĐV)\./, '');
@@ -314,10 +331,9 @@
         </div>
       </div>
       <p class="ins-desc">${C.CUNG_Y[p.cung]}</p>
-      <div class="majors">${chinh.length ? chinh.map((s) => `<div class="major">
-          <h3><span class="${HANH_CLASS[s.hanh] || ''}">${s.amDuong ? SIGN(s.amDuong) + ' ' : ''}${s.name}</span><span class="badge ${['M', 'V', 'Đ'].includes(s.bright) ? 'good' : s.bright === 'H' ? 'bad' : ''}">${s.bright ? BRIGHT_WORD[s.bright] : 'Không xét'}${s.hoa ? ', ' + s.hoa : ''}</span></h3>
-          <p>${starLine(s)}</p></div>`).join('')
-        : `<div class="major"><h3>Vô chính diệu ${info('vcd')}</h3><p>Cung không có chính tinh, theo lệ mượn chính tinh cung xung chiếu ${opp.cung}: ${opp.stars.filter((s) => s.kind === 'chinh').map((s) => s.name).join(', ') || 'cũng vô chính diệu'}.</p></div>`}</div>
+      <div class="majors">${chinh.length ? chinh.map((s) => majorCard(s, p.cung)).join('')
+        : `<div class="major"><h3>Vô chính diệu ${info('vcd')}</h3><p>Cung không có chính tinh, theo lệ mượn chính tinh cung xung chiếu ${opp.cung}: ${opp.stars.filter((s) => s.kind === 'chinh').map((s) => s.name).join(', ') || 'cũng vô chính diệu'}. Nghĩa mượn nhẹ hơn sao đóng thẳng trong cung.</p></div>`
+          + opp.stars.filter((s) => s.kind === 'chinh').map((s) => majorCard(s, p.cung, opp.cung)).join('')}</div>
       ${p.tuan || p.triet ? `<p class="ins-desc">Cung gặp ${[p.tuan ? 'Tuần' : '', p.triet ? 'Triệt' : ''].filter(Boolean).join(' và ')}: sao tốt giảm lực, sao xấu cũng bớt hại.</p>` : ''}
       <p class="tap-hint">Bấm vào một sao để xem nghĩa</p>
       <div class="group"><h4>Cát tinh ${info('catTinh')}</h4><div class="chips">${chips('cat') || '<span class="muted">Không có</span>'}</div></div>
@@ -421,7 +437,7 @@
         <p>Mệnh đóng ở ${menh.chiTen}, Thân cư ${tb.thanCu} (${than.chiTen}): từ khoảng 30 tuổi trở đi, đời sống xoay quanh ${C.THAN_CU[tb.thanCu] || 'cung này'}.</p>
       </section>
       <section><h3>Cung Mệnh</h3>${borrow}
-        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s)}</li>`).join('')}</ul>
+        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s, 'Mệnh')}</li>`).join('')}</ul>
         ${catIn(menh).length ? `<p>Cát tinh tại Mệnh: ${catIn(menh).join(', ')}.</p>` : ''}
         ${hungIn(menh).length ? `<p>Sát tinh tại Mệnh: ${hungIn(menh).join(', ')}. Nên giữ bình tĩnh, tránh quyết định vội.</p>` : ''}
         ${tt(menh) ? `<p>Mệnh gặp ${tt(menh)}: thời trẻ thường chậm hoặc trắc trở, càng về sau càng nhẹ.</p>` : ''}

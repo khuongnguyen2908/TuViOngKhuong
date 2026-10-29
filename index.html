@@ -197,6 +197,9 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .badge { font: 600 11.5px var(--f-ui); padding: 2px 8px; border-radius: 6px; background: var(--tint); color: var(--ink); white-space: nowrap; }
 .badge.good { color: var(--moc); } .badge.bad { color: var(--hoa); }
 .major p { margin: 6px 0 0; font-size: 13.5px; }
+.major .o-cung { font: 500 12.5px var(--f-ui); color: var(--muted); }
+.major .bright-line { margin-top: 4px; }
+.major .gen { margin-top: 4px; font-size: 12.5px; color: var(--muted); }
 .group h4 { font: 600 13px var(--f-ui); color: var(--muted); margin-bottom: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font-size: 12.5px; padding: 4px 9px 4px 10px; border-radius: 999px; border: 1px solid var(--gold-soft); background: var(--tint); cursor: pointer; display: inline-flex; align-items: center; transition: border-color 0.12s, background-color 0.12s; }
@@ -1532,6 +1535,222 @@ const TuViCachCuc = (() => {
 })();
 
 
+// Kho nghĩa sao theo cung — tự biên soạn theo ý nghĩa phổ biến, mang tính tham khảo.
+// CHINH_CUNG[chính tinh][cung] = nghĩa khi chính tinh đóng ở cung đó (lời chung, chưa xét sáng / hãm:
+// phần sáng / hãm vẫn lấy ở content.js). Giọng điềm đạm, không phán chắc, không nói bệnh cụ thể.
+// Muốn ghi nguồn cho một ô đã sửa theo sách: thêm vào NGUON, khóa 'Sao|Cung', ví dụ 'Tử Vi|Mệnh': 'Tên sách, trang'.
+// Sửa xong chạy `npm run build` để cập nhật trang đọc duyệt docs/nghia-sao.md.
+const TuViNghiaSao = (() => {
+  const CUNG = ['Mệnh', 'Phụ Mẫu', 'Phúc Đức', 'Điền Trạch', 'Quan Lộc', 'Nô Bộc', 'Thiên Di', 'Tật Ách', 'Tài Bạch', 'Tử Tức', 'Phu Thê', 'Huynh Đệ'];
+
+  const CHINH_CUNG = {
+    'Tử Vi': {
+      'Mệnh': 'Phong thái đĩnh đạc, tự trọng cao, thích được tôn trọng và quen đứng ra gánh vác. Có khả năng tổ chức, dẫn dắt; nên tránh tự quyết một mình và nghe lời nịnh.',
+      'Phụ Mẫu': 'Cha mẹ có uy, nề nếp hoặc có vị thế trong họ hàng, xã hội. Được bề trên che chở nhưng cũng chịu nhiều kỳ vọng và sự kiểm soát.',
+      'Phúc Đức': 'Họ hàng có nền nếp, phúc phần khá dày. Đời sống tinh thần coi trọng danh dự; về già thường được an nhàn, có chỗ dựa.',
+      'Điền Trạch': 'Có duyên với nhà cửa đất đai, nhà thường khang trang hoặc ở nơi tốt. Thích không gian sống bề thế, ngăn nắp; tài sản cố định là chỗ dựa lâu dài.',
+      'Quan Lộc': 'Hợp vị trí quản lý, lãnh đạo hoặc làm ở tổ chức lớn, cơ quan nhà nước. Công danh lên đều nếu chịu học hỏi và biết dùng người.',
+      'Nô Bộc': 'Bạn bè, đồng nghiệp có nhiều người giỏi, có vị thế nhưng không dễ sai bảo. Quan hệ tốt khi đôi bên tôn trọng nhau; tránh để cấp dưới lấn quyền.',
+      'Thiên Di': 'Ra ngoài được người nể, dễ gặp quý nhân và có tiếng ở môi trường bên ngoài. Hợp đi xa lập nghiệp hoặc làm việc với tổ chức lớn.',
+      'Tật Ách': 'Sức khỏe nền tảng khá, gặp chuyện thường có cách giải. Dễ mệt vì áp lực trách nhiệm kéo dài; nên giữ nhịp nghỉ ngơi, ăn uống điều độ.',
+      'Tài Bạch': 'Tiền bạc đến từ vị thế, uy tín và việc quản lý hơn là may rủi. Chi tiêu rộng tay vì thể diện; biết giữ thì của bền.',
+      'Tử Tức': 'Con cái có cá tính, tự trọng, có chí. Nên dạy bằng gương và sự tôn trọng hơn là ép buộc; con dễ thành đạt nếu được định hướng.',
+      'Phu Thê': 'Người phối ngẫu có cá tính mạnh, tự trọng, thường giỏi giang hoặc có vị thế. Trong nhà dễ có người muốn nắm quyền; nên bàn bạc thay vì áp đặt.',
+      'Huynh Đệ': 'Anh chị em có người khá giả hoặc có tiếng nói, giúp được nhau khi cần. Mỗi người một chính kiến nên dễ va chạm vì sĩ diện.',
+    },
+    'Thiên Cơ': {
+      'Mệnh': 'Thông minh, nhanh nhạy, thích suy tính và tìm cách làm mới. Hợp việc cần đầu óc, kế hoạch, kỹ thuật; dễ lo nghĩ nhiều và hay đổi ý.',
+      'Phụ Mẫu': 'Cha mẹ khéo léo, chu đáo, hay lo cho con nhưng cũng hay can thiệp. Quan hệ với bề trên tốt khi biết trình bày rõ ràng, có lý lẽ.',
+      'Phúc Đức': 'Đời sống tinh thần nhiều suy tư, thích tìm hiểu tôn giáo, triết lý. Phúc phần đến qua sự khéo léo và lòng tốt; nên tập buông bớt lo âu.',
+      'Điền Trạch': 'Nhà cửa hay thay đổi, sửa sang hoặc dời chỗ ở. Có tài xoay vòng mua bán nhà đất; nhà vừa phải mà tiện thường giữ được lâu hơn nhà lớn.',
+      'Quan Lộc': 'Hợp việc lập kế hoạch, tham mưu, kỹ thuật, công nghệ, giáo dục. Hay đổi việc hoặc đổi hướng; giỏi nhất ở vai trò người nghĩ ra cách làm.',
+      'Nô Bộc': 'Bạn bè nhiều kiểu, đến rồi đi; có người góp được mưu hay. Nên giữ khoảng cách vừa phải và rõ ràng trong chuyện tiền bạc.',
+      'Thiên Di': 'Ra ngoài linh hoạt, dễ thích nghi, hay đi lại. Cơ hội đến từ sự nhanh trí; tránh bôn ba quá nhiều khiến khó tích lũy.',
+      'Tật Ách': 'Dễ căng thẳng, khó ngủ khi lo nghĩ nhiều. Nên giữ tinh thần thư thái, vận động nhẹ đều đặn và nghỉ ngơi đúng giờ.',
+      'Tài Bạch': 'Kiếm tiền bằng trí óc, mưu tính, dịch vụ hoặc buôn bán linh hoạt. Thu nhập lên xuống theo kế hoạch; tiền thường đến từ nhiều nguồn nhỏ.',
+      'Tử Tức': 'Con cái lanh lợi, hiếu động, học nhanh. Cần hướng dẫn kiên nhẫn để con không nóng vội và bỏ dở giữa chừng.',
+      'Phu Thê': 'Người phối ngẫu thông minh, khéo léo, tính trẻ trung. Tình cảm dễ đổi theo hoàn cảnh; cần nói chuyện thẳng thắn để tránh nghi kỵ.',
+      'Huynh Đệ': 'Anh chị em lanh lợi, mỗi người một hướng, ít khi ở gần nhau. Giúp nhau bằng lời khuyên, kinh nghiệm hơn là tiền bạc.',
+    },
+    'Thái Dương': {
+      'Mệnh': 'Cởi mở, rộng rãi, thích giúp đỡ và muốn được ghi nhận. Hợp vai trò đứng trước đám đông; sáng thì có tiếng, tối thì hay vất vả vì người khác.',
+      'Phụ Mẫu': 'Hình ảnh người cha nổi bật, cha có ảnh hưởng lớn tới mình. Sáng thì được cha và bề trên nâng đỡ, tối thì sớm phải tự lập.',
+      'Phúc Đức': 'Họ hàng có người danh giá; phúc phần đến từ việc làm điều tốt một cách công khai. Tinh thần lạc quan, thích làm việc thiện.',
+      'Điền Trạch': 'Nhà cửa sáng sủa, thoáng đãng, có thể ở nơi đông người qua lại. Nhà có được nhờ công sức tự làm; sáng thì rộng rãi, tối thì hay phải sửa sang.',
+      'Quan Lộc': 'Hợp việc công khai, giao tiếp, giáo dục, truyền thông, cơ quan nhà nước. Danh thường lớn hơn lợi; làm vì người khác dễ được ghi nhận.',
+      'Nô Bộc': 'Bạn bè đông, mình thường là người cho đi nhiều hơn nhận lại. Được tiếng tốt trong nhóm; nên tránh ôm việc thay người khác.',
+      'Thiên Di': 'Ra ngoài được chú ý, quan hệ rộng, hợp đi xa hoặc làm việc với nước ngoài. Sáng thì được trọng vọng, tối thì bôn ba nhiều.',
+      'Tật Ách': 'Dễ mệt vì làm quá sức và thức khuya. Nên giữ nhịp nghỉ ngơi, để ý đôi mắt và tránh nóng giận.',
+      'Tài Bạch': 'Tiền đến từ danh tiếng và công việc công khai; kiếm được nhưng chi cũng rộng. Sáng thì thu nhập ổn, tối thì làm nhiều mà giữ được ít.',
+      'Tử Tức': 'Con cái hoạt bát, thẳng thắn, thích thể hiện. Được khuyến khích đúng cách thì con dễ có tiếng tăm.',
+      'Phu Thê': 'Người phối ngẫu thẳng thắn, rộng rãi, có trách nhiệm, thường bận việc bên ngoài. Cần dành thời gian cho nhau để tình cảm không nguội.',
+      'Huynh Đệ': 'Anh chị em cởi mở, có người thành đạt hoặc có tiếng. Hay giúp nhau công khai; mình thường đóng vai người lo toan.',
+    },
+    'Vũ Khúc': {
+      'Mệnh': 'Cứng rắn, quyết đoán, thực tế và giỏi tính toán tiền bạc. Làm việc chắc chắn, ít nói nhiều làm; nên mềm mỏng hơn trong quan hệ.',
+      'Phụ Mẫu': 'Cha mẹ nghiêm, sống thực tế, coi trọng kinh tế gia đình. Ít bày tỏ tình cảm nhưng lo chu đáo về vật chất.',
+      'Phúc Đức': 'Họ hàng có người giỏi làm kinh tế; phúc phần đến từ sự chăm chỉ tích lũy. Tinh thần vững vàng, ít mơ mộng.',
+      'Điền Trạch': 'Tự tạo dựng nhà cửa bằng sức mình, thường mua được nhà sau thời gian dành dụm. Tài sản cố định tăng dần và bền.',
+      'Quan Lộc': 'Hợp tài chính, ngân hàng, kế toán, kinh doanh, kỹ thuật, quân đội. Làm việc kỷ luật, lên chậm mà chắc.',
+      'Nô Bộc': 'Bạn bè ít nhưng thực chất, quan hệ hay gắn với công việc làm ăn. Rõ ràng chuyện tiền bạc thì giữ được bạn lâu.',
+      'Thiên Di': 'Ra ngoài làm ăn được, hợp buôn bán xa, kinh doanh. Người ngoài nể vì sự chắc chắn; nên bớt cứng nhắc khi giao tiếp.',
+      'Tật Ách': 'Dễ mệt vì làm việc liên tục, ít nghỉ. Nên giữ gìn đường hô hấp và cẩn thận va chạm khi làm việc nặng.',
+      'Tài Bạch': 'Chỗ hợp nhất của Vũ Khúc: giỏi kiếm và giữ tiền, có đầu óc kinh tế. Sáng thì giàu dần, tối thì tiền lên xuống mạnh.',
+      'Tử Tức': 'Con cái có cá tính, độc lập, sớm biết lo. Quan hệ với con nghiêm hơn là tình cảm; nên gần gũi con nhiều hơn.',
+      'Phu Thê': 'Người phối ngẫu thực tế, cứng tính, giỏi lo kinh tế. Hôn nhân vững về vật chất nhưng dễ thiếu lời ngọt; cưới muộn hoặc biết nhường nhau thì êm hơn.',
+      'Huynh Đệ': 'Anh chị em mỗi người tự lo, ít dựa vào nhau. Hợp tác làm ăn với anh em cần sòng phẳng từ đầu.',
+    },
+    'Thiên Đồng': {
+      'Mệnh': 'Hiền hòa, dễ gần, thích sự thoải mái và ít tranh giành. Hay được người thương; cần thêm ý chí để không trì hoãn việc lớn.',
+      'Phụ Mẫu': 'Cha mẹ hiền, dễ tính, gia đình êm ấm. Được bề trên thương nhưng ít được rèn giũa khắt khe.',
+      'Phúc Đức': 'Phúc phần tốt, đời sống tinh thần vui vẻ, biết hưởng. Về già an nhàn; nên giữ chừng mực trong ăn chơi.',
+      'Điền Trạch': 'Nhà cửa ấm cúng, thường có nhà nhờ gia đình hoặc được thừa hưởng. Thích không gian thoải mái hơn là bề thế.',
+      'Quan Lộc': 'Hợp việc ổn định, dịch vụ, chăm sóc người khác, phúc lợi, nghệ thuật nhẹ nhàng. Ít bon chen; thăng tiến nhờ được lòng người.',
+      'Nô Bộc': 'Bạn bè dễ chịu, đông vui, hay rủ nhau ăn chơi. Được bạn giúp những việc nhỏ; tránh để bạn bè kéo vào tiêu xài.',
+      'Thiên Di': 'Ra ngoài dễ được giúp, hay gặp người tốt. Thích đi chơi, du lịch; ít gặp tranh chấp ở nơi xa.',
+      'Tật Ách': 'Sức khỏe thường ổn, gặp chuyện hay qua. Nên để ý cân nặng, thói quen ăn uống và giờ giấc ngủ nghỉ.',
+      'Tài Bạch': 'Tiền bạc đủ dùng, đến tương đối dễ nhưng cũng tiêu cho hưởng thụ. Ít khi giàu đột ngột; nên tập để dành đều đặn.',
+      'Tử Tức': 'Con cái hiền, dễ nuôi, gần gũi cha mẹ. Nên khích lệ để con có thêm chí tiến thủ.',
+      'Phu Thê': 'Người phối ngẫu hiền, dễ chịu, biết chiều. Hôn nhân êm; có giai đoạn tình cảm nhạt thì cần chủ động hâm nóng.',
+      'Huynh Đệ': 'Anh chị em hòa thuận, ít cãi vã. Giúp nhau bằng tình cảm nhiều hơn vật chất.',
+    },
+    'Liêm Trinh': {
+      'Mệnh': 'Có nguyên tắc, mạnh mẽ, nhiều tham vọng và tự ái cao. Sáng thì chính trực, có tài quản lý; tối thì nóng nảy, dễ vướng thị phi.',
+      'Phụ Mẫu': 'Cha mẹ nghiêm khắc, có nguyên tắc; quan hệ với bề trên dễ căng nếu không khéo. Nên giữ lễ và nói rõ quan điểm của mình.',
+      'Phúc Đức': 'Họ hàng có người làm việc công quyền hoặc từng có giai đoạn thăng trầm. Tinh thần hay giằng co giữa nguyên tắc và ham muốn; nên tu dưỡng sự bình tâm.',
+      'Điền Trạch': 'Nhà cửa có lúc biến động: mua bán, đổi chủ hoặc vướng giấy tờ. Làm thủ tục nhà đất cần cẩn thận, rõ ràng.',
+      'Quan Lộc': 'Hợp ngành kỷ luật, pháp luật, quản lý, kỹ thuật, chính trị. Sáng thì có quyền, có tiếng; tối thì dễ vướng chuyện pháp lý trong công việc.',
+      'Nô Bộc': 'Bạn bè có người mạnh mẽ, giao du rộng nhưng phức tạp. Chọn bạn cẩn thận, tránh dính vào việc không minh bạch.',
+      'Thiên Di': 'Ra ngoài năng nổ, gặp nhiều cạnh tranh. Hợp lập nghiệp xa; cần tôn trọng luật lệ nơi mình đến.',
+      'Tật Ách': 'Dễ nóng trong người, căng thẳng khi bị dồn ép. Nên kiểm tra sức khỏe định kỳ và tránh làm việc quá sức.',
+      'Tài Bạch': 'Kiếm tiền bằng quyền hạn, kỹ thuật hoặc kinh doanh có tính cạnh tranh. Tiền vào ra mạnh; giữ minh bạch thì tránh được rắc rối.',
+      'Tử Tức': 'Con cái cá tính, mạnh mẽ, có chính kiến sớm. Nên dạy con biết kiềm chế cảm xúc và tôn trọng luật lệ.',
+      'Phu Thê': 'Tình cảm mãnh liệt nhưng dễ va chạm vì cả hai đều tự ái. Cần sự chung thủy và tôn trọng ranh giới của nhau để hôn nhân bền.',
+      'Huynh Đệ': 'Anh chị em mỗi người một cá tính, dễ bất đồng. Tránh hùn hạp làm ăn khi chưa thỏa thuận rõ ràng.',
+    },
+    'Thiên Phủ': {
+      'Mệnh': 'Điềm đạm, chín chắn, độ lượng và giỏi giữ của. Thích ổn định, làm việc chu toàn; nên tránh bảo thủ và quá an phận.',
+      'Phụ Mẫu': 'Cha mẹ khá giả hoặc chu đáo, gia đình có nền nếp. Được bề trên tin cậy và nâng đỡ.',
+      'Phúc Đức': 'Phúc phần dày, họ hàng có của ăn của để. Tinh thần ổn định, về già sung túc.',
+      'Điền Trạch': 'Rất hợp: nhà cửa vững, thường giữ được tài sản gia đình để lại hoặc tự tạo dựng được. Nhà đất là kho tích lũy lâu dài.',
+      'Quan Lộc': 'Hợp quản lý tài chính, hành chính, ngân hàng, kho vận, tổ chức lớn. Công danh ổn định, ít biến động.',
+      'Nô Bộc': 'Bạn bè đáng tin, có người khá giả, biết giữ lời. Được cấp dưới tôn trọng nhờ sự chu đáo.',
+      'Thiên Di': 'Ra ngoài được tin cậy, hợp làm ăn với tổ chức lớn. Đi xa thường thuận, có người lo liệu.',
+      'Tật Ách': 'Sức khỏe khá, gặp chuyện thường qua. Nên ăn uống điều độ, tránh dư thừa và ít vận động.',
+      'Tài Bạch': 'Giỏi tích lũy, chi tiêu có tính toán; tiền bạc ổn định, ít khi túng thiếu. Hợp để dành và đầu tư chắc chắn.',
+      'Tử Tức': 'Con cái hiền, có hiếu, biết lo. Gia đình đông vui, con cháu thuận hòa.',
+      'Phu Thê': 'Người phối ngẫu chu đáo, biết lo toan, có thể khá giả. Hôn nhân ổn định; nên tránh để một bên kiểm soát quá nhiều.',
+      'Huynh Đệ': 'Anh chị em thuận hòa, giúp đỡ nhau được. Trong nhà có người làm chỗ dựa chung.',
+    },
+    'Thái Âm': {
+      'Mệnh': 'Dịu dàng, tinh tế, giàu cảm xúc và có óc thẩm mỹ. Sáng thì có của để dành, được yêu mến; tối thì đa sầu, hay lo vu vơ.',
+      'Phụ Mẫu': 'Hình ảnh người mẹ nổi bật, mẹ ảnh hưởng nhiều tới tính cách. Sáng thì được mẹ chăm lo, tối thì sớm phải tự lập về tình cảm.',
+      'Phúc Đức': 'Phúc phần đến từ bên ngoại hoặc từ những người phụ nữ trong họ. Đời sống tinh thần sâu lắng, thích yên tĩnh.',
+      'Điền Trạch': 'Rất hợp: có duyên nhà đất, dễ tích lũy bất động sản. Nhà cửa đẹp, ngăn nắp, có chiều sâu.',
+      'Quan Lộc': 'Hợp công việc tinh tế: tài chính, bất động sản, nghệ thuật, thiết kế, chăm sóc. Thăng tiến âm thầm mà bền.',
+      'Nô Bộc': 'Bạn bè nhiều người tình cảm, kín đáo. Được giúp ngầm; nên giữ chừng mực khi chia sẻ chuyện riêng.',
+      'Thiên Di': 'Ra ngoài nhẹ nhàng, được cảm tình, hợp đi xa hoặc sống ở xa. Sáng thì thuận lợi, tối thì hay nhớ nhà, lo âu.',
+      'Tật Ách': 'Dễ bị cảm xúc chi phối, mệt mỏi, khó ngủ về đêm. Nên giữ ấm, nghỉ ngơi đủ và tìm cách giải tỏa tâm trạng.',
+      'Tài Bạch': 'Giỏi để dành, tiền tích lũy dần; hợp nhà đất và thu nhập đều đặn. Sáng thì giàu bền, tối thì tiền khó giữ.',
+      'Tử Tức': 'Con cái hiền, tình cảm, nhạy cảm. Con cần được lắng nghe nhiều hơn là dạy bảo.',
+      'Phu Thê': 'Người phối ngẫu dịu dàng, tinh tế, ưa nhìn. Tình cảm sâu nhưng dễ tủi thân; cần chia sẻ để tránh hiểu lầm.',
+      'Huynh Đệ': 'Anh chị em tình cảm, có người thân thiết như bạn. Giúp nhau âm thầm, chu đáo.',
+    },
+    'Tham Lang': {
+      'Mệnh': 'Đa tài, giao thiệp rộng, ham học hỏi và thích hưởng thụ. Sáng thì khéo léo, có duyên làm ăn; tối thì dễ sa đà, khó kiên trì.',
+      'Phụ Mẫu': 'Cha mẹ năng động, có tài riêng nhưng thường bận rộn. Quan hệ với bề trên tốt nhờ khéo léo; nên thêm sự chân thành.',
+      'Phúc Đức': 'Họ hàng đông, có người tài hoa. Tinh thần ham vui, thích khám phá; về sau hay tìm đến tôn giáo, tu dưỡng.',
+      'Điền Trạch': 'Nhà cửa có lúc thay đổi, mua bán; thích trang trí, hưởng thụ trong nhà. Có của nhưng dễ tiêu vào nhà cửa.',
+      'Quan Lộc': 'Hợp kinh doanh, ngoại giao, giải trí, ẩm thực, nghệ thuật, bán hàng. Thành công nhờ quan hệ; thường phát muộn.',
+      'Nô Bộc': 'Bạn bè đông, vui vẻ, nhiều mối quan hệ xã giao. Cẩn thận bạn bè rủ rê ăn chơi, hao tiền.',
+      'Thiên Di': 'Ra ngoài được lòng người, nhiều cơ hội giao lưu, làm ăn. Hợp đi xa; cần giữ mình trước cám dỗ.',
+      'Tật Ách': 'Dễ mệt vì sinh hoạt thất thường, ăn uống và thức khuya. Nên điều độ, hạn chế rượu bia và chất kích thích.',
+      'Tài Bạch': 'Kiếm tiền qua giao thiệp, buôn bán, tài nghệ; có lúc phát nhanh. Tiêu cũng nhanh, nên để dành khi đang lên.',
+      'Tử Tức': 'Con cái lanh lợi, có năng khiếu, hiếu động. Nên dạy con biết kiên trì và biết chọn bạn.',
+      'Phu Thê': 'Người phối ngẫu có duyên, cuốn hút, ưa giao thiệp. Tình cảm sôi nổi; cần chung thủy và tin tưởng để giữ gìn.',
+      'Huynh Đệ': 'Anh chị em đông, mỗi người một tài. Vui khi gặp nhau nhưng ít giúp được nhau chuyện lớn.',
+    },
+    'Cự Môn': {
+      'Mệnh': 'Sắc sảo, giỏi lý luận, hay hoài nghi và thích tìm hiểu đến cùng. Sáng thì sống được bằng lời nói, chuyên môn; tối thì dễ thị phi, khẩu thiệt.',
+      'Phụ Mẫu': 'Với cha mẹ, bề trên dễ bất đồng quan điểm. Thẳng thắn mà mềm mỏng thì hai bên hiểu nhau hơn.',
+      'Phúc Đức': 'Họ hàng ít đoàn kết hoặc có chuyện không vui. Tinh thần hay trăn trở; nên tìm niềm tin, sở thích giúp an lòng.',
+      'Điền Trạch': 'Nhà cửa dễ có tranh chấp, giấy tờ rắc rối hoặc láng giềng phiền. Làm thủ tục cẩn thận, giữ hòa khí với hàng xóm.',
+      'Quan Lộc': 'Hợp nghề dùng lời nói và phân tích: luật, dạy học, truyền thông, bán hàng, y, nghiên cứu. Thành công nhờ chuyên môn sâu.',
+      'Nô Bộc': 'Bạn bè dễ sinh hiểu lầm, nói qua nói lại. Nên ít bàn chuyện người khác và rõ ràng khi hứa hẹn.',
+      'Thiên Di': 'Ra ngoài dễ gặp tranh cãi, thị phi nhưng cũng nổi nhờ tài ăn nói. Đi xa lập nghiệp thường tốt hơn ở gần.',
+      'Tật Ách': 'Dễ mệt vì lo nghĩ, ăn uống thất thường. Nên giữ tinh thần thoải mái và ăn uống đúng bữa.',
+      'Tài Bạch': 'Kiếm tiền bằng lời nói, chuyên môn, tư vấn hoặc buôn bán cạnh tranh. Tiền đến sau nhiều cố gắng; cẩn thận tranh chấp tiền bạc.',
+      'Tử Tức': 'Con cái thông minh, hay hỏi, có chính kiến. Kiên nhẫn trò chuyện để con không sinh khoảng cách.',
+      'Phu Thê': 'Vợ chồng dễ cãi vã, bất đồng ý kiến. Biết lắng nghe và nói mềm thì gắn bó lâu; cưới muộn thường êm hơn.',
+      'Huynh Đệ': 'Anh chị em dễ hiểu lầm, ít hợp ý. Nên giữ hòa khí, tránh chuyện tiền bạc chung.',
+    },
+    'Thiên Tướng': {
+      'Mệnh': 'Đứng đắn, chu đáo, thích giúp người và coi trọng công bằng. Hợp làm người phụ tá, người tổ chức; dễ bị nhờ vả quá nhiều.',
+      'Phụ Mẫu': 'Cha mẹ hiền, có trách nhiệm, coi trọng lễ nghĩa. Được bề trên tin tưởng giao việc.',
+      'Phúc Đức': 'Họ hàng có nền nếp, phúc phần ổn định. Tinh thần an hòa, thích làm việc nghĩa.',
+      'Điền Trạch': 'Nhà cửa ổn, có thể được thừa hưởng hoặc có nhờ người giúp. Nhà gọn gàng, đúng mực.',
+      'Quan Lộc': 'Hợp hành chính, nhân sự, pháp lý, phục vụ cộng đồng và những việc cần sự tin cậy. Thăng tiến nhờ uy tín.',
+      'Nô Bộc': 'Bạn bè tốt, biết giúp nhau; cấp dưới trung thành. Nhiều người tìm đến nhờ cậy.',
+      'Thiên Di': 'Ra ngoài được tin, hay gặp người giúp. Hợp làm việc trong tổ chức, nơi cần sự đứng đắn.',
+      'Tật Ách': 'Sức khỏe khá ổn. Nên chăm sóc da, giữ vệ sinh và tránh làm quá sức vì việc của người khác.',
+      'Tài Bạch': 'Tiền bạc đủ đầy, đến đều từ công việc; hay chi cho người khác. Giữ được của nếu biết từ chối đúng lúc.',
+      'Tử Tức': 'Con cái ngoan, biết điều, có trách nhiệm, lớn lên hay đỡ đần cha mẹ. Gia đình nề nếp, ít phải lo về con.',
+      'Phu Thê': 'Người phối ngẫu đứng đắn, chu đáo, biết chăm lo. Hôn nhân ổn khi cả hai cùng gánh vác, không dồn việc cho một người.',
+      'Huynh Đệ': 'Anh chị em thuận hòa, biết giúp nhau. Mình thường là người được tin cậy trong nhà.',
+    },
+    'Thiên Lương': {
+      'Mệnh': 'Nhân hậu, chín chắn, thích che chở và chỉ bảo người khác. Gặp nạn hay có người giúp; nên tránh cố chấp và thích dạy đời.',
+      'Phụ Mẫu': 'Cha mẹ hiền, có nề nếp, thường sống thọ. Được bề trên che chở và học được nhiều từ người lớn.',
+      'Phúc Đức': 'Phúc phần dày, họ hàng có người tu hành hoặc hay làm việc thiện. Tinh thần an ổn, sống thọ.',
+      'Điền Trạch': 'Nhà cửa có gốc gác, có thể ở nhà cũ của gia đình. Tài sản giữ được lâu.',
+      'Quan Lộc': 'Hợp giáo dục, y dược, tư vấn, bảo hiểm, công tác xã hội, cơ quan nhà nước. Được tín nhiệm nhờ đạo đức.',
+      'Nô Bộc': 'Bạn bè hiền, có người lớn tuổi hơn giúp đỡ. Mình hay là người khuyên bảo bạn bè.',
+      'Thiên Di': 'Ra ngoài gặp quý nhân, được giúp khi khó khăn. Đi xa thuận lợi, người ngoài tin cậy vì sự đứng đắn.',
+      'Tật Ách': 'Gặp chuyện sức khỏe hay có người chữa, có cách giải. Vẫn nên khám định kỳ, không chủ quan.',
+      'Tài Bạch': 'Tiền bạc đủ dùng, đến từ uy tín và chuyên môn. Không hợp đầu cơ; giàu nhờ tích lũy.',
+      'Tử Tức': 'Con cái hiền, có hiếu, biết nghe lời. Có thể có con muộn nhưng con ngoan.',
+      'Phu Thê': 'Người phối ngẫu chín chắn, có thể lớn tuổi hơn hoặc tính già dặn. Hôn nhân vững, được chăm lo.',
+      'Huynh Đệ': 'Anh chị em thương nhau, có người làm chỗ dựa cho cả nhà. Hay giúp nhau lúc khó, ít khi tính toán.',
+    },
+    'Thất Sát': {
+      'Mệnh': 'Gan dạ, quyết đoán, dám làm và chịu được áp lực. Đời nhiều thay đổi, tự lập sớm; nên kiềm tính nóng và tránh liều lĩnh.',
+      'Phụ Mẫu': 'Cha mẹ nghiêm khắc hoặc gia đình có biến động. Với bề trên dễ va chạm; sớm phải tự lo.',
+      'Phúc Đức': 'Họ hàng có thăng trầm, phúc phần phải tự tạo. Tinh thần mạnh mẽ nhưng hay bất an; nên tìm sự bình tĩnh.',
+      'Điền Trạch': 'Nhà cửa có biến động, hay thay đổi chỗ ở. Tự tay tạo dựng nhà cửa sau nhiều vất vả.',
+      'Quan Lộc': 'Hợp quân đội, công an, kỹ thuật, kinh doanh nhiều rủi ro, khởi nghiệp. Thành bại lớn; cần kế hoạch chắc chắn.',
+      'Nô Bộc': 'Bạn bè mạnh mẽ, có người tài nhưng khó bảo. Tránh xung đột với cấp dưới, đồng nghiệp.',
+      'Thiên Di': 'Ra ngoài nhiều cạnh tranh, phải tự tranh đấu. Hợp đi xa lập nghiệp; cẩn thận khi đi lại.',
+      'Tật Ách': 'Dễ va chạm, chấn thương khi làm việc nặng hoặc đi đường. Nên cẩn thận và không làm quá sức.',
+      'Tài Bạch': 'Kiếm tiền bằng sức lực và sự dám làm; tiền lên xuống mạnh. Có lúc phát lớn, nên để dành phòng khi khó.',
+      'Tử Tức': 'Con cái mạnh mẽ, cá tính, sớm độc lập. Nên dạy con biết kiềm chế và giữ an toàn.',
+      'Phu Thê': 'Vợ chồng đều cá tính, dễ va chạm. Hôn nhân bền khi biết nhường nhịn; cưới muộn thường êm hơn.',
+      'Huynh Đệ': 'Anh chị em ít, mỗi người một ngả, dễ bất hòa. Nên tự lập, không trông cậy nhiều.',
+    },
+    'Phá Quân': {
+      'Mệnh': 'Thẳng thắn, thích đổi mới, phá cũ làm mới và không chịu gò bó. Đời nhiều thay đổi; sáng thì khai phá được, tối thì hao tán, bốc đồng.',
+      'Phụ Mẫu': 'Gia đình có thay đổi, cha mẹ và con dễ khác quan điểm. Thường sớm rời nhà hoặc tự lập.',
+      'Phúc Đức': 'Họ hàng có biến động, ly tán. Tinh thần hay thay đổi, ít yên; nên tìm việc giúp tâm an.',
+      'Điền Trạch': 'Nhà cửa thay đổi nhiều, hay sửa sang, dời chỗ. Tài sản cũ khó giữ, tài sản mới phải tự tạo.',
+      'Quan Lộc': 'Hợp công việc đổi mới, kỹ thuật, khởi nghiệp, sửa chữa, cải tổ. Hay đổi nghề; thành công khi tìm đúng hướng.',
+      'Nô Bộc': 'Bạn bè hay thay đổi, khó giữ lâu; có người đến lúc vui, đi lúc khó. Cẩn thận khi hợp tác hoặc cho vay.',
+      'Thiên Di': 'Ra ngoài nhiều biến động, hay đi lại. Hợp đi xa lập nghiệp, dám thử môi trường mới.',
+      'Tật Ách': 'Dễ hao sức, sinh hoạt thất thường. Nên giữ nề nếp sinh hoạt và cẩn thận khi đi lại.',
+      'Tài Bạch': 'Tiền vào ra mạnh, dễ hao vì chi tiêu hoặc đầu tư liều. Cần kế hoạch tài chính chặt chẽ.',
+      'Tử Tức': 'Con cái cá tính, hiếu động, lúc nhỏ có thể khó bảo. Cần kiên nhẫn và định hướng sớm.',
+      'Phu Thê': 'Hôn nhân dễ có sóng gió, thay đổi. Cần kiên nhẫn và tôn trọng sự tự do của nhau; cưới muộn thường êm hơn.',
+      'Huynh Đệ': 'Anh chị em mỗi người một ngả, ít khi ở gần nhau. Giữ liên lạc thường xuyên thì tình cảm vẫn bền.',
+    },
+  };
+
+  // Nguồn của từng ô (mặc định: tự biên soạn). Khóa 'Sao|Cung'.
+  const NGUON = {};
+  const nguon = (sao, cung) => NGUON[sao + '|' + cung] || 'tự biên soạn';
+  const cungOf = (sao, cung) => (CHINH_CUNG[sao] && CHINH_CUNG[sao][cung]) || null;
+
+  return { CUNG, CHINH_CUNG, NGUON, nguon, cungOf };
+})();
+
+
 // Luận giải AI khi chạy ngoài Claude: gọi proxy (worker/ai-proxy.js) và đọc luồng sự kiện của Claude API.
 // Trả về hàm cùng dạng với claude.use('sample'): (input, {signal, onText}) => Promise<{text, truncated}>.
 const TuViAI = (() => {
@@ -1571,7 +1790,7 @@ const TuViAI = (() => {
 
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -1843,12 +2062,29 @@ const TuViAI = (() => {
   }
 
   // ---------- Bảng chi tiết cung ----------
-  function starLine(s) {
+  // Câu theo thế sáng / hãm của chính tinh
+  function brightLine(s) {
     const inf = C.CHINH[s.name];
     if (!inf) return '';
     const sang = s.bright && ['M', 'V', 'Đ'].includes(s.bright);
-    const tail = sang ? `Ở thế ${C.BRIGHT_TEN[s.bright]}: ${inf[1]}.` : s.bright === 'H' ? `Ở thế hãm: ${inf[2]}.` : 'Ở thế bình hòa: tốt xấu tùy sao đi kèm.';
-    return `${inf[0]} ${tail}`;
+    return sang ? `Ở thế ${C.BRIGHT_TEN[s.bright]}: ${inf[1]}.` : s.bright === 'H' ? `Ở thế hãm: ${inf[2]}.` : 'Ở thế bình hòa: tốt xấu tùy sao đi kèm.';
+  }
+  // Nghĩa chính tinh: có cung thì lấy nghĩa theo cung (kho nghĩa sao), không thì lấy tính chất chung
+  function starLine(s, cung) {
+    const inf = C.CHINH[s.name];
+    if (!inf) return '';
+    return `${(cung && N.cungOf(s.name, cung)) || inf[0]} ${brightLine(s)}`;
+  }
+  // Thẻ chính tinh trong bảng chi tiết cung; muon = cung xung chiếu khi cung đang xem vô chính diệu
+  function majorCard(s, cung, muon) {
+    const inf = C.CHINH[s.name];
+    const o = N.cungOf(s.name, cung);
+    return `<div class="major">
+      <h3><span class="${HANH_CLASS[s.hanh] || ''}">${s.amDuong ? SIGN(s.amDuong) + ' ' : ''}${s.name}<small class="o-cung"> ở ${cung}${muon ? ` (mượn từ ${muon})` : ''}</small></span><span class="badge ${['M', 'V', 'Đ'].includes(s.bright) ? 'good' : s.bright === 'H' ? 'bad' : ''}">${s.bright ? BRIGHT_WORD[s.bright] : 'Không xét'}${s.hoa ? ', ' + s.hoa : ''}</span></h3>
+      <p>${o || inf[0]}</p>
+      <p class="bright-line">${brightLine(s)}</p>
+      ${o ? `<p class="gen">Tính chất chung: ${inf[0]}</p>` : ''}
+    </div>`;
   }
   function starMeaning(name) {
     const base = name.replace(/^(L|ĐV)\./, '');
@@ -1885,10 +2121,9 @@ const TuViAI = (() => {
         </div>
       </div>
       <p class="ins-desc">${C.CUNG_Y[p.cung]}</p>
-      <div class="majors">${chinh.length ? chinh.map((s) => `<div class="major">
-          <h3><span class="${HANH_CLASS[s.hanh] || ''}">${s.amDuong ? SIGN(s.amDuong) + ' ' : ''}${s.name}</span><span class="badge ${['M', 'V', 'Đ'].includes(s.bright) ? 'good' : s.bright === 'H' ? 'bad' : ''}">${s.bright ? BRIGHT_WORD[s.bright] : 'Không xét'}${s.hoa ? ', ' + s.hoa : ''}</span></h3>
-          <p>${starLine(s)}</p></div>`).join('')
-        : `<div class="major"><h3>Vô chính diệu ${info('vcd')}</h3><p>Cung không có chính tinh, theo lệ mượn chính tinh cung xung chiếu ${opp.cung}: ${opp.stars.filter((s) => s.kind === 'chinh').map((s) => s.name).join(', ') || 'cũng vô chính diệu'}.</p></div>`}</div>
+      <div class="majors">${chinh.length ? chinh.map((s) => majorCard(s, p.cung)).join('')
+        : `<div class="major"><h3>Vô chính diệu ${info('vcd')}</h3><p>Cung không có chính tinh, theo lệ mượn chính tinh cung xung chiếu ${opp.cung}: ${opp.stars.filter((s) => s.kind === 'chinh').map((s) => s.name).join(', ') || 'cũng vô chính diệu'}. Nghĩa mượn nhẹ hơn sao đóng thẳng trong cung.</p></div>`
+          + opp.stars.filter((s) => s.kind === 'chinh').map((s) => majorCard(s, p.cung, opp.cung)).join('')}</div>
       ${p.tuan || p.triet ? `<p class="ins-desc">Cung gặp ${[p.tuan ? 'Tuần' : '', p.triet ? 'Triệt' : ''].filter(Boolean).join(' và ')}: sao tốt giảm lực, sao xấu cũng bớt hại.</p>` : ''}
       <p class="tap-hint">Bấm vào một sao để xem nghĩa</p>
       <div class="group"><h4>Cát tinh ${info('catTinh')}</h4><div class="chips">${chips('cat') || '<span class="muted">Không có</span>'}</div></div>
@@ -1992,7 +2227,7 @@ const TuViAI = (() => {
         <p>Mệnh đóng ở ${menh.chiTen}, Thân cư ${tb.thanCu} (${than.chiTen}): từ khoảng 30 tuổi trở đi, đời sống xoay quanh ${C.THAN_CU[tb.thanCu] || 'cung này'}.</p>
       </section>
       <section><h3>Cung Mệnh</h3>${borrow}
-        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s)}</li>`).join('')}</ul>
+        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s, 'Mệnh')}</li>`).join('')}</ul>
         ${catIn(menh).length ? `<p>Cát tinh tại Mệnh: ${catIn(menh).join(', ')}.</p>` : ''}
         ${hungIn(menh).length ? `<p>Sát tinh tại Mệnh: ${hungIn(menh).join(', ')}. Nên giữ bình tĩnh, tránh quyết định vội.</p>` : ''}
         ${tt(menh) ? `<p>Mệnh gặp ${tt(menh)}: thời trẻ thường chậm hoặc trắc trở, càng về sau càng nhẹ.</p>` : ''}

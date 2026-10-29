@@ -184,6 +184,9 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .badge { font: 600 11.5px var(--f-ui); padding: 2px 8px; border-radius: 6px; background: var(--tint); color: var(--ink); white-space: nowrap; }
 .badge.good { color: var(--moc); } .badge.bad { color: var(--hoa); }
 .major p { margin: 6px 0 0; font-size: 13.5px; }
+.major .o-cung { font: 500 12.5px var(--f-ui); color: var(--muted); }
+.major .bright-line { margin-top: 4px; }
+.major .gen { margin-top: 4px; font-size: 12.5px; color: var(--muted); }
 .group h4 { font: 600 13px var(--f-ui); color: var(--muted); margin-bottom: 6px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font-size: 12.5px; padding: 4px 9px 4px 10px; border-radius: 999px; border: 1px solid var(--gold-soft); background: var(--tint); cursor: pointer; display: inline-flex; align-items: center; transition: border-color 0.12s, background-color 0.12s; }

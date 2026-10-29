@@ -9,6 +9,7 @@ globalThis.LunarVN = L;
 const E = require('../src/engine.js');
 const AI = require('../src/ai.js');
 const K = require('../src/cachcuc.js');
+const N = require('../src/nghiasao.js');
 const cal = L.makeCalendar(7);
 
 test('Tết âm lịch Việt Nam, kể cả những năm lệch với lịch Trung Quốc', () => {
@@ -176,4 +177,20 @@ test('Đổi năm xem: lá số gốc giữ nguyên, sao lưu đại hạn đổ
     const cungNam = E.compute({ ...base, namXem: y - (tb.tuoi - r.palaces[tb.daiHanCung].daiHan) });
     assert.deepEqual(r.palaces.map((p) => p.daiVan), cungNam.palaces.map((p) => p.daiVan));
   }
+});
+
+test('Kho nghĩa sao: đủ 14 chính tinh × 12 cung, độ dài hợp lý, không phán tuyệt đối', () => {
+  assert.deepEqual(N.CUNG, E.CUNG);
+  assert.deepEqual(Object.keys(N.CHINH_CUNG).sort(), [...E.CHINH_TINH].sort());
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  for (const sao of E.CHINH_TINH) {
+    assert.deepEqual(Object.keys(N.CHINH_CUNG[sao]), E.CUNG, `${sao}: thiếu cung hoặc sai thứ tự`);
+    for (const cung of E.CUNG) {
+      const t = N.CHINH_CUNG[sao][cung];
+      assert.ok(t.length >= 60 && t.length <= 400, `${sao} ở ${cung}: dài ${t.length} ký tự`);
+      assert.ok(!CAM.test(t), `${sao} ở ${cung}: có từ phán tuyệt đối`);
+    }
+  }
+  // Nguồn chỉ ghi cho ô có thật
+  Object.keys(N.NGUON).forEach((k) => { const [s, c] = k.split('|'); assert.ok(N.cungOf(s, c), `NGUON có khóa lạ: ${k}`); });
 });
