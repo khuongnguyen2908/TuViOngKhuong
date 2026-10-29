@@ -12,7 +12,7 @@ Trên web, sau câu theo cung còn có một câu theo thế sáng / hãm (ghi n
 
 Tính chất chung: Đế tinh, chủ về uy quyền, lòng tự trọng và khả năng lãnh đạo.
 
-Khi sáng (miếu, vượng, đắc): đứng đắn, có tầm nhìn, dễ được người nâng đỡ. Khi hãm: dễ tự cao, thích được tôn trọng nhưng thiếu người giúp thật lòng.
+Khi sáng (miếu, vượng, đắc): đứng đắn, có tầm nhìn, dễ được người nâng đỡ. Khi hãm: tự cao, độc đoán, thích được tâng bốc; người quanh mình nể ngoài mặt nhưng ít ai giúp thật lòng, làm việc lớn dễ hụt hơi.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -33,7 +33,7 @@ Khi sáng (miếu, vượng, đắc): đứng đắn, có tầm nhìn, dễ đư
 
 Tính chất chung: Mưu tinh, chủ về trí tuệ, tính toán và sự linh hoạt.
 
-Khi sáng (miếu, vượng, đắc): nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch. Khi hãm: hay lo nghĩ, dễ thay đổi, tính toán quá mức.
+Khi sáng (miếu, vượng, đắc): nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch. Khi hãm: lo nghĩ quá mức, thay đổi liên tục, tính nhiều làm ít; mưu tính quá sâu dễ làm mất lòng người.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -54,7 +54,7 @@ Khi sáng (miếu, vượng, đắc): nhanh nhạy, khéo xoay xở, giỏi lậ
 
 Tính chất chung: Quý tinh, chủ về danh tiếng, sự rộng rãi và hình ảnh người cha.
 
-Khi sáng (miếu, vượng, đắc): thẳng thắn, hào phóng, có tiếng tăm. Khi hãm: vất vả vì người khác, danh lớn hơn lợi, dễ hao tâm sức.
+Khi sáng (miếu, vượng, đắc): thẳng thắn, hào phóng, có tiếng tăm. Khi hãm: vất vả vì người khác mà ít được đền đáp, danh lớn hơn lợi, tiền làm ra khó giữ; thường thiếu sự nâng đỡ của cha hoặc bề trên.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ Khi sáng (miếu, vượng, đắc): thẳng thắn, hào phóng, có tiếng t
 
 Tính chất chung: Tài tinh, chủ về tiền bạc, ý chí và tính quyết đoán.
 
-Khi sáng (miếu, vượng, đắc): kiên định, giỏi quản lý tài chính. Khi hãm: cứng nhắc, cô đơn, tiền bạc lên xuống.
+Khi sáng (miếu, vượng, đắc): kiên định, giỏi quản lý tài chính. Khi hãm: cứng nhắc, khô khan, cô độc; tiền bạc lên xuống thất thường, dễ thất bại vì quyết định liều.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ Khi sáng (miếu, vượng, đắc): kiên định, giỏi quản lý tài chí
 
 Tính chất chung: Phúc tinh, chủ về sự hiền hòa, hưởng thụ và khả năng hóa giải.
 
-Khi sáng (miếu, vượng, đắc): ôn hòa, dễ gần, được hưởng phúc. Khi hãm: thiếu quyết tâm, ham vui, dễ trì hoãn.
+Khi sáng (miếu, vượng, đắc): ôn hòa, dễ gần, được hưởng phúc. Khi hãm: thiếu ý chí, ham vui, hay trì hoãn; gặp khó dễ bỏ cuộc, đời trôi theo hoàn cảnh hơn là tự làm chủ.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -117,7 +117,7 @@ Khi sáng (miếu, vượng, đắc): ôn hòa, dễ gần, được hưởng ph
 
 Tính chất chung: Tù tinh, chủ về nguyên tắc, kỷ luật và ham muốn.
 
-Khi sáng (miếu, vượng, đắc): chính trực, có nguyên tắc, làm việc nghiêm túc. Khi hãm: nóng nảy, dễ vướng thị phi hoặc kiện tụng.
+Khi sáng (miếu, vượng, đắc): chính trực, có nguyên tắc, làm việc nghiêm túc. Khi hãm: nóng nảy, cố chấp, ham muốn quá đà; dễ vướng thị phi, kiện tụng hoặc rắc rối tình cảm.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ Khi sáng (miếu, vượng, đắc): chính trực, có nguyên tắc, làm vi�
 
 Tính chất chung: Tài khố tinh, chủ về sự ổn định, tích lũy và độ lượng.
 
-Khi sáng (miếu, vượng, đắc): chắc chắn, biết giữ của, có uy tín. Khi hãm: thận trọng quá mức, bảo thủ.
+Khi sáng (miếu, vượng, đắc): chắc chắn, biết giữ của, có uy tín. Khi hãm: bảo thủ, chặt chẽ quá thành keo kiệt, ngại thay đổi; giữ của mà không làm của sinh sôi, để lỡ cơ hội vì quá thận trọng.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -159,7 +159,7 @@ Khi sáng (miếu, vượng, đắc): chắc chắn, biết giữ của, có uy 
 
 Tính chất chung: Phú tinh, chủ về điền sản, sự dịu dàng và hình ảnh người mẹ.
 
-Khi sáng (miếu, vượng, đắc): tinh tế, có của để dành, giàu cảm xúc. Khi hãm: đa sầu, nhạy cảm, tài sản khó bền.
+Khi sáng (miếu, vượng, đắc): tinh tế, có của để dành, giàu cảm xúc. Khi hãm: đa sầu, nhạy cảm quá mức, hay tủi thân; tài sản khó bền, tình cảm nhiều nỗi buồn.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -180,7 +180,7 @@ Khi sáng (miếu, vượng, đắc): tinh tế, có của để dành, giàu c�
 
 Tính chất chung: Đào hoa tinh, chủ về ham muốn, giao tiếp và tài nghệ.
 
-Khi sáng (miếu, vượng, đắc): đa tài, giao thiệp rộng, có duyên. Khi hãm: ham vui, dễ sa đà, thiếu kiên trì.
+Khi sáng (miếu, vượng, đắc): đa tài, giao thiệp rộng, có duyên. Khi hãm: ham vui, dễ sa vào rượu chè, cờ bạc hoặc tình ái, thiếu kiên trì; hao tiền và mang tiếng vì quan hệ phức tạp.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -201,7 +201,7 @@ Khi sáng (miếu, vượng, đắc): đa tài, giao thiệp rộng, có duyên.
 
 Tính chất chung: Ám tinh, chủ về ăn nói, tranh luận và sự nghi ngờ.
 
-Khi sáng (miếu, vượng, đắc): giỏi lý luận, hợp nghề nói và phân tích. Khi hãm: dễ thị phi, khẩu thiệt, hay nghi ngại.
+Khi sáng (miếu, vượng, đắc): giỏi lý luận, hợp nghề nói và phân tích. Khi hãm: nói nhiều thành thị phi, hay nghi ngờ người khác; dễ kiện tụng, khẩu thiệt, quan hệ đổ vỡ vì lời nói.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -222,7 +222,7 @@ Khi sáng (miếu, vượng, đắc): giỏi lý luận, hợp nghề nói và p
 
 Tính chất chung: Ấn tinh, chủ về sự công bằng, phục vụ và giúp người.
 
-Khi sáng (miếu, vượng, đắc): đáng tin, chu đáo, có khiếu tổ chức. Khi hãm: dễ bị lợi dụng, gánh việc cho người khác.
+Khi sáng (miếu, vượng, đắc): đáng tin, chu đáo, có khiếu tổ chức. Khi hãm: dễ bị lợi dụng, gánh việc và gánh nợ cho người khác; thiếu chính kiến, hay chịu thiệt.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -243,7 +243,7 @@ Khi sáng (miếu, vượng, đắc): đáng tin, chu đáo, có khiếu tổ ch
 
 Tính chất chung: Ấm tinh, chủ về sự che chở, đạo đức và tuổi thọ.
 
-Khi sáng (miếu, vượng, đắc): nhân hậu, thích giúp người, gặp nạn có cứu. Khi hãm: cố chấp, thích dạy đời, hay lo chuyện người khác.
+Khi sáng (miếu, vượng, đắc): nhân hậu, thích giúp người, gặp nạn có cứu. Khi hãm: cố chấp, thích dạy đời, hay xen vào chuyện người khác; dễ bị cho là khó gần, nói hay hơn làm.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -264,7 +264,7 @@ Khi sáng (miếu, vượng, đắc): nhân hậu, thích giúp người, gặp 
 
 Tính chất chung: Tướng tinh, chủ về sự dũng mãnh, thay đổi và mạo hiểm.
 
-Khi sáng (miếu, vượng, đắc): gan dạ, dám làm, tạo dựng từ hai bàn tay. Khi hãm: nóng vội, dễ gặp biến động lớn.
+Khi sáng (miếu, vượng, đắc): gan dạ, dám làm, tạo dựng từ hai bàn tay. Khi hãm: nóng vội, liều lĩnh, cô độc; đời biến động lớn, dễ thất bại nặng hoặc gặp tai nạn vì quyết định vội.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |
@@ -285,7 +285,7 @@ Khi sáng (miếu, vượng, đắc): gan dạ, dám làm, tạo dựng từ hai
 
 Tính chất chung: Hao tinh, chủ về phá cũ lập mới và tiêu hao.
 
-Khi sáng (miếu, vượng, đắc): dám đổi mới, có sức bật, hợp khai phá. Khi hãm: bốc đồng, hao tán, quan hệ dễ đổ vỡ.
+Khi sáng (miếu, vượng, đắc): dám đổi mới, có sức bật, hợp khai phá. Khi hãm: bốc đồng, phá nhiều hơn xây, hao tán tiền bạc; công việc, quan hệ, hôn nhân dễ đổ vỡ.
 
 | Cung | Nghĩa | Nguồn |
 | --- | --- | --- |

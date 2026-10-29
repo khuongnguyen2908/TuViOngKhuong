@@ -476,7 +476,7 @@ footer a { color: inherit; }
     <div class="fc-foot">
       <p class="err" id="form-error" role="alert" hidden></p>
       <button type="submit" class="btn btn-primary">An lá số</button>
-      <p class="privacy">Luận giải mang tính tham khảo, không thay cho tư vấn chuyên môn.</p>
+      <p class="privacy">Tử Vi là một cách diễn giải truyền thống, chưa được khoa học chứng minh. Hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. <button type="button" class="info" data-info="docDung" aria-label="Giải thích: Đọc lá số thế nào cho đúng" aria-expanded="false">i</button></p>
     </div>
   </form>
 </main>
@@ -542,7 +542,7 @@ footer a { color: inherit; }
 
   <footer>
     <span>Âm lịch tính thiên văn theo công thức của Jean Meeus, giờ Hà Nội (UTC+7). Quy tắc an sao phái Việt; bảng độ sáng và ngũ hành sao tham khảo <a href="https://github.com/doanguyen/lasotuvi" target="_blank" rel="noopener">lasotuvi</a> (MIT, © 2016 doanguyen).</span>
-    <span>Luận giải mang tính tham khảo, không thay cho tư vấn chuyên môn.</span>
+    <span>Tử Vi là một cách diễn giải truyền thống. Chưa có nghiên cứu khoa học nào cho thấy lá số dự đoán được tính cách hay vận mệnh. Luận giải trên trang chỉ để tham khảo, không thay cho tư vấn chuyên môn.</span>
   </footer>
 </main>
 </div>
@@ -1187,20 +1187,20 @@ const TuViContent = (() => {
 
   // [tính chất chung, khi sáng (miếu/vượng/đắc), khi hãm]
   const CHINH = {
-    'Tử Vi': ['Đế tinh, chủ về uy quyền, lòng tự trọng và khả năng lãnh đạo.', 'đứng đắn, có tầm nhìn, dễ được người nâng đỡ', 'dễ tự cao, thích được tôn trọng nhưng thiếu người giúp thật lòng'],
-    'Thiên Cơ': ['Mưu tinh, chủ về trí tuệ, tính toán và sự linh hoạt.', 'nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch', 'hay lo nghĩ, dễ thay đổi, tính toán quá mức'],
-    'Thái Dương': ['Quý tinh, chủ về danh tiếng, sự rộng rãi và hình ảnh người cha.', 'thẳng thắn, hào phóng, có tiếng tăm', 'vất vả vì người khác, danh lớn hơn lợi, dễ hao tâm sức'],
-    'Vũ Khúc': ['Tài tinh, chủ về tiền bạc, ý chí và tính quyết đoán.', 'kiên định, giỏi quản lý tài chính', 'cứng nhắc, cô đơn, tiền bạc lên xuống'],
-    'Thiên Đồng': ['Phúc tinh, chủ về sự hiền hòa, hưởng thụ và khả năng hóa giải.', 'ôn hòa, dễ gần, được hưởng phúc', 'thiếu quyết tâm, ham vui, dễ trì hoãn'],
-    'Liêm Trinh': ['Tù tinh, chủ về nguyên tắc, kỷ luật và ham muốn.', 'chính trực, có nguyên tắc, làm việc nghiêm túc', 'nóng nảy, dễ vướng thị phi hoặc kiện tụng'],
-    'Thiên Phủ': ['Tài khố tinh, chủ về sự ổn định, tích lũy và độ lượng.', 'chắc chắn, biết giữ của, có uy tín', 'thận trọng quá mức, bảo thủ'],
-    'Thái Âm': ['Phú tinh, chủ về điền sản, sự dịu dàng và hình ảnh người mẹ.', 'tinh tế, có của để dành, giàu cảm xúc', 'đa sầu, nhạy cảm, tài sản khó bền'],
-    'Tham Lang': ['Đào hoa tinh, chủ về ham muốn, giao tiếp và tài nghệ.', 'đa tài, giao thiệp rộng, có duyên', 'ham vui, dễ sa đà, thiếu kiên trì'],
-    'Cự Môn': ['Ám tinh, chủ về ăn nói, tranh luận và sự nghi ngờ.', 'giỏi lý luận, hợp nghề nói và phân tích', 'dễ thị phi, khẩu thiệt, hay nghi ngại'],
-    'Thiên Tướng': ['Ấn tinh, chủ về sự công bằng, phục vụ và giúp người.', 'đáng tin, chu đáo, có khiếu tổ chức', 'dễ bị lợi dụng, gánh việc cho người khác'],
-    'Thiên Lương': ['Ấm tinh, chủ về sự che chở, đạo đức và tuổi thọ.', 'nhân hậu, thích giúp người, gặp nạn có cứu', 'cố chấp, thích dạy đời, hay lo chuyện người khác'],
-    'Thất Sát': ['Tướng tinh, chủ về sự dũng mãnh, thay đổi và mạo hiểm.', 'gan dạ, dám làm, tạo dựng từ hai bàn tay', 'nóng vội, dễ gặp biến động lớn'],
-    'Phá Quân': ['Hao tinh, chủ về phá cũ lập mới và tiêu hao.', 'dám đổi mới, có sức bật, hợp khai phá', 'bốc đồng, hao tán, quan hệ dễ đổ vỡ'],
+    'Tử Vi': ['Đế tinh, chủ về uy quyền, lòng tự trọng và khả năng lãnh đạo.', 'đứng đắn, có tầm nhìn, dễ được người nâng đỡ', 'tự cao, độc đoán, thích được tâng bốc; người quanh mình nể ngoài mặt nhưng ít ai giúp thật lòng, làm việc lớn dễ hụt hơi'],
+    'Thiên Cơ': ['Mưu tinh, chủ về trí tuệ, tính toán và sự linh hoạt.', 'nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch', 'lo nghĩ quá mức, thay đổi liên tục, tính nhiều làm ít; mưu tính quá sâu dễ làm mất lòng người'],
+    'Thái Dương': ['Quý tinh, chủ về danh tiếng, sự rộng rãi và hình ảnh người cha.', 'thẳng thắn, hào phóng, có tiếng tăm', 'vất vả vì người khác mà ít được đền đáp, danh lớn hơn lợi, tiền làm ra khó giữ; thường thiếu sự nâng đỡ của cha hoặc bề trên'],
+    'Vũ Khúc': ['Tài tinh, chủ về tiền bạc, ý chí và tính quyết đoán.', 'kiên định, giỏi quản lý tài chính', 'cứng nhắc, khô khan, cô độc; tiền bạc lên xuống thất thường, dễ thất bại vì quyết định liều'],
+    'Thiên Đồng': ['Phúc tinh, chủ về sự hiền hòa, hưởng thụ và khả năng hóa giải.', 'ôn hòa, dễ gần, được hưởng phúc', 'thiếu ý chí, ham vui, hay trì hoãn; gặp khó dễ bỏ cuộc, đời trôi theo hoàn cảnh hơn là tự làm chủ'],
+    'Liêm Trinh': ['Tù tinh, chủ về nguyên tắc, kỷ luật và ham muốn.', 'chính trực, có nguyên tắc, làm việc nghiêm túc', 'nóng nảy, cố chấp, ham muốn quá đà; dễ vướng thị phi, kiện tụng hoặc rắc rối tình cảm'],
+    'Thiên Phủ': ['Tài khố tinh, chủ về sự ổn định, tích lũy và độ lượng.', 'chắc chắn, biết giữ của, có uy tín', 'bảo thủ, chặt chẽ quá thành keo kiệt, ngại thay đổi; giữ của mà không làm của sinh sôi, để lỡ cơ hội vì quá thận trọng'],
+    'Thái Âm': ['Phú tinh, chủ về điền sản, sự dịu dàng và hình ảnh người mẹ.', 'tinh tế, có của để dành, giàu cảm xúc', 'đa sầu, nhạy cảm quá mức, hay tủi thân; tài sản khó bền, tình cảm nhiều nỗi buồn'],
+    'Tham Lang': ['Đào hoa tinh, chủ về ham muốn, giao tiếp và tài nghệ.', 'đa tài, giao thiệp rộng, có duyên', 'ham vui, dễ sa vào rượu chè, cờ bạc hoặc tình ái, thiếu kiên trì; hao tiền và mang tiếng vì quan hệ phức tạp'],
+    'Cự Môn': ['Ám tinh, chủ về ăn nói, tranh luận và sự nghi ngờ.', 'giỏi lý luận, hợp nghề nói và phân tích', 'nói nhiều thành thị phi, hay nghi ngờ người khác; dễ kiện tụng, khẩu thiệt, quan hệ đổ vỡ vì lời nói'],
+    'Thiên Tướng': ['Ấn tinh, chủ về sự công bằng, phục vụ và giúp người.', 'đáng tin, chu đáo, có khiếu tổ chức', 'dễ bị lợi dụng, gánh việc và gánh nợ cho người khác; thiếu chính kiến, hay chịu thiệt'],
+    'Thiên Lương': ['Ấm tinh, chủ về sự che chở, đạo đức và tuổi thọ.', 'nhân hậu, thích giúp người, gặp nạn có cứu', 'cố chấp, thích dạy đời, hay xen vào chuyện người khác; dễ bị cho là khó gần, nói hay hơn làm'],
+    'Thất Sát': ['Tướng tinh, chủ về sự dũng mãnh, thay đổi và mạo hiểm.', 'gan dạ, dám làm, tạo dựng từ hai bàn tay', 'nóng vội, liều lĩnh, cô độc; đời biến động lớn, dễ thất bại nặng hoặc gặp tai nạn vì quyết định vội'],
+    'Phá Quân': ['Hao tinh, chủ về phá cũ lập mới và tiêu hao.', 'dám đổi mới, có sức bật, hợp khai phá', 'bốc đồng, phá nhiều hơn xây, hao tán tiền bạc; công việc, quan hệ, hôn nhân dễ đổ vỡ'],
   };
 
   const PHU = {
@@ -1254,6 +1254,7 @@ const TuViContent = (() => {
   const THAN_CU = { 'Mệnh': 'chính bản thân, tự lập', 'Phúc Đức': 'phúc phần và đời sống tinh thần', 'Quan Lộc': 'công danh, sự nghiệp', 'Thiên Di': 'việc ra ngoài, đi xa', 'Tài Bạch': 'chuyện tiền bạc', 'Phu Thê': 'gia đình, vợ chồng' };
   // Giải thích ngắn cho nút (i)
   const INFO = {
+    docDung: ['Đọc lá số thế nào cho đúng', 'Lá số được tính chính xác theo quy tắc an sao, nhưng phần luận giải là diễn giải truyền thống, chưa có nghiên cứu khoa học nào cho thấy nó dự đoán được tính cách hay vận mệnh. Nhiều câu như "hay lo nghĩ", "thích được tôn trọng" đúng với hầu hết mọi người, nên ai đọc cũng dễ thấy "trúng" (gọi là hiệu ứng Barnum). Hãy đọc cả điểm tốt lẫn điểm xấu như gợi ý để tự soi xét, đừng dùng để quyết định hôn nhân, tiền bạc, sức khỏe hay việc lớn.'],
     luuNien: ['Sao lưu niên', 'Các sao có chữ L. đứng trước là sao của riêng năm đang xem, an theo can chi của năm đó. Dùng để xem vận trong năm, không thay đổi lá số gốc.'],
     daiVan: ['Sao lưu đại hạn', 'Các sao có chữ ĐV. đứng trước là sao của riêng đại hạn (10 năm) đang chạy: Tứ hóa, Lộc Tồn, Kình Dương, Đà La an theo can của cung đại hạn; Thiên Mã theo chi của cung đó. Các trường phái còn khác nhau về bộ sao này (có nơi thêm Khôi, Việt, Xương, Khúc; có nơi chỉ dùng Tứ hóa).'],
     tamPhuong: ['Đường tam phương', 'Nối cung đang chọn với hai cung tam hợp (cách 4 cung, đường liền) và cung xung chiếu (đối diện, đường đứt). Bốn cung này cùng chi phối cung đang xem.'],
@@ -1293,7 +1294,8 @@ const TuViCachCuc = (() => {
   const CHI = { 'Tý': 0, 'Sửu': 1, 'Dần': 2, 'Mão': 3, 'Thìn': 4, 'Tỵ': 5, 'Ngọ': 6, 'Mùi': 7, 'Thân': 8, 'Dậu': 9, 'Tuất': 10, 'Hợi': 11 };
   const TU_SAT = ['Kình Dương', 'Đà La', 'Hỏa Tinh', 'Linh Tinh'];
   const KHONG_KIEP = ['Địa Không', 'Địa Kiếp'];
-  const PHA = [...TU_SAT, ...KHONG_KIEP, 'Hóa Kỵ'];
+  const LUC_SAT = [...TU_SAT, ...KHONG_KIEP];
+  const PHA = [...LUC_SAT, 'Hóa Kỵ'];
   const BA_HOA = ['Hóa Lộc', 'Hóa Quyền', 'Hóa Khoa'];
 
   // Công cụ tra lá số cho các luật. m = chi cung Mệnh.
@@ -1503,6 +1505,25 @@ const TuViCachCuc = (() => {
     { id: 'nhatNguyetPhanBoi', ten: 'Nhật Nguyệt phản bối', nhom: 'hung',
       nghia: 'Thái Dương và Thái Âm đều hãm trong tam phương: vất vả hơn người, ít được nhờ cha mẹ; tự lực thì vẫn khá.',
       test: (c) => c.trong(c.TP, 'Thái Dương') && c.trong(c.TP, 'Thái Âm') && c.sang(c.at['Thái Dương'], 'Thái Dương') === 'H' && c.sang(c.at['Thái Âm'], 'Thái Âm') === 'H' && ['Thái Dương', 'Thái Âm'] },
+    // Thêm 30/10 để cát hung cân hơn (trước đó mỗi lá số trung bình 1,05 cách cát, 0,48 cách hung)
+    { id: 'kyThuMenh', ten: 'Kỵ thủ Mệnh', nhom: 'hung',
+      nghia: 'Hóa Kỵ đóng Mệnh: hay vướng mắc trong lòng, dễ bị hiểu lầm, việc mình làm thường gặp trở ngại hoặc bị soi xét hơn người khác. Thành công đến chậm và tốn sức hơn.',
+      test: (c) => c.o(c.m, 'Hóa Kỵ') && ['Hóa Kỵ'] },
+    { id: 'kinhDaHamThuMenh', ten: 'Kình Đà hãm thủ Mệnh', nhom: 'hung',
+      nghia: 'Kình Dương hoặc Đà La ở thế hãm đóng Mệnh: tính cứng, dễ va chạm, đời nhiều trắc trở và thị phi; hay gặp chuyện kéo dài khó dứt.',
+      test: (c) => { const k = ['Kình Dương', 'Đà La'].filter((n) => c.o(c.m, n) && c.sang(c.m, n) === 'H'); return k.length > 0 && k; } },
+    { id: 'hoaLinhHamThuMenh', ten: 'Hỏa Linh hãm thủ Mệnh', nhom: 'hung',
+      nghia: 'Hỏa Tinh hoặc Linh Tinh ở thế hãm đóng Mệnh: nóng nảy, bất an, dễ gặp chuyện bất ngờ gây thiệt hại; quyết định vội thường phải trả giá.',
+      test: (c) => { const k = ['Hỏa Tinh', 'Linh Tinh'].filter((n) => c.o(c.m, n) && c.sang(c.m, n) === 'H'); return k.length > 0 && k; } },
+    { id: 'satTinhHoiMenh', ten: 'Sát tinh hội Mệnh', nhom: 'hung',
+      nghia: 'Từ 4 sát tinh trở lên hội về Mệnh và tam phương: đời nhiều sóng gió, cạnh tranh, mất mát; cái tốt của chính tinh bị giảm đáng kể.',
+      test: (c) => { const s = c.co(c.TP, LUC_SAT); return s.length >= 4 && s; } },
+    { id: 'tuanTrietDuongDau', ten: 'Tuần Triệt đương đầu', nhom: 'hung',
+      nghia: 'Tuần và Triệt cùng đóng Mệnh: thời trẻ nhiều cản trở, công sức bỏ ra hay bị chặn giữa chừng; thường phải qua tuổi trung niên mới ổn.',
+      test: (c) => c.P[c.m].tuan && c.P[c.m].triet && [] },
+    { id: 'hinhSatThuMenh', ten: 'Hình sát thủ Mệnh', nhom: 'hung',
+      nghia: 'Thiên Hình gặp Kình Dương hoặc Đà La cùng đóng Mệnh: dễ vướng tai nạn, thương tích hoặc chuyện pháp lý; tính khắc nghiệt dễ gây xung đột.',
+      test: (c) => { const k = ['Kình Dương', 'Đà La'].filter((n) => c.o(c.m, n)); return c.o(c.m, 'Thiên Hình') && k.length > 0 && ['Thiên Hình', ...k]; } },
   ];
 
   // Căn cứ: gom sao theo cung, ví dụ "Mệnh (Tý): Thái Dương; Thiên Di (Ngọ): Cự Môn"
@@ -1520,6 +1541,7 @@ const TuViCachCuc = (() => {
       if (r.id === 'vcdTamKhong') sao = sao.filter((n) => n !== 'Tuần' && n !== 'Triệt'); // Tuần, Triệt không phải sao trong cung
       const cung = [...new Set([c.m, ...sao.map((n) => c.at[n]).filter((p) => p !== undefined)])];
       if (r.id === 'menhVoChinhDieu' || r.id === 'vcdTamKhong') { cung.push(c.xung); ext.push(`Mệnh (${c.P[c.m].chiTen}) vô chính diệu, mượn ${c.P[c.xung].cung} (${c.P[c.xung].chiTen}): ${c.chinhO(c.xung).join(', ')}`); }
+      if (r.id === 'tuanTrietDuongDau') ext.push(`Tuần và Triệt cùng ở Mệnh (${c.P[c.m].chiTen})`);
       if (r.id === 'vcdTamKhong') [c.m, c.xung].forEach((p) => { if (c.P[p].tuan) ext.push(`Tuần ở ${c.P[p].cung}`); if (c.P[p].triet) ext.push(`Triệt ở ${c.P[p].cung}`); });
       // Phá cách: cách cát mà Mệnh có sát tinh / Hóa Kỵ (trừ sao đã là căn cứ của chính cách đó)
       const pha = r.nhom === 'cat' ? c.oMenh(PHA).filter((n) => !sao.includes(n)) : [];
@@ -2482,7 +2504,7 @@ const TuViAI = (() => {
         ${dh ? `<p>Năm ${tb.namXem} (${tb.tuoi} tuổi) đang ở đại hạn ${dh.daiHan}–${dh.daiHanEnd} tại cung ${dh.cung} (${dh.chiTen}): ${nameList(dh)}. ${C.CUNG_Y[dh.cung]}</p>` : `<p>Năm ${tb.namXem} chưa vào đại hạn đầu tiên (bắt đầu từ ${tb.cuc} tuổi).</p>`}
         <p>Tiểu hạn năm ${tb.namXemCanChi} ở cung ${th.cung} (${th.chiTen}): ${nameList(th)}${catIn(th).length ? `, có ${catIn(th).join(', ')}` : ''}${hungIn(th).length ? `, gặp ${hungIn(th).join(', ')}` : ''}.</p>
       </section>
-      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao và mang tính tham khảo. Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
+      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao theo sách truyền thống. Tử Vi chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')} Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
   }
 
   // ---------- Dữ liệu cho AI và JSON ----------
@@ -2507,7 +2529,11 @@ const TuViAI = (() => {
 
   // ---------- AI ----------
   const rules = () => 'Bạn là người luận giải Tử Vi Đẩu Số theo phái Việt Nam. Lá số dưới đây đã được an sẵn bằng phần mềm; dùng đúng dữ liệu này, không tự an lại.\n'
-    + 'Viết tiếng Việt, giọng điềm đạm và cụ thể. Mỗi nhận định nêu rõ sao hoặc cung làm căn cứ. Không phán định tuyệt đối, không dọa, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
+    + 'Viết tiếng Việt, giọng điềm đạm, thẳng thắn và cụ thể. Mỗi nhận định nêu rõ sao hoặc cung làm căn cứ. '
+    + 'Nêu điểm xấu rõ ràng và ngang hàng với điểm tốt, không nói giảm, không khen để làm vui lòng người xem; sao hãm, sát tinh, Hóa Kỵ, hung cách thì nói thẳng ảnh hưởng của chúng. '
+    + 'Tránh những câu chung chung ai đọc cũng thấy đúng; câu nào cũng phải gắn với một đặc điểm riêng của lá số này. '
+    + 'Không phán định tuyệt đối, không nói chuyện sống chết, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
+    + 'Cuối bài nhắc một câu ngắn rằng Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh. '
     + 'Định dạng: các mục có tiêu đề dạng "## Tiêu đề", gạch đầu dòng bằng "- ", in đậm bằng **...**.\n\nLÁ SỐ:\n' + chartText();
   function md(text) {
     const out = []; let list = false;

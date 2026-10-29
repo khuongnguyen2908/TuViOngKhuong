@@ -210,3 +210,9 @@ test('Kho nghĩa sao: phụ tinh đủ, không trùng, độ dài hợp lý', ()
   dai.forEach((s) => kiem(N.PHU_DAI[s], s));
   assert.equal(N.phuCungOf('Hóa Kỵ', 'Phu Thê'), N.PHU_NHOM['Hóa Kỵ']['Người thân, bạn bè']);
 });
+
+test('Cách cục: cát và hung không lệch quá (hung ít nhất 70 % số cát)', () => {
+  const dem = { cat: 0, hung: 0 };
+  laSoNgauNhien(2000, 77).forEach((ch) => K.detect(ch).cach.forEach((h) => { if (h.nhom in dem) dem[h.nhom]++; }));
+  assert.ok(dem.hung >= 0.7 * dem.cat, `Cát ${dem.cat}, hung ${dem.hung}: lệch về cát`);
+});

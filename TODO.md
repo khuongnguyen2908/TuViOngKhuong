@@ -34,9 +34,11 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 ## Đã xong gần đây
 
+- [x] Bớt nói giảm (30/10): ghi rõ Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh (dưới nút An lá số, chân trang, cuối Tổng quan + nút i "Đọc lá số thế nào cho đúng"); thêm 6 hung cách (cát/hung mỗi lá số 1,03 / 0,87, trước 1,05 / 0,48); lời dặn AI nói thẳng điểm xấu, tránh câu chung chung; viết lại 14 câu "khi hãm" của chính tinh. Chưa làm: công tắc ẩn lời khuyên (tách lời khuyên khỏi 272 ô nghĩa sao).
+
 - [x] Đổi năm xem ngay trên lá số: nút ‹ › (bấm giữ để lướt, phím ← →), nút Năm nay, dải 10 năm của đại hạn (bấm đại hạn để mở), link tự cập nhật năm; sao lưu đại hạn ĐV. (công tắc riêng, màu tím) trong cung, bảng chi tiết, AI và JSON.
 
-- [x] Cách cục: 4 bộ chính tinh + 48 cách (cát / hung / biến), phá cách, cách lớn che cách nhỏ, bấm để tô cung trên lá số, gửi kèm AI và JSON.
+- [x] Cách cục: 4 bộ chính tinh + 48 cách, nay 54 (cát / hung / biến), phá cách, cách lớn che cách nhỏ, bấm để tô cung trên lá số, gửi kèm AI và JSON.
 
 - [x] Trang đã lên GitHub Pages: https://khuongnguyen2908.github.io/TuViOngKhuong/ (workflow `.github/workflows/pages.yml`: mỗi lần đẩy lên `main` chạy kiểm thử → ghép → đăng).
 - [x] Đưa code ra gốc repo (trước nằm trong `tu-vi-ong-khuong/`), thêm `.gitattributes` (xuống dòng LF), `.gitignore`.

@@ -6,7 +6,8 @@ const TuViCachCuc = (() => {
   const CHI = { 'Tý': 0, 'Sửu': 1, 'Dần': 2, 'Mão': 3, 'Thìn': 4, 'Tỵ': 5, 'Ngọ': 6, 'Mùi': 7, 'Thân': 8, 'Dậu': 9, 'Tuất': 10, 'Hợi': 11 };
   const TU_SAT = ['Kình Dương', 'Đà La', 'Hỏa Tinh', 'Linh Tinh'];
   const KHONG_KIEP = ['Địa Không', 'Địa Kiếp'];
-  const PHA = [...TU_SAT, ...KHONG_KIEP, 'Hóa Kỵ'];
+  const LUC_SAT = [...TU_SAT, ...KHONG_KIEP];
+  const PHA = [...LUC_SAT, 'Hóa Kỵ'];
   const BA_HOA = ['Hóa Lộc', 'Hóa Quyền', 'Hóa Khoa'];
 
   // Công cụ tra lá số cho các luật. m = chi cung Mệnh.
@@ -216,6 +217,25 @@ const TuViCachCuc = (() => {
     { id: 'nhatNguyetPhanBoi', ten: 'Nhật Nguyệt phản bối', nhom: 'hung',
       nghia: 'Thái Dương và Thái Âm đều hãm trong tam phương: vất vả hơn người, ít được nhờ cha mẹ; tự lực thì vẫn khá.',
       test: (c) => c.trong(c.TP, 'Thái Dương') && c.trong(c.TP, 'Thái Âm') && c.sang(c.at['Thái Dương'], 'Thái Dương') === 'H' && c.sang(c.at['Thái Âm'], 'Thái Âm') === 'H' && ['Thái Dương', 'Thái Âm'] },
+    // Thêm 30/10 để cát hung cân hơn (trước đó mỗi lá số trung bình 1,05 cách cát, 0,48 cách hung)
+    { id: 'kyThuMenh', ten: 'Kỵ thủ Mệnh', nhom: 'hung',
+      nghia: 'Hóa Kỵ đóng Mệnh: hay vướng mắc trong lòng, dễ bị hiểu lầm, việc mình làm thường gặp trở ngại hoặc bị soi xét hơn người khác. Thành công đến chậm và tốn sức hơn.',
+      test: (c) => c.o(c.m, 'Hóa Kỵ') && ['Hóa Kỵ'] },
+    { id: 'kinhDaHamThuMenh', ten: 'Kình Đà hãm thủ Mệnh', nhom: 'hung',
+      nghia: 'Kình Dương hoặc Đà La ở thế hãm đóng Mệnh: tính cứng, dễ va chạm, đời nhiều trắc trở và thị phi; hay gặp chuyện kéo dài khó dứt.',
+      test: (c) => { const k = ['Kình Dương', 'Đà La'].filter((n) => c.o(c.m, n) && c.sang(c.m, n) === 'H'); return k.length > 0 && k; } },
+    { id: 'hoaLinhHamThuMenh', ten: 'Hỏa Linh hãm thủ Mệnh', nhom: 'hung',
+      nghia: 'Hỏa Tinh hoặc Linh Tinh ở thế hãm đóng Mệnh: nóng nảy, bất an, dễ gặp chuyện bất ngờ gây thiệt hại; quyết định vội thường phải trả giá.',
+      test: (c) => { const k = ['Hỏa Tinh', 'Linh Tinh'].filter((n) => c.o(c.m, n) && c.sang(c.m, n) === 'H'); return k.length > 0 && k; } },
+    { id: 'satTinhHoiMenh', ten: 'Sát tinh hội Mệnh', nhom: 'hung',
+      nghia: 'Từ 4 sát tinh trở lên hội về Mệnh và tam phương: đời nhiều sóng gió, cạnh tranh, mất mát; cái tốt của chính tinh bị giảm đáng kể.',
+      test: (c) => { const s = c.co(c.TP, LUC_SAT); return s.length >= 4 && s; } },
+    { id: 'tuanTrietDuongDau', ten: 'Tuần Triệt đương đầu', nhom: 'hung',
+      nghia: 'Tuần và Triệt cùng đóng Mệnh: thời trẻ nhiều cản trở, công sức bỏ ra hay bị chặn giữa chừng; thường phải qua tuổi trung niên mới ổn.',
+      test: (c) => c.P[c.m].tuan && c.P[c.m].triet && [] },
+    { id: 'hinhSatThuMenh', ten: 'Hình sát thủ Mệnh', nhom: 'hung',
+      nghia: 'Thiên Hình gặp Kình Dương hoặc Đà La cùng đóng Mệnh: dễ vướng tai nạn, thương tích hoặc chuyện pháp lý; tính khắc nghiệt dễ gây xung đột.',
+      test: (c) => { const k = ['Kình Dương', 'Đà La'].filter((n) => c.o(c.m, n)); return c.o(c.m, 'Thiên Hình') && k.length > 0 && ['Thiên Hình', ...k]; } },
   ];
 
   // Căn cứ: gom sao theo cung, ví dụ "Mệnh (Tý): Thái Dương; Thiên Di (Ngọ): Cự Môn"
@@ -233,6 +253,7 @@ const TuViCachCuc = (() => {
       if (r.id === 'vcdTamKhong') sao = sao.filter((n) => n !== 'Tuần' && n !== 'Triệt'); // Tuần, Triệt không phải sao trong cung
       const cung = [...new Set([c.m, ...sao.map((n) => c.at[n]).filter((p) => p !== undefined)])];
       if (r.id === 'menhVoChinhDieu' || r.id === 'vcdTamKhong') { cung.push(c.xung); ext.push(`Mệnh (${c.P[c.m].chiTen}) vô chính diệu, mượn ${c.P[c.xung].cung} (${c.P[c.xung].chiTen}): ${c.chinhO(c.xung).join(', ')}`); }
+      if (r.id === 'tuanTrietDuongDau') ext.push(`Tuần và Triệt cùng ở Mệnh (${c.P[c.m].chiTen})`);
       if (r.id === 'vcdTamKhong') [c.m, c.xung].forEach((p) => { if (c.P[p].tuan) ext.push(`Tuần ở ${c.P[p].cung}`); if (c.P[p].triet) ext.push(`Triệt ở ${c.P[p].cung}`); });
       // Phá cách: cách cát mà Mệnh có sát tinh / Hóa Kỵ (trừ sao đã là căn cứ của chính cách đó)
       const pha = r.nhom === 'cat' ? c.oMenh(PHA).filter((n) => !sao.includes(n)) : [];

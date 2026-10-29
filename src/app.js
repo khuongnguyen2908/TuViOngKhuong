@@ -456,7 +456,7 @@
         ${dh ? `<p>Năm ${tb.namXem} (${tb.tuoi} tuổi) đang ở đại hạn ${dh.daiHan}–${dh.daiHanEnd} tại cung ${dh.cung} (${dh.chiTen}): ${nameList(dh)}. ${C.CUNG_Y[dh.cung]}</p>` : `<p>Năm ${tb.namXem} chưa vào đại hạn đầu tiên (bắt đầu từ ${tb.cuc} tuổi).</p>`}
         <p>Tiểu hạn năm ${tb.namXemCanChi} ở cung ${th.cung} (${th.chiTen}): ${nameList(th)}${catIn(th).length ? `, có ${catIn(th).join(', ')}` : ''}${hungIn(th).length ? `, gặp ${hungIn(th).join(', ')}` : ''}.</p>
       </section>
-      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao và mang tính tham khảo. Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
+      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao theo sách truyền thống. Tử Vi chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')} Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
   }
 
   // ---------- Dữ liệu cho AI và JSON ----------
@@ -481,7 +481,11 @@
 
   // ---------- AI ----------
   const rules = () => 'Bạn là người luận giải Tử Vi Đẩu Số theo phái Việt Nam. Lá số dưới đây đã được an sẵn bằng phần mềm; dùng đúng dữ liệu này, không tự an lại.\n'
-    + 'Viết tiếng Việt, giọng điềm đạm và cụ thể. Mỗi nhận định nêu rõ sao hoặc cung làm căn cứ. Không phán định tuyệt đối, không dọa, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
+    + 'Viết tiếng Việt, giọng điềm đạm, thẳng thắn và cụ thể. Mỗi nhận định nêu rõ sao hoặc cung làm căn cứ. '
+    + 'Nêu điểm xấu rõ ràng và ngang hàng với điểm tốt, không nói giảm, không khen để làm vui lòng người xem; sao hãm, sát tinh, Hóa Kỵ, hung cách thì nói thẳng ảnh hưởng của chúng. '
+    + 'Tránh những câu chung chung ai đọc cũng thấy đúng; câu nào cũng phải gắn với một đặc điểm riêng của lá số này. '
+    + 'Không phán định tuyệt đối, không nói chuyện sống chết, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
+    + 'Cuối bài nhắc một câu ngắn rằng Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh. '
     + 'Định dạng: các mục có tiêu đề dạng "## Tiêu đề", gạch đầu dòng bằng "- ", in đậm bằng **...**.\n\nLÁ SỐ:\n' + chartText();
   function md(text) {
     const out = []; let list = false;

@@ -17,20 +17,20 @@ const TuViContent = (() => {
 
   // [tính chất chung, khi sáng (miếu/vượng/đắc), khi hãm]
   const CHINH = {
-    'Tử Vi': ['Đế tinh, chủ về uy quyền, lòng tự trọng và khả năng lãnh đạo.', 'đứng đắn, có tầm nhìn, dễ được người nâng đỡ', 'dễ tự cao, thích được tôn trọng nhưng thiếu người giúp thật lòng'],
-    'Thiên Cơ': ['Mưu tinh, chủ về trí tuệ, tính toán và sự linh hoạt.', 'nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch', 'hay lo nghĩ, dễ thay đổi, tính toán quá mức'],
-    'Thái Dương': ['Quý tinh, chủ về danh tiếng, sự rộng rãi và hình ảnh người cha.', 'thẳng thắn, hào phóng, có tiếng tăm', 'vất vả vì người khác, danh lớn hơn lợi, dễ hao tâm sức'],
-    'Vũ Khúc': ['Tài tinh, chủ về tiền bạc, ý chí và tính quyết đoán.', 'kiên định, giỏi quản lý tài chính', 'cứng nhắc, cô đơn, tiền bạc lên xuống'],
-    'Thiên Đồng': ['Phúc tinh, chủ về sự hiền hòa, hưởng thụ và khả năng hóa giải.', 'ôn hòa, dễ gần, được hưởng phúc', 'thiếu quyết tâm, ham vui, dễ trì hoãn'],
-    'Liêm Trinh': ['Tù tinh, chủ về nguyên tắc, kỷ luật và ham muốn.', 'chính trực, có nguyên tắc, làm việc nghiêm túc', 'nóng nảy, dễ vướng thị phi hoặc kiện tụng'],
-    'Thiên Phủ': ['Tài khố tinh, chủ về sự ổn định, tích lũy và độ lượng.', 'chắc chắn, biết giữ của, có uy tín', 'thận trọng quá mức, bảo thủ'],
-    'Thái Âm': ['Phú tinh, chủ về điền sản, sự dịu dàng và hình ảnh người mẹ.', 'tinh tế, có của để dành, giàu cảm xúc', 'đa sầu, nhạy cảm, tài sản khó bền'],
-    'Tham Lang': ['Đào hoa tinh, chủ về ham muốn, giao tiếp và tài nghệ.', 'đa tài, giao thiệp rộng, có duyên', 'ham vui, dễ sa đà, thiếu kiên trì'],
-    'Cự Môn': ['Ám tinh, chủ về ăn nói, tranh luận và sự nghi ngờ.', 'giỏi lý luận, hợp nghề nói và phân tích', 'dễ thị phi, khẩu thiệt, hay nghi ngại'],
-    'Thiên Tướng': ['Ấn tinh, chủ về sự công bằng, phục vụ và giúp người.', 'đáng tin, chu đáo, có khiếu tổ chức', 'dễ bị lợi dụng, gánh việc cho người khác'],
-    'Thiên Lương': ['Ấm tinh, chủ về sự che chở, đạo đức và tuổi thọ.', 'nhân hậu, thích giúp người, gặp nạn có cứu', 'cố chấp, thích dạy đời, hay lo chuyện người khác'],
-    'Thất Sát': ['Tướng tinh, chủ về sự dũng mãnh, thay đổi và mạo hiểm.', 'gan dạ, dám làm, tạo dựng từ hai bàn tay', 'nóng vội, dễ gặp biến động lớn'],
-    'Phá Quân': ['Hao tinh, chủ về phá cũ lập mới và tiêu hao.', 'dám đổi mới, có sức bật, hợp khai phá', 'bốc đồng, hao tán, quan hệ dễ đổ vỡ'],
+    'Tử Vi': ['Đế tinh, chủ về uy quyền, lòng tự trọng và khả năng lãnh đạo.', 'đứng đắn, có tầm nhìn, dễ được người nâng đỡ', 'tự cao, độc đoán, thích được tâng bốc; người quanh mình nể ngoài mặt nhưng ít ai giúp thật lòng, làm việc lớn dễ hụt hơi'],
+    'Thiên Cơ': ['Mưu tinh, chủ về trí tuệ, tính toán và sự linh hoạt.', 'nhanh nhạy, khéo xoay xở, giỏi lập kế hoạch', 'lo nghĩ quá mức, thay đổi liên tục, tính nhiều làm ít; mưu tính quá sâu dễ làm mất lòng người'],
+    'Thái Dương': ['Quý tinh, chủ về danh tiếng, sự rộng rãi và hình ảnh người cha.', 'thẳng thắn, hào phóng, có tiếng tăm', 'vất vả vì người khác mà ít được đền đáp, danh lớn hơn lợi, tiền làm ra khó giữ; thường thiếu sự nâng đỡ của cha hoặc bề trên'],
+    'Vũ Khúc': ['Tài tinh, chủ về tiền bạc, ý chí và tính quyết đoán.', 'kiên định, giỏi quản lý tài chính', 'cứng nhắc, khô khan, cô độc; tiền bạc lên xuống thất thường, dễ thất bại vì quyết định liều'],
+    'Thiên Đồng': ['Phúc tinh, chủ về sự hiền hòa, hưởng thụ và khả năng hóa giải.', 'ôn hòa, dễ gần, được hưởng phúc', 'thiếu ý chí, ham vui, hay trì hoãn; gặp khó dễ bỏ cuộc, đời trôi theo hoàn cảnh hơn là tự làm chủ'],
+    'Liêm Trinh': ['Tù tinh, chủ về nguyên tắc, kỷ luật và ham muốn.', 'chính trực, có nguyên tắc, làm việc nghiêm túc', 'nóng nảy, cố chấp, ham muốn quá đà; dễ vướng thị phi, kiện tụng hoặc rắc rối tình cảm'],
+    'Thiên Phủ': ['Tài khố tinh, chủ về sự ổn định, tích lũy và độ lượng.', 'chắc chắn, biết giữ của, có uy tín', 'bảo thủ, chặt chẽ quá thành keo kiệt, ngại thay đổi; giữ của mà không làm của sinh sôi, để lỡ cơ hội vì quá thận trọng'],
+    'Thái Âm': ['Phú tinh, chủ về điền sản, sự dịu dàng và hình ảnh người mẹ.', 'tinh tế, có của để dành, giàu cảm xúc', 'đa sầu, nhạy cảm quá mức, hay tủi thân; tài sản khó bền, tình cảm nhiều nỗi buồn'],
+    'Tham Lang': ['Đào hoa tinh, chủ về ham muốn, giao tiếp và tài nghệ.', 'đa tài, giao thiệp rộng, có duyên', 'ham vui, dễ sa vào rượu chè, cờ bạc hoặc tình ái, thiếu kiên trì; hao tiền và mang tiếng vì quan hệ phức tạp'],
+    'Cự Môn': ['Ám tinh, chủ về ăn nói, tranh luận và sự nghi ngờ.', 'giỏi lý luận, hợp nghề nói và phân tích', 'nói nhiều thành thị phi, hay nghi ngờ người khác; dễ kiện tụng, khẩu thiệt, quan hệ đổ vỡ vì lời nói'],
+    'Thiên Tướng': ['Ấn tinh, chủ về sự công bằng, phục vụ và giúp người.', 'đáng tin, chu đáo, có khiếu tổ chức', 'dễ bị lợi dụng, gánh việc và gánh nợ cho người khác; thiếu chính kiến, hay chịu thiệt'],
+    'Thiên Lương': ['Ấm tinh, chủ về sự che chở, đạo đức và tuổi thọ.', 'nhân hậu, thích giúp người, gặp nạn có cứu', 'cố chấp, thích dạy đời, hay xen vào chuyện người khác; dễ bị cho là khó gần, nói hay hơn làm'],
+    'Thất Sát': ['Tướng tinh, chủ về sự dũng mãnh, thay đổi và mạo hiểm.', 'gan dạ, dám làm, tạo dựng từ hai bàn tay', 'nóng vội, liều lĩnh, cô độc; đời biến động lớn, dễ thất bại nặng hoặc gặp tai nạn vì quyết định vội'],
+    'Phá Quân': ['Hao tinh, chủ về phá cũ lập mới và tiêu hao.', 'dám đổi mới, có sức bật, hợp khai phá', 'bốc đồng, phá nhiều hơn xây, hao tán tiền bạc; công việc, quan hệ, hôn nhân dễ đổ vỡ'],
   };
 
   const PHU = {
@@ -84,6 +84,7 @@ const TuViContent = (() => {
   const THAN_CU = { 'Mệnh': 'chính bản thân, tự lập', 'Phúc Đức': 'phúc phần và đời sống tinh thần', 'Quan Lộc': 'công danh, sự nghiệp', 'Thiên Di': 'việc ra ngoài, đi xa', 'Tài Bạch': 'chuyện tiền bạc', 'Phu Thê': 'gia đình, vợ chồng' };
   // Giải thích ngắn cho nút (i)
   const INFO = {
+    docDung: ['Đọc lá số thế nào cho đúng', 'Lá số được tính chính xác theo quy tắc an sao, nhưng phần luận giải là diễn giải truyền thống, chưa có nghiên cứu khoa học nào cho thấy nó dự đoán được tính cách hay vận mệnh. Nhiều câu như "hay lo nghĩ", "thích được tôn trọng" đúng với hầu hết mọi người, nên ai đọc cũng dễ thấy "trúng" (gọi là hiệu ứng Barnum). Hãy đọc cả điểm tốt lẫn điểm xấu như gợi ý để tự soi xét, đừng dùng để quyết định hôn nhân, tiền bạc, sức khỏe hay việc lớn.'],
     luuNien: ['Sao lưu niên', 'Các sao có chữ L. đứng trước là sao của riêng năm đang xem, an theo can chi của năm đó. Dùng để xem vận trong năm, không thay đổi lá số gốc.'],
     daiVan: ['Sao lưu đại hạn', 'Các sao có chữ ĐV. đứng trước là sao của riêng đại hạn (10 năm) đang chạy: Tứ hóa, Lộc Tồn, Kình Dương, Đà La an theo can của cung đại hạn; Thiên Mã theo chi của cung đó. Các trường phái còn khác nhau về bộ sao này (có nơi thêm Khôi, Việt, Xương, Khúc; có nơi chỉ dùng Tứ hóa).'],
     tamPhuong: ['Đường tam phương', 'Nối cung đang chọn với hai cung tam hợp (cách 4 cung, đường liền) và cung xung chiếu (đối diện, đường đứt). Bốn cung này cùng chi phối cung đang xem.'],

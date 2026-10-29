@@ -92,8 +92,16 @@ Bỏ khỏi danh sách: "Khôi Việt hội trong TP" (19,5 % — quá phổ bi�
 | Lộc phùng xung phá | Mệnh có Lộc Tồn / Hóa Lộc, Không Kiếp ở Mệnh hoặc xung chiếu | 4,7 % |
 | Hình Tù giáp Ấn | Liêm Trinh + Thiên Tướng + Kình Dương cùng ở Mệnh | 0,3 % |
 | Nhật Nguyệt phản bối | TP có Thái Dương hãm và Thái Âm hãm | 8,3 % |
+| Kỵ thủ Mệnh | Hóa Kỵ ở Mệnh | 8,7 % |
+| Kình Đà hãm thủ Mệnh | Kình Dương hoặc Đà La ở Mệnh, thế hãm | 8,0 % |
+| Hỏa Linh hãm thủ Mệnh | Hỏa Tinh hoặc Linh Tinh ở Mệnh, thế hãm | 9,4 % |
+| Sát tinh hội Mệnh | TP có từ 4 trong 6 sát tinh (Kình, Đà, Hỏa, Linh, Không, Kiếp) | 12,6 % |
+| Tuần Triệt đương đầu | Tuần và Triệt cùng đóng Mệnh | 2,4 % |
+| Hình sát thủ Mệnh | Thiên Hình cùng Kình Dương hoặc Đà La ở Mệnh | 1,4 % |
 
-Thống kê: mỗi lá số trung bình ra **2 cách** (ngoài bộ chính tinh), 90 % lá số ≤ 4 cách, ~17 % không có cách nào.
+6 cách cuối thêm ngày 30/10 để cát hung cân hơn. Trước đó danh sách có 36 cách cát, 9 hung, 3 biến; mỗi lá số trung bình ra 1,05 cách cát và 0,48 cách hung.
+Bây giờ: 36 cát, 15 hung, 3 biến; trung bình **1,03 cách cát, 0,87 cách hung, 0,19 cách biến** mỗi lá số, ~13 % lá số không có cách nào (đo trên 6.000 lá số ngẫu nhiên).
+Không thêm: "Triệt đóng Mệnh" (16 %, Tổng quan đã nói về Tuần Triệt), "Sát tinh hội Mệnh" ngưỡng 3 sao (34 %, quá phổ biến), "Chính tinh hãm gặp sát" (trùng nhiều với 2 cách hãm thủ Mệnh).
 
 ## Luật chung
 
