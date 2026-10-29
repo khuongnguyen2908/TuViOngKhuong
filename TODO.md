@@ -16,9 +16,9 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 1. [x] **Nhận diện cách cục** (xong 30/10, xem `docs/cach-cuc.md`). Còn: người am hiểu xác nhận 5 điểm ❓ (Nhật Nguyệt tịnh minh, Hùng tú triều viên, Thạch trung ẩn ngọc, Thất Sát ngưỡng đẩu, Vô chính diệu đắc tam không).
 2. [x] **Đổi năm xem ngay trên lá số** (xong 30/10): thanh ‹ năm › + Năm nay, dải 10 năm dưới đại hạn, sao lưu đại hạn ĐV. Còn: **cách cục theo đại hạn / lưu niên** (làm sau khi chốt bộ sao ĐV.).
-3. [ ] **Kho nghĩa sao đầy đủ** (phương án A, 2 đợt):
-   - [x] Đợt 1 (30/10): 168 ô chính tinh × 12 cung (`src/nghiasao.js`), hiện trong bảng chi tiết cung + Cung Mệnh; trang đọc duyệt `docs/nghia-sao.md`. **Chờ chủ dự án / người am hiểu đọc góp ý.**
-   - [ ] Đợt 2: 26 phụ tinh chủ chốt × 4 nhóm cung (bản thân · tiền và việc · người · bên ngoài và sức khỏe) + viết dài 57 phụ tinh còn lại.
+3. [x] **Kho nghĩa sao đầy đủ** (phương án A, xong 30/10). **Chờ chủ dự án / người am hiểu đọc `docs/nghia-sao.md` góp ý.**
+   - [x] Đợt 1: 168 ô chính tinh × 12 cung, hiện trong bảng chi tiết cung + Cung Mệnh.
+   - [x] Đợt 2: 26 phụ tinh chủ chốt × 4 nhóm cung (Bản thân · Tiền và việc · Người thân, bạn bè · Bên ngoài, sức khỏe) + viết dài 57 phụ tinh còn lại; hiện khi bấm vào sao.
    - Còn bàn: sao mượn ở cung vô chính diệu đang hiện độ sáng của cung gốc (cung xung chiếu); có sách xét lại độ sáng theo cung mượn.
 4. [ ] **Ảnh chia sẻ mạng xã hội** tỉ lệ 4:5 và 9:16, có dòng "Ông Khương phán rằng" và tóm tắt Mệnh.
 5. [ ] **So sánh hai lá số**: hợp tuổi, vợ chồng, đối tác.

@@ -1,7 +1,8 @@
 // Kho nghĩa sao theo cung — tự biên soạn theo ý nghĩa phổ biến, mang tính tham khảo.
 // CHINH_CUNG[chính tinh][cung] = nghĩa khi chính tinh đóng ở cung đó (lời chung, chưa xét sáng / hãm:
 // phần sáng / hãm vẫn lấy ở content.js). Giọng điềm đạm, không phán chắc, không nói bệnh cụ thể.
-// Muốn ghi nguồn cho một ô đã sửa theo sách: thêm vào NGUON, khóa 'Sao|Cung', ví dụ 'Tử Vi|Mệnh': 'Tên sách, trang'.
+// Muốn ghi nguồn cho một ô đã sửa theo sách: thêm vào NGUON, khóa 'Sao|Cung' (chính tinh), 'Sao|Nhóm cung' (phụ tinh chủ chốt)
+// hoặc 'Sao|chung' (phụ tinh khác), ví dụ 'Tử Vi|Mệnh': 'Tên sách, trang'.
 // Sửa xong chạy `npm run build` để cập nhật trang đọc duyệt docs/nghia-sao.md.
 const TuViNghiaSao = (() => {
   const CUNG = ['Mệnh', 'Phụ Mẫu', 'Phúc Đức', 'Điền Trạch', 'Quan Lộc', 'Nô Bộc', 'Thiên Di', 'Tật Ách', 'Tài Bạch', 'Tử Tức', 'Phu Thê', 'Huynh Đệ'];
@@ -205,12 +206,245 @@ const TuViNghiaSao = (() => {
     },
   };
 
-  // Nguồn của từng ô (mặc định: tự biên soạn). Khóa 'Sao|Cung'.
+  // ---------- Phụ tinh ----------
+  // 4 nhóm cung: phụ tinh chủ chốt có nghĩa riêng theo nhóm (viết 12 cung cho mỗi phụ tinh thì lặp ý nhiều)
+  const NHOM = {
+    'Bản thân': ['Mệnh', 'Phúc Đức'],
+    'Tiền và việc': ['Tài Bạch', 'Quan Lộc', 'Điền Trạch'],
+    'Người thân, bạn bè': ['Phụ Mẫu', 'Huynh Đệ', 'Phu Thê', 'Tử Tức', 'Nô Bộc'],
+    'Bên ngoài, sức khỏe': ['Thiên Di', 'Tật Ách'],
+  };
+  const nhomOf = (cung) => Object.keys(NHOM).find((k) => NHOM[k].includes(cung)) || null;
+
+  // PHU_NHOM[phụ tinh][nhóm cung] = nghĩa khi sao ở một cung thuộc nhóm đó (26 sao chủ chốt)
+  const PHU_NHOM = {
+    'Hóa Lộc': {
+      'Bản thân': 'Dễ gặp thuận lợi, có duyên với tiền và cơ hội; tính dễ chịu nên được lòng người.',
+      'Tiền và việc': 'Tiền bạc và công việc trôi chảy, dễ có nguồn thu mới, làm ăn có lãi; nhà đất dễ lên giá.',
+      'Người thân, bạn bè': 'Quan hệ với người của cung này êm thấm; họ hay mang lộc tới hoặc giúp mình về vật chất.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài gặp cơ hội kiếm tiền. Về sức khỏe là sao nhẹ, chỉ nên tránh ăn uống quá đà.',
+    },
+    'Hóa Quyền': {
+      'Bản thân': 'Có chính kiến, muốn làm chủ tình hình, nói có người nghe; nên tránh áp đặt người khác.',
+      'Tiền và việc': 'Có quyền quyết trong công việc và tiền bạc; hợp vị trí quản lý, dễ được giao việc lớn.',
+      'Người thân, bạn bè': 'Người của cung này mạnh mẽ, có tiếng nói; dễ thành chuyện ai nghe ai, nên biết nhường.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài có uy, được nể. Sức khỏe khá nhưng hay gắng quá sức.',
+    },
+    'Hóa Khoa': {
+      'Bản thân': 'Có học, có tiếng tốt, cư xử nhã nhặn; gặp khó thường có người hiểu biết giúp.',
+      'Tiền và việc': 'Thuận thi cử, bằng cấp, giấy tờ; công việc được ghi nhận nhờ chuyên môn và uy tín.',
+      'Người thân, bạn bè': 'Người của cung này có học, hiểu biết; giúp mình bằng lời khuyên và kiến thức.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài được tiếng tốt, gặp người giúp. Có bệnh dễ gặp thầy giỏi, thuốc hợp.',
+    },
+    'Hóa Kỵ': {
+      'Bản thân': 'Hay lo nghĩ, ôm chuyện trong lòng, dễ bị hiểu lầm. Biến nỗi lo thành sự kỹ lưỡng thì lại thành điểm mạnh.',
+      'Tiền và việc': 'Tiền bạc, công việc hay vướng mắc, chậm trễ hoặc rắc rối giấy tờ; làm chắc tay và đọc kỹ hợp đồng.',
+      'Người thân, bạn bè': 'Với người của cung này dễ có khúc mắc, hiểu lầm; nói rõ ràng, đừng để bụng lâu.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ gặp trở ngại, thị phi. Sức khỏe nên để ý những chỗ hay tái đi tái lại.',
+    },
+    'Văn Xương': {
+      'Bản thân': 'Sáng dạ, thích học, có khiếu chữ nghĩa và cư xử có văn hóa.',
+      'Tiền và việc': 'Hợp nghề dùng chữ nghĩa, giấy tờ, giáo dục; bằng cấp, thi cử giúp công việc tiến lên.',
+      'Người thân, bạn bè': 'Người của cung này có học thức, thích đọc; quan hệ nhẹ nhàng, lịch sự.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài được tiếng là người có học. Đi xa nên giữ cẩn thận giấy tờ.',
+    },
+    'Văn Khúc': {
+      'Bản thân': 'Khéo ăn nói, có năng khiếu nghệ thuật, âm nhạc; duyên dáng trong giao tiếp.',
+      'Tiền và việc': 'Kiếm tiền nhờ tài ăn nói, nghệ thuật, thiết kế; giỏi thương lượng giá cả.',
+      'Người thân, bạn bè': 'Người của cung này khéo léo, tài hoa, tình cảm; ở với nhau vui vẻ.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài giao tiếp tốt, được cảm tình; dễ có duyên gặp gỡ ở nơi xa.',
+    },
+    'Thiên Khôi': {
+      'Bản thân': 'Có quý nhân giúp công khai, được người lớn, cấp trên nâng đỡ; bản thân đứng đắn, có uy.',
+      'Tiền và việc': 'Công việc gặp người có thế lực giúp, dễ được đề bạt; thi cử, xin việc thuận.',
+      'Người thân, bạn bè': 'Người của cung này là quý nhân của mình, hoặc là người có vị thế.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài gặp người giúp đúng lúc. Có bệnh dễ gặp thầy giỏi.',
+    },
+    'Thiên Việt': {
+      'Bản thân': 'Có quý nhân giúp kín đáo, đúng lúc; bản thân tinh tế, biết điều.',
+      'Tiền và việc': 'Công việc có người đỡ ngầm, cơ hội đến qua lời giới thiệu; tiền bạc có lúc được trợ giúp.',
+      'Người thân, bạn bè': 'Người của cung này âm thầm giúp mình, nhất là những lúc khó khăn.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài gặp may nhờ người quen giới thiệu; có chuyện gấp thường có người đỡ.',
+    },
+    'Tả Phù': {
+      'Bản thân': 'Có người phụ giúp, hợp làm việc nhóm; tính rộng lượng, biết hợp tác.',
+      'Tiền và việc': 'Công việc có cộng sự đắc lực; tiền bạc có thêm nguồn hỗ trợ từ người khác.',
+      'Người thân, bạn bè': 'Được người của cung này giúp sức; trong nhà, trong nhóm có người đỡ đần.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài có bạn đồng hành, hợp tác thuận; gặp chuyện có người đỡ.',
+    },
+    'Hữu Bật': {
+      'Bản thân': 'Được hậu thuẫn, có người đứng sau ủng hộ; tính mềm mỏng, dễ hợp tác.',
+      'Tiền và việc': 'Công việc có người hỗ trợ âm thầm; hợp làm phó, làm cùng nhóm.',
+      'Người thân, bạn bè': 'Người của cung này giúp mình chân thành, nhất là chuyện trong nhà.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài có người giúp, đi xa không cô độc; ốm đau có người chăm.',
+    },
+    'Kình Dương': {
+      'Bản thân': 'Quyết liệt, thẳng tính, dám va chạm; có uy nhưng dễ nóng và làm mất lòng người.',
+      'Tiền và việc': 'Cạnh tranh gay gắt, phải giành mới có; tiền đến nhanh đi nhanh, cẩn thận tranh chấp.',
+      'Người thân, bạn bè': 'Với người của cung này dễ xung khắc, nặng lời; nên nhường nhịn.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ va chạm, cẩn thận khi đi lại và dùng đồ sắc nhọn; dễ có chấn thương nhỏ.',
+    },
+    'Đà La': {
+      'Bản thân': 'Chậm mà lì, hay chần chừ, ôm việc lâu; bền bỉ nhưng dễ bị cuốn vào chuyện dây dưa.',
+      'Tiền và việc': 'Công việc, tiền bạc chậm, hay kéo dài, thủ tục rườm rà; kiên nhẫn thì vẫn thành.',
+      'Người thân, bạn bè': 'Quan hệ với người của cung này hay dây dưa, khó dứt; chuyện nhỏ dễ kéo thành lớn.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài hay trễ hẹn, trục trặc giữa đường. Bệnh dai dẳng thì nên chữa sớm.',
+    },
+    'Địa Không': {
+      'Bản thân': 'Suy nghĩ khác người, nhiều ý tưởng lạ, có lúc thấy trống trải; hợp nghề sáng tạo, nghiên cứu, tu dưỡng.',
+      'Tiền và việc': 'Tiền bạc dễ hụt bất ngờ, kế hoạch bỏ dở; tránh đầu cơ và vay mượn lớn.',
+      'Người thân, bạn bè': 'Duyên với người của cung này có lúc xa cách, hụt hẫng; đừng đặt kỳ vọng quá cao.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ mất đồ, lỡ việc. Có lúc mệt mỏi không rõ lý do, nên nghỉ ngơi đủ.',
+    },
+    'Địa Kiếp': {
+      'Bản thân': 'Đời có lúc lên xuống mạnh, dám nghĩ dám làm; nên tránh liều lĩnh.',
+      'Tiền và việc': 'Tiền vào rồi ra, dễ hao vì biến cố; cần quỹ dự phòng và hợp đồng chặt chẽ.',
+      'Người thân, bạn bè': 'Người của cung này có lúc gặp biến cố, hoặc quan hệ có lúc đứt quãng.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài cẩn thận mất mát, trộm cắp. Nên phòng tai nạn bất ngờ khi đi lại.',
+    },
+    'Hỏa Tinh': {
+      'Bản thân': 'Nóng tính, nhanh nhẹn, dễ bùng nổ; làm việc có lửa nhưng hay bốc đồng.',
+      'Tiền và việc': 'Công việc, tiền bạc có lúc bùng lên nhanh; giữ bình tĩnh để không mất nhanh như lúc được.',
+      'Người thân, bạn bè': 'Với người của cung này dễ cãi nhau to rồi lại nguôi nhanh.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài cẩn thận lửa, nhiệt, xe cộ. Dễ nóng trong người khi làm việc quá sức.',
+    },
+    'Linh Tinh': {
+      'Bản thân': 'Bề ngoài điềm tĩnh mà trong lòng hay bứt rứt; chuyện để lâu dễ bùng ra bất ngờ.',
+      'Tiền và việc': 'Tiền bạc, công việc có trở ngại âm ỉ, bất chợt; nên rà soát định kỳ, đừng chủ quan.',
+      'Người thân, bạn bè': 'Dễ bất hòa ngầm với người của cung này; nói ra sớm thì đỡ.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ gặp chuyện bất ngờ. Nên để ý những dấu hiệu nhỏ kéo dài trong người.',
+    },
+    'Lộc Tồn': {
+      'Bản thân': 'Cẩn trọng, biết giữ của, sống tiết kiệm; có lộc nhưng hơi cô độc, ít muốn nhờ ai.',
+      'Tiền và việc': 'Rất hợp: tích lũy đều, giữ được tiền, công việc ổn định; hợp nghề liên quan tài chính.',
+      'Người thân, bạn bè': 'Người của cung này khá giả hoặc biết lo; mình có thể được nhờ về vật chất.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài có lộc, làm ăn xa được. Sức khỏe giữ được nhờ sống điều độ.',
+    },
+    'Thiên Mã': {
+      'Bản thân': 'Năng động, thích di chuyển, không chịu ngồi yên; hợp nghề đi lại, hay thay đổi.',
+      'Tiền và việc': 'Tiền đến nhờ đi lại, buôn bán xa hoặc đổi việc; gặp Lộc Tồn, Hóa Lộc thì càng tốt.',
+      'Người thân, bạn bè': 'Người của cung này hay đi xa, sống xa nhà; gặp nhau ít mà thương nhau nhiều.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài nhiều, đi xa lập nghiệp tốt. Giữ an toàn khi đi đường và đừng để quá mệt.',
+    },
+    'Đào Hoa': {
+      'Bản thân': 'Có duyên, ưa nhìn, được nhiều người để ý; nên chừng mực trong chuyện tình cảm.',
+      'Tiền và việc': 'Kiếm tiền nhờ duyên giao tiếp; hợp nghề làm đẹp, giải trí, dịch vụ.',
+      'Người thân, bạn bè': 'Quan hệ với người của cung này vui vẻ, tình cảm; ở Phu Thê thì duyên đến sớm và mặn nồng.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài được chú ý, dễ có duyên gặp gỡ; vui chơi nhớ giữ sức khỏe.',
+    },
+    'Hồng Loan': {
+      'Bản thân': 'Hiền hòa, dễ mến, có duyên; tình cảm chân thành.',
+      'Tiền và việc': 'Công việc có người quý mến giúp; hợp nghề liên quan cưới hỏi, làm đẹp, chăm sóc.',
+      'Người thân, bạn bè': 'Quan hệ êm ấm, dễ có hỷ sự; ở Phu Thê thì duyên đến sớm, dễ lập gia đình.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài được cảm tình. Có chuyện vui thì tinh thần, sức khỏe đều khá lên.',
+    },
+    'Thiên Hỷ': {
+      'Bản thân': 'Vui vẻ, lạc quan, hay mang tin vui đến cho người khác.',
+      'Tiền và việc': 'Công việc có tin vui: được thưởng, ký kết thuận lợi, việc mới suôn sẻ.',
+      'Người thân, bạn bè': 'Người của cung này mang niềm vui; dễ có cưới hỏi, sinh nở, đoàn tụ.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài gặp chuyện vui, có tin tốt từ xa; tinh thần phấn chấn.',
+    },
+    'Thiên Hình': {
+      'Bản thân': 'Nghiêm khắc, có kỷ luật, thẳng đến mức cứng rắn; hợp ngành luật, quân đội, y.',
+      'Tiền và việc': 'Công việc có tính kỷ luật, pháp lý; cẩn thận phạt vạ, kiện tụng trong làm ăn.',
+      'Người thân, bạn bè': 'Quan hệ với người của cung này nghiêm, ít mềm mỏng; tránh dùng lời nặng.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài cẩn thận va chạm và chuyện pháp lý. Có việc cần thủ thuật y tế thì nên khám kỹ.',
+    },
+    'Thiên Riêu': {
+      'Bản thân': 'Đa tình, giàu cảm xúc, thích cái đẹp; dễ mê đắm nên cần tỉnh táo.',
+      'Tiền và việc': 'Kiếm tiền nhờ nghệ thuật, làm đẹp; cẩn thận chi tiêu theo cảm xúc.',
+      'Người thân, bạn bè': 'Quan hệ với người của cung này nặng tình cảm, có lúc phức tạp.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ có mối quan hệ lãng mạn; nên giữ sinh hoạt điều độ.',
+    },
+    'Tang Môn': {
+      'Bản thân': 'Hay buồn, dễ xúc động, nhìn đời hơi trầm; có lòng thương người.',
+      'Tiền và việc': 'Công việc có lúc gặp chuyện không vui, trì trệ; nên có kế hoạch dự phòng.',
+      'Người thân, bạn bè': 'Người của cung này có lúc gặp chuyện buồn; nên quan tâm, hỏi han nhiều hơn.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài có lúc nghe tin không vui. Tinh thần cần được nghỉ ngơi, chia sẻ.',
+    },
+    'Bạch Hổ': {
+      'Bản thân': 'Mạnh mẽ, dám nói dám làm, có uy; dễ làm mất lòng người vì quá thẳng.',
+      'Tiền và việc': 'Công việc cạnh tranh, có thể vướng tranh chấp, kiện cáo; giữ giấy tờ rõ ràng.',
+      'Người thân, bạn bè': 'Với người của cung này dễ va chạm, lời qua tiếng lại.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài cẩn thận va chạm khi đi đường; dễ có chấn thương nếu chủ quan.',
+    },
+    'Thái Tuế': {
+      'Bản thân': 'Nói thẳng, có lý lẽ, thích tranh luận; lời nói có trọng lượng nhưng dễ gây thị phi.',
+      'Tiền và việc': 'Công việc gắn với lời nói, pháp lý; cẩn thận khi hứa hẹn và khi tranh cãi về tiền.',
+      'Người thân, bạn bè': 'Với người của cung này dễ lời qua tiếng lại; nói ít, nói đúng lúc thì yên.',
+      'Bên ngoài, sức khỏe': 'Ra ngoài dễ gặp thị phi, bị bàn tán; giữ lời ăn tiếng nói.',
+    },
+  };
+
+  // PHU_DAI[phụ tinh] = nghĩa chung viết dài hơn (1–2 câu) cho 57 phụ tinh còn lại; ở cung nào cũng đọc như nhau
+  const PHU_DAI = {
+    'Bác Sĩ': 'Sao của sự thông minh, học rộng và tính cẩn thận. Đóng ở cung nào thì việc của cung đó được làm chu đáo, có hiểu biết.',
+    'Lực Sĩ': 'Sao của sức mạnh và quyền lực. Đi với sao tốt thì có thêm sức đẩy; đi với sát tinh thì dễ thành cứng rắn, nóng vội.',
+    'Thanh Long': 'Sao của niềm vui và may mắn. Mang lại chuyện vui, tin tốt cho việc của cung đang đóng.',
+    'Tấu Thư': 'Sao của giấy tờ, văn thư, lời nói có duyên. Thuận cho việc viết lách, đơn từ, hợp đồng.',
+    'Hỷ Thần': 'Sao của tin vui, hỷ sự. Cung có sao này dễ có chuyện mừng, nhất là cưới hỏi, thăng tiến.',
+    'Thiếu Dương': 'Sao của sự thông minh, vui vẻ, cởi mở. Giúp tính cách sáng sủa và dễ hòa đồng.',
+    'Thiếu Âm': 'Sao của sự hiền hòa, kín đáo. Giúp ứng xử mềm mỏng, biết giữ hòa khí.',
+    'Long Đức': 'Sao phúc đức, giải nhẹ những điều xấu. Cung có sao này bớt được phần nào trắc trở.',
+    'Phúc Đức': 'Sao của phúc thiện và sự che chở. Người có sao này hay làm việc tốt và được đền đáp.',
+    'Long Trì': 'Sao của khoa bảng, sự thanh nhã. Thường đi cùng Phượng Các, thuận cho học hành, danh tiếng.',
+    'Phượng Các': 'Sao của danh tiếng, khoa bảng và vẻ đẹp. Đi cùng Long Trì thì càng tốt cho thi cử, tiếng tăm.',
+    'Giải Thần': 'Sao hóa giải, gặp nạn có cách gỡ. Làm nhẹ bớt ảnh hưởng của sát tinh trong cùng cung.',
+    'Tam Thai': 'Sao của địa vị, chức vụ. Thường đi cùng Bát Tọa, thuận cho việc thăng tiến, được trọng dụng.',
+    'Bát Tọa': 'Sao của địa vị, sự trọng vọng. Đi cùng Tam Thai thì vị thế càng vững.',
+    'Ân Quang': 'Sao của ơn nghĩa, được ban thưởng. Hay gặp người giúp đỡ và cũng biết đền ơn.',
+    'Thiên Quý': 'Sao của sự quý mến, được giúp đỡ. Thường đi cùng Ân Quang, thêm phần quý nhân.',
+    'Thiên Quan': 'Sao quý hiển, được đề bạt. Thuận cho công danh và việc xin xỏ, thủ tục.',
+    'Thiên Phúc': 'Sao phúc lộc, gắn với tín ngưỡng. Người có sao này hay có niềm tin vững và được phù hộ.',
+    'Thiên Đức': 'Sao đức độ, giải trừ điều xấu. Giúp cung đang đóng bớt tai ách.',
+    'Nguyệt Đức': 'Sao hiền hậu, giải trừ điều xấu. Đi cùng Thiên Đức thì sức giải càng mạnh.',
+    'Thiên Tài': 'Sao của tài năng riêng, có khiếu ở một lĩnh vực. Làm tăng sức của chính tinh trong cùng cung.',
+    'Thiên Thọ': 'Sao của sự sống thọ, tính điềm đạm. Giúp tinh thần ổn định, bền bỉ.',
+    'Thai Phụ': 'Sao của danh dự, chức tước. Thuận cho việc được công nhận, khen thưởng.',
+    'Phong Cáo': 'Sao của bằng sắc, khen thưởng. Đi cùng Thai Phụ thì càng dễ được ghi nhận chính thức.',
+    'Quốc Ấn': 'Sao của ấn tín, chức quyền. Thuận cho công việc có con dấu, quyền ký, quản lý.',
+    'Đường Phù': 'Sao của địa vị, nhà cửa, xe cộ. Giúp đời sống vật chất có phần sung túc, đàng hoàng.',
+    'Văn Tinh': 'Sao của văn học, khoa cử. Thuận cho học hành, viết lách, thi cử.',
+    'Thiên Giải': 'Sao giải trừ tai họa. Gặp khó khăn hay có cách gỡ, có người cứu giúp.',
+    'Địa Giải': 'Sao giải trừ tai họa, nhất là chuyện đất đai, nhà cửa. Làm nhẹ những rắc rối trong cùng cung.',
+    'Thiên Y': 'Sao của y dược, chữa lành. Hợp nghề y, dược, chăm sóc; ốm đau dễ gặp thuốc hợp.',
+    'Thiên Trù': 'Sao của ăn uống, bếp núc, lộc ăn. Thường có lộc ăn uống, hợp nghề ẩm thực.',
+    'Hoa Cái': 'Sao của phong cách, thích làm đẹp, chuộng hình thức; cũng gắn với tôn giáo, nghệ thuật. Có khi hơi kiêu, khó gần.',
+    'Quan Phù': 'Sao của kiện tụng, giấy tờ pháp lý. Cung có sao này nên làm đúng thủ tục, tránh tranh chấp.',
+    'Tử Phù': 'Sao của ưu phiền, mệt mỏi nhẹ. Hay lo chuyện nhỏ; nên giữ tinh thần thoải mái.',
+    'Tuế Phá': 'Sao của hao tổn, phá vỡ. Việc của cung đang đóng dễ có hỏng hóc, phải làm lại.',
+    'Điếu Khách': 'Sao của chuyện buồn, tin không vui. Hay đi cùng Tang Môn; nên giữ bình tĩnh khi gặp chuyện.',
+    'Trực Phù': 'Sao của trở ngại, ngăn cản. Việc của cung đang đóng dễ bị chặn giữa chừng, cần kiên nhẫn.',
+    'Quan Phủ': 'Sao của chuyện quan quyền, giấy tờ. Hay phải làm việc với cơ quan, thủ tục hành chính.',
+    'Tiểu Hao': 'Sao hao tốn nhỏ. Tiền bạc của cung đang đóng hay vơi dần vì những khoản lặt vặt.',
+    'Đại Hao': 'Sao hao tốn lớn. Cung có sao này nên dè chừng những khoản chi lớn, mua sắm vội.',
+    'Tướng Quân': 'Sao uy dũng, chủ động nhưng nóng vội. Tốt cho việc cần quyết đoán, kém cho việc cần nhẫn nại.',
+    'Phi Liêm': 'Sao của sự nhanh nhẹn và thị phi bay đến. Việc đến nhanh, tin đồn cũng nhanh; nên thận trọng lời nói.',
+    'Bệnh Phù': 'Sao của sự mệt mỏi, ốm vặt. Nhắc nhở giữ gìn sức khỏe, nghỉ ngơi đủ.',
+    'Phục Binh': 'Sao của sự ám hại ngầm, bị chơi xấu sau lưng. Nên giữ bí mật kế hoạch, cẩn thận người lạ.',
+    'Thiên Không': 'Sao của sự hư hao, mưu tính khó thành. Ở cung nào thì việc của cung đó dễ hụt so với dự tính.',
+    'Thiên Khốc': 'Sao của nỗi buồn, lo âu. Hay đi cùng Thiên Hư; người có sao này giàu cảm xúc, dễ xúc động.',
+    'Thiên Hư': 'Sao của sự trống rỗng, buồn vu vơ. Nên tìm việc có ý nghĩa để lấp chỗ trống trong lòng.',
+    'Cô Thần': 'Sao của sự cô đơn, ít gần người thân. Thích tự lập, nhưng nên chủ động giữ liên lạc với mọi người.',
+    'Quả Tú': 'Sao của sự lẻ loi, khó chia sẻ. Hay giữ chuyện trong lòng; tìm được người tin cậy thì nhẹ nhõm hơn.',
+    'Thiên Thương': 'Sao của hao tổn, buồn rầu, luôn đóng ở cung Nô Bộc. Bạn bè, cấp dưới có lúc làm mình phiền lòng.',
+    'Thiên Sứ': 'Sao của tai ương, lo âu, luôn đóng ở cung Tật Ách. Nhắc nhở giữ gìn sức khỏe và cẩn thận khi đi lại.',
+    'Thiên La': 'Sao của sự ràng buộc, vướng mắc, luôn đóng ở Thìn. Việc của cung này hay bị trói buộc, khó thoát ra nhanh.',
+    'Địa Võng': 'Sao của sự ràng buộc, vướng mắc, luôn đóng ở Tuất. Như Thiên La, cần kiên nhẫn gỡ từng nút.',
+    'Lưu Hà': 'Sao của tai nạn sông nước, máu huyết. Nên cẩn thận khi bơi lội, đi thuyền và va chạm.',
+    'Kiếp Sát': 'Sao của tai nạn, mất mát. Cung có sao này nên giữ đồ cẩn thận, phòng rủi ro.',
+    'Phá Toái': 'Sao của sự đổ vỡ, phá hỏng. Việc của cung đang đóng dễ dang dở, cần làm cẩn thận từ đầu.',
+    'Đẩu Quân': 'Sao của sự nghiêm khắc, cô độc. Người có sao này kỷ luật, khó tính; nên mềm mỏng hơn với người thân.',
+  };
+
+  // Nguồn của từng ô (mặc định: tự biên soạn). Khóa 'Sao|Cung' (chính tinh) hoặc 'Sao|Nhóm cung' (phụ tinh).
   const NGUON = {};
   const nguon = (sao, cung) => NGUON[sao + '|' + cung] || 'tự biên soạn';
   const cungOf = (sao, cung) => (CHINH_CUNG[sao] && CHINH_CUNG[sao][cung]) || null;
+  // Nghĩa phụ tinh theo cung đang xem (qua nhóm cung); null nếu sao không thuộc 26 sao chủ chốt
+  const phuCungOf = (sao, cung) => { const k = nhomOf(cung); return (k && PHU_NHOM[sao] && PHU_NHOM[sao][k]) || null; };
 
-  return { CUNG, CHINH_CUNG, NGUON, nguon, cungOf };
+  return { CUNG, CHINH_CUNG, NHOM, nhomOf, PHU_NHOM, PHU_DAI, NGUON, nguon, cungOf, phuCungOf };
 })();
 
 if (typeof module !== 'undefined') module.exports = TuViNghiaSao;

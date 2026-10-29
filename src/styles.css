@@ -203,6 +203,8 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .rel button:focus-visible { outline: 2px solid var(--cinnabar); }
 .star-note { display: grid; gap: 3px; padding: 10px 12px; border-left: 3px solid var(--cinnabar); background: var(--tint); border-radius: 0 8px 8px 0; font-size: 13.5px; }
 .star-note b { font: 700 17px/1.2 var(--f-display); }
+.star-note .sn-cung { margin-top: 4px; padding-top: 6px; border-top: 1px dashed var(--gold-soft); }
+.star-note .sn-cung i { font-style: normal; font-weight: 600; }
 .tap-hint { margin: 0; font-size: 12.5px; color: var(--muted); }
 
 /* Dải đại hạn */

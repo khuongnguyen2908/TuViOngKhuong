@@ -4,7 +4,7 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 
 - Âm lịch Việt Nam tính theo giờ Hà Nội (UTC+7), đúng cả những năm Tết lệch với lịch Trung Quốc (1985, 2007, 2030, 2053).
 - Engine an sao phái Việt với 9 tùy chọn trường phái.
-- Luận giải cơ bản ghép từ nghĩa sao và cung (kho nghĩa 14 chính tinh × 12 cung tự biên soạn, đọc duyệt ở `docs/nghia-sao.md`); luận giải AI theo chủ đề khi có cấu hình.
+- Luận giải cơ bản ghép từ nghĩa sao và cung (kho nghĩa tự biên soạn: 14 chính tinh × 12 cung, 26 phụ tinh chủ chốt × 4 nhóm cung, 57 phụ tinh khác; đọc duyệt ở `docs/nghia-sao.md`); luận giải AI theo chủ đề khi có cấu hình.
 - Nhận diện cách cục của cung Mệnh (bộ chính tinh, cát cách, hung cách, phá cách); bấm vào một cách để tô các cung liên quan.
 - Đổi năm xem ngay trên lá số (nút ‹ ›, nút Năm nay, dải 10 năm của từng đại hạn); có sao lưu niên (L.) và sao lưu đại hạn (ĐV.), bật tắt riêng.
 - Mỗi lá số có link riêng (`#la-so-...`), chỉ chứa ngày giờ, năm xem và tùy chọn, không chứa họ tên.
@@ -26,7 +26,7 @@ src/
   lunar.js              Âm lịch Việt Nam, can chi, tiết khí
   engine.js             An sao phái Việt
   content.js            Nghĩa cung, nghĩa sao chung (tự biên soạn)
-  nghiasao.js           Nghĩa chính tinh theo từng cung (tự biên soạn; trang đọc duyệt: docs/nghia-sao.md)
+  nghiasao.js           Nghĩa sao theo cung / nhóm cung (tự biên soạn; trang đọc duyệt: docs/nghia-sao.md)
   cachcuc.js            Nhận diện cách cục (luật + nghĩa tự biên soạn; danh sách ở docs/cach-cuc.md)
   ai.js                 Gọi proxy AI khi chạy ngoài Claude
   app.js                Giao diện, điều hướng, xuất file

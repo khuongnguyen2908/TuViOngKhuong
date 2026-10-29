@@ -191,6 +191,22 @@ test('Kho nghĩa sao: đủ 14 chính tinh × 12 cung, độ dài hợp lý, kh�
       assert.ok(!CAM.test(t), `${sao} ở ${cung}: có từ phán tuyệt đối`);
     }
   }
-  // Nguồn chỉ ghi cho ô có thật
-  Object.keys(N.NGUON).forEach((k) => { const [s, c] = k.split('|'); assert.ok(N.cungOf(s, c), `NGUON có khóa lạ: ${k}`); });
+  // Nguồn chỉ ghi cho ô có thật: 'Chính tinh|Cung', 'Phụ tinh chủ chốt|Nhóm cung' hoặc 'Phụ tinh khác|chung'
+  Object.keys(N.NGUON).forEach((k) => {
+    const [s, c] = k.split('|');
+    assert.ok(N.cungOf(s, c) || (N.PHU_NHOM[s] && N.PHU_NHOM[s][c]) || (c === 'chung' && N.PHU_DAI[s]), `NGUON có khóa lạ: ${k}`);
+  });
+});
+
+test('Kho nghĩa sao: phụ tinh đủ, không trùng, độ dài hợp lý', () => {
+  const C = require('../src/content.js');
+  const nhom = Object.keys(N.PHU_NHOM), dai = Object.keys(N.PHU_DAI);
+  assert.equal(nhom.length, 26);
+  assert.deepEqual([...nhom, ...dai].sort(), Object.keys(C.PHU).sort(), 'Mỗi phụ tinh phải có đúng một chỗ: PHU_NHOM hoặc PHU_DAI');
+  assert.deepEqual(Object.values(N.NHOM).flat().sort(), [...E.CUNG].sort(), '4 nhóm phải phủ đủ 12 cung, không trùng');
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  const kiem = (t, ten) => { assert.ok(t.length >= 40 && t.length <= 400, `${ten}: dài ${t.length} ký tự`); assert.ok(!CAM.test(t), `${ten}: có từ phán tuyệt đối`); };
+  nhom.forEach((s) => Object.keys(N.NHOM).forEach((g) => { assert.ok(N.PHU_NHOM[s][g], `${s}: thiếu nhóm ${g}`); kiem(N.PHU_NHOM[s][g], `${s} / ${g}`); }));
+  dai.forEach((s) => kiem(N.PHU_DAI[s], s));
+  assert.equal(N.phuCungOf('Hóa Kỵ', 'Phu Thê'), N.PHU_NHOM['Hóa Kỵ']['Người thân, bạn bè']);
 });

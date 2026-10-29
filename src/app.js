@@ -299,16 +299,21 @@
   function starMeaning(name) {
     const base = name.replace(/^(L|ĐV)\./, '');
     const isLuu = name.startsWith('L.'), isDv = name.startsWith('ĐV.');
-    const txt = C.CHINH[base] ? C.CHINH[base][0] : (C.PHU[base] || 'Chưa có diễn giải cho sao này.');
+    // Chung: chính tinh lấy tính chất chung; phụ tinh lấy bản viết dài nếu có, không thì dòng ngắn
+    const txt = C.CHINH[base] ? C.CHINH[base][0] : (N.PHU_DAI[base] || C.PHU[base] || 'Chưa có diễn giải cho sao này.');
     const tb = state.chart.thienBan, dh = tb.daiHanCung !== null ? state.chart.palaces[tb.daiHanCung] : null;
     const pre = isLuu ? `Sao lưu của năm ${tb.namXem}. ` : isDv && dh ? `Sao lưu của đại hạn ${dh.daiHan}–${dh.daiHanEnd} (cung ${dh.cung}, ${tb.daiVanCanChi}). ` : '';
-    return { title: (isLuu ? 'Lưu ' : isDv ? 'Lưu đại hạn ' : '') + base, text: pre + txt };
+    // Theo cung đang chọn: chính tinh theo từng cung, phụ tinh chủ chốt theo nhóm cung
+    const cung = state.chart.palaces[state.selected].cung;
+    const oCung = N.cungOf(base, cung), oNhom = N.phuCungOf(base, cung);
+    const where = oCung ? { head: `Ở ${cung}`, text: oCung } : oNhom ? { head: `Ở ${cung} (nhóm ${N.nhomOf(cung).toLowerCase()})`, text: oNhom } : null;
+    return { title: (isLuu ? 'Lưu ' : isDv ? 'Lưu đại hạn ' : '') + base, text: pre + txt, where };
   }
   function showStarNote(name) {
     const m = starMeaning(name);
     const box = $('#star-note');
     box.hidden = false;
-    box.innerHTML = `<b>${esc(m.title)}</b><span>${esc(m.text)}</span>`;
+    box.innerHTML = `<b>${esc(m.title)}</b><span>${esc(m.text)}</span>${m.where ? `<span class="sn-cung"><i>${esc(m.where.head)}:</i> ${esc(m.where.text)}</span>` : ''}`;
     $$('#inspector .chip').forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-star') === name)));
   }
   function renderInspector() {

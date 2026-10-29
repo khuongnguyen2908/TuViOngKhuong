@@ -12,7 +12,7 @@ const C = require(join(root, 'src', 'content.js'));
 
 const cell = (s) => String(s).replace(/\|/g, '\\|');
 const out = [
-  '# Kho nghĩa sao theo cung',
+  '# Kho nghĩa sao',
   '',
   'Trang này tạo tự động từ `src/nghiasao.js` (đừng sửa tay ở đây; sửa trong file đó rồi chạy `npm run build`).',
   'Lời tự biên soạn theo ý nghĩa phổ biến, mang tính tham khảo. Ô nào đã sửa theo sách thì ghi tên sách vào `NGUON` trong file đó.',
@@ -20,7 +20,7 @@ const out = [
   '',
   '## Mục lục',
   '',
-  Object.keys(N.CHINH_CUNG).map((s) => `[${s}](#${s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/\s+/g, '-')})`).join(' · '),
+  [...Object.keys(N.CHINH_CUNG), 'Phụ tinh chủ chốt', 'Phụ tinh khác'].map((s) => `[${s}](#${s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/\s+/g, '-')})`).join(' · '),
   '',
 ];
 for (const [sao, byCung] of Object.entries(N.CHINH_CUNG)) {
@@ -30,6 +30,22 @@ for (const [sao, byCung] of Object.entries(N.CHINH_CUNG)) {
   N.CUNG.forEach((cung) => out.push(`| ${cung} | ${cell(byCung[cung] || '(chưa có)')} | ${cell(N.nguon(sao, cung))} |`));
   out.push('');
 }
+
+// Phụ tinh chủ chốt: nghĩa theo 4 nhóm cung
+out.push('## Phụ tinh chủ chốt', '', 'Nghĩa theo nhóm của cung mà sao đang đóng:', '');
+Object.entries(N.NHOM).forEach(([nhom, cungs]) => out.push(`- **${nhom}**: ${cungs.join(', ')}`));
+out.push('');
+for (const [sao, byNhom] of Object.entries(N.PHU_NHOM)) {
+  out.push(`### ${sao}`, '', `Dòng ngắn: ${C.PHU[sao]}`, '', '| Nhóm cung | Nghĩa | Nguồn |', '| --- | --- | --- |');
+  Object.keys(N.NHOM).forEach((nhom) => out.push(`| ${nhom} | ${cell(byNhom[nhom] || '(chưa có)')} | ${cell(N.nguon(sao, nhom))} |`));
+  out.push('');
+}
+
+// Phụ tinh khác: một đoạn chung
+out.push('## Phụ tinh khác', '', 'Một đoạn chung, ở cung nào cũng đọc như nhau.', '', '| Sao | Nghĩa | Nguồn |', '| --- | --- | --- |');
+for (const [sao, t] of Object.entries(N.PHU_DAI)) out.push(`| ${sao} | ${cell(t)} | ${cell(N.nguon(sao, 'chung'))} |`);
+out.push('');
+
 mkdirSync(join(root, 'docs'), { recursive: true });
 writeFileSync(join(root, 'docs', 'nghia-sao.md'), out.join('\n'));
 console.log('Đã ghi docs/nghia-sao.md');
