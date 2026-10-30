@@ -9,6 +9,7 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 - Lời khuyên cho từng điểm xấu: hung cách, phá cách, chính tinh hãm, sát tinh và hung tinh (khi bấm vào sao), sát tinh ở Mệnh và tiểu hạn.
 - Bát Tự (Tứ Trụ): chọn ngay ở trang chủ. Trụ năm đổi ở Lập Xuân, trụ tháng theo 12 tiết (tính thời điểm giao tiết đến phút); tàng can, thập thần, Trường Sinh, nạp âm, Thai nguyên, Mệnh cung, thần sát chính, ngũ hành và ước lượng nhật chủ mạnh yếu, đại vận, lưu niên; không rõ giờ thì lập ba trụ. Đối chiếu khớp với bazi.vn ở 3 lá số mẫu. Có hồ sơ tính cách 10 nhật chủ, biểu đồ ngũ giác ngũ hành, biểu tượng con giáp (emoji, Mão là mèo) và chữ Hán ngũ hành, nút (i) và bấm vào thập thần / thần sát để xem nghĩa.
 - Bản đồ sao (chiêm tinh phương Tây): lựa chọn thứ ba ở trang chủ, cần nơi sinh (63 tỉnh thành hoặc tự nhập tọa độ, múi giờ). Vòng bản đồ SVG, vị trí 10 hành tinh, Nút Bắc, Điểm Mọc, Thiên Đỉnh, 12 nhà Placidus, nghịch hành, đắc/vượng/hãm/tuyệt, góc chiếu, nguyên tố; luận giải bộ ba Mặt Trời – Mặt Trăng – Cung Mọc và từng hành tinh. Công thức tự viết (Meeus, Schlyter, JPL), khớp Swiss Ephemeris dưới 2 phút cung ở lá mẫu.
+- Thần số học (Pythagoras): cần họ tên và ngày sinh. Số chủ đạo, linh hồn, sứ mệnh, nhân cách, thái độ, ngày sinh, trưởng thành, tư duy; biểu đồ ngày sinh và tên, mũi tên, số thiếu; chu kỳ năm cá nhân 11 năm và tháng cá nhân; bốn đỉnh cao và thử thách. Khớp tracuuthansohoc ở lá mẫu. Link chia sẻ có chứa họ tên.
 - Tổng hợp 3 hệ: một người, xem cùng lúc Tử Vi, Bát Tự, Bản đồ sao (thẻ thứ tư ở trang chủ, hoặc nút "So sánh 3 hệ" ở từng màn). Đối chiếu nét tính cách mà nhiều hệ cùng nói, đặt ngũ hành cạnh nguyên tố.
 - Không rõ giờ sinh: xem nhanh cung Mệnh, Thân, Cục của cả 12 giờ (lọc theo buổi), bấm để mở lá số từng giờ.
 - So sánh hai lá số (vợ chồng, đối tác, bạn bè): ngũ hành bản mệnh, thiên can, địa chi, cung Mệnh, tuổi rơi vào cung, cung liên quan; mỗi điểm kỵ có lời khuyên; chép được để hỏi AI khác.
@@ -39,6 +40,7 @@ src/
   battu.js              Bát Tự: tứ trụ theo tiết khí, thập thần, đại vận (lời giải nghĩa tự biên soạn)
   bandosao.js           Bản đồ sao: vị trí hành tinh, nhà Placidus, góc chiếu, tọa độ 63 tỉnh thành
   bandosao-nghia.js     Giải nghĩa cung hoàng đạo, hành tinh, nhà, góc chiếu (tự biên soạn)
+  thansohoc.js          Thần số học Pythagoras: chỉ số, biểu đồ, năm cá nhân, đỉnh cao (lời giải nghĩa tự biên soạn)
   tonghop.js            Tổng hợp 3 hệ: bảng gắn nét tính cách cho chính tinh, nhật chủ, cung hoàng đạo
   ai.js                 Gọi proxy AI khi chạy ngoài Claude
   app.js                Giao diện, điều hướng, xuất file

@@ -420,3 +420,23 @@ test('Tổng hợp 3 hệ: gắn nét đủ, gom đúng theo hệ, không phán 
   const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
   [...Object.values(TH.NET).map((v) => v[0]), ...Object.values(TH.KHUYEN)].forEach((t) => assert.ok(!CAM.test(t), t));
 });
+
+test('Thần số học: khớp trang mẫu (Nguyễn Phúc Quí Khương, 01/01/1998), biểu đồ, mũi tên, nội dung', () => {
+  const TS = require('../src/thansohoc.js');
+  const r = TS.compute({ name: 'Nguyễn Phúc Quí Khương', day: 1, month: 1, year: 1998, namXem: 2026 });
+  assert.deepEqual([r.chuDao, r.linhHon, r.suMenh, r.thaiDo, r.nhanCach, r.truongThanh, r.tuDuy], [11, 5, 5, 2, 9, 7, 6]);
+  assert.deepEqual(r.chuKy.map((x) => x.so), [7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8]); // 2021–2031
+  assert.equal(r.chuCai, 'NGUYENPHUCQUIKHUONG');
+  assert.deepEqual(r.dem.slice(1), [3, 0, 0, 0, 0, 0, 0, 1, 2]);
+  assert.deepEqual(r.muiTen.trong.map((m) => m.k), ['456', '357']);
+  // Số bậc thầy 22 giữ nguyên, hiện 22/4; Đ đổi thành D
+  assert.equal(TS.rut(22), 22); assert.equal(TS.hien(22), '22/4'); assert.equal(TS.rut(29), 11); assert.equal(TS.rut(38), 11); assert.equal(TS.rut(47, false), 2);
+  assert.equal(TS.chuCai('Đặng Thị Ánh'), 'DANGTHIANH');
+  // Ngày 29/11/1993: 2+9+1+1+1+9+9+3 = 35 → 8
+  assert.equal(TS.compute({ name: 'A', day: 29, month: 11, year: 1993 }).chuDao, 8);
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  const tat = [...Object.values(TS.SO).flatMap((s) => [s.tuKhoa, s.moTa, ...s.manh, ...s.yeu, s.khuyen]), ...Object.values(TS.NAM).flat(), ...Object.values(TS.MUI_TEN_Y).flat(), ...Object.values(TS.THIEU).flat(), ...TS.THU_THACH];
+  tat.forEach((t) => assert.ok(!CAM.test(t), t));
+  TS.MUI_TEN.forEach(([, a, b]) => assert.ok(TS.MUI_TEN_Y[a] && TS.MUI_TEN_Y[b], `Thiếu nghĩa mũi tên ${a}/${b}`));
+  for (let n = 1; n <= 9; n++) assert.ok(TS.SO[n] && TS.NAM[n] && TS.THIEU[n]);
+});

@@ -111,6 +111,10 @@ const TuViContent = (() => {
     namXem: ['Năm xem hạn', 'Năm dùng để tính tuổi, đại hạn, tiểu hạn, tháng âm và sao lưu niên. Mặc định là năm nay.'],
     gioDongHo: ['Giờ đồng hồ lúc sinh', 'Miền Bắc dùng giờ UTC+8 đến 08/1967, miền Nam đến 1975. Chọn UTC+8 nếu giờ sinh ghi theo đồng hồ thời đó; web tự đổi về giờ Việt Nam.'],
     gioTy: ['Giờ Tý sớm và muộn', 'Giờ Tý từ 23 giờ đến 1 giờ sáng. Tý muộn (23 đến 24 giờ) mặc định tính sang ngày hôm sau; có thể đổi trong Tùy chọn trường phái.'],
+    // Thần số học
+    tshChiSo: ['Cách tính các chỉ số', 'Số chủ đạo cộng mọi chữ số của ngày sinh dương lịch. Các số từ tên đổi chữ cái thành số theo bảng Pythagoras (A, J, S = 1; B, K, T = 2; …; I, R = 9): linh hồn cộng nguyên âm, nhân cách cộng phụ âm, sứ mệnh cộng tất cả. Rút gọn đến một chữ số, riêng 11, 22, 33 là số bậc thầy được giữ lại.'],
+    tshLuoi: ['Biểu đồ và mũi tên', 'Các chữ số của ngày sinh (bỏ số 0) được xếp vào lưới 3×3: cột trái 1-2-3, giữa 4-5-6, phải 7-8-9 (từ dưới lên). Hàng, cột hay đường chéo có đủ số là mũi tên sức mạnh; trống hẳn là điểm cần rèn. Biểu đồ tên đếm các chữ cái theo số.'],
+    tshNam: ['Năm cá nhân', 'Cộng ngày, tháng sinh với năm đang xem rồi rút gọn còn 1–9. Mỗi 9 năm là một chu kỳ: năm 1 khởi đầu, năm 9 khép lại. Tháng cá nhân bằng năm cá nhân cộng số tháng.'],
     // Bản đồ sao
     bdsNoiSinh: ['Nơi sinh', 'Cần để tính Điểm Mọc và 12 nhà. Chọn tỉnh, thành theo tên cũ (trước sáp nhập 2025); tọa độ lấy ở trung tâm tỉnh lỵ nên Điểm Mọc có thể lệch khoảng 1 độ. Sinh ở huyện xa tỉnh lỵ hoặc ở nước ngoài thì chọn "Nơi khác" và nhập tọa độ, múi giờ.'],
     bdsVong: ['Cách đọc vòng bản đồ sao', 'Vòng ngoài là 12 cung hoàng đạo. Vòng giữa đánh số 12 nhà, bắt đầu từ Điểm Mọc (AC) bên trái, đi ngược chiều kim đồng hồ. Ký hiệu bên trong là hành tinh, chữ R là đang nghịch hành. Đường nối giữa vòng là góc chiếu: xanh là hài hòa, đỏ là căng thẳng, vàng là trùng tụ.'],

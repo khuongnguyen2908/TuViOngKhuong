@@ -30,6 +30,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 10. [x] **Tổng hợp 3 hệ** (xong 30/10): `src/tonghop.js`, màn `#tong-hop-...`. Còn: người am hiểu duyệt bảng gắn nét tính cách.
 
+11. [x] **Thần số học** (xong 30/10): `src/thansohoc.js`, màn `#than-so-hoc-...`. Khớp tracuuthansohoc 7 chỉ số ở lá mẫu. Còn: cân nhắc đưa vào Tổng hợp (thành 4 hệ).
+
 ## Kỹ thuật
 
 - [ ] Bật Góp ý trên GitHub Pages: deploy `worker/gop-y.mjs` + D1, đặt biến `FEEDBACK_ENDPOINT` (xem README). Cân nhắc bật `DUYET_TRUOC` nếu bị spam.

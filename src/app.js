@@ -1,6 +1,6 @@
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia, TH = TuViTongHop;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia, TH = TuViTongHop, TS = TuViThanSo;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -153,8 +153,13 @@
     $('#f-tz').closest('.field').hidden = khac;
     $('#hours').classList.toggle('is-off', noHour);
     $$('#hours input').forEach((x) => { x.disabled = noHour; });
-    $('#exact-row').hidden = noHour;
-    $('#time-row').hidden = noHour || !$('#f-exact').checked;
+    // Thần số học chỉ cần họ tên và ngày sinh
+    const tsh = state.mode === 'tsh';
+    $('#hours').closest('.field').hidden = tsh; $('#f-nohour').closest('.check').hidden = tsh;
+    if (tsh) $('#f-tz').closest('.field').hidden = true;
+    $('#f-name').placeholder = tsh ? 'Họ tên đầy đủ, có dấu (bắt buộc)' : 'Có thể để trống';
+    $('#exact-row').hidden = tsh || noHour;
+    $('#time-row').hidden = tsh || noHour || !$('#f-exact').checked;
     const y = +$('#f-year').value;
     $('#tz-hint').hidden = !(y && y < 1976 && $('#f-tz').value === '7');
   }
@@ -166,11 +171,13 @@
     { mode: 'tuvi', hash: 'lap-la-so', ten: 'Lá số Tử Vi', mo: '12 cung, đại hạn, tiểu hạn', ico: () => `<span class="tool-ico bagua-ico">${BAGUA}</span>` },
     { mode: 'battu', hash: 'lap-bat-tu', ten: 'Bát Tự', mo: 'Tứ trụ, ngũ hành, đại vận', ico: () => `<img class="tool-ico" src="assets/can/giap.webp" alt="" width="44" height="44">` },
     { mode: 'bds', hash: 'lap-ban-do-sao', ten: 'Bản đồ sao', mo: 'Chiêm tinh phương Tây', ico: () => '<span class="tool-ico sao-ico">♈︎</span>' },
+    { mode: 'tsh', hash: 'lap-than-so-hoc', ten: 'Thần số học', mo: 'Số chủ đạo, biểu đồ ngày sinh', ico: () => '<span class="tool-ico tsh-ico">7</span>' },
     { mode: 'tonghop', hash: 'lap-tong-hop', ten: 'Tổng hợp 3 hệ', mo: 'Tử Vi, Bát Tự, Bản đồ sao cùng nói gì', ico: () => '<span class="tool-ico th-ico">3</span>' },
   ];
   const homeHash =(m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
   const MODE_TXT = {
     tuvi: ['Lập lá số Tử Vi', 'Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.', 'An lá số', 'Không rõ giờ sinh (xem nhanh cả 12 giờ)'],
+    tsh: ['Thần số học', 'Nhập họ tên đầy đủ và ngày sinh để tính số chủ đạo, các chỉ số từ tên, biểu đồ ngày sinh, mũi tên, năm cá nhân và bốn đỉnh cao của đời.', 'Xem thần số học', ''],
     tonghop: ['Tổng hợp 3 hệ', 'Nhập ngày, giờ và nơi sinh một lần để xem cùng lúc lá số Tử Vi, Bát Tự và Bản đồ sao, và xem ba hệ cùng nói gì về bạn.', 'Xem tổng hợp', 'Không rõ giờ sinh (chỉ dùng Bát Tự ba trụ và Mặt Trời)'],
     bds: ['Lập bản đồ sao', 'Nhập ngày, giờ và nơi sinh để vẽ bản đồ sao chiêm tinh: Mặt Trời, Mặt Trăng, các hành tinh trong 12 cung hoàng đạo và 12 nhà, cùng góc chiếu giữa chúng.', 'Vẽ bản đồ sao', 'Không rõ giờ sinh (bỏ qua Điểm Mọc và 12 nhà)'],
     battu: ['Lập lá số Bát Tự', 'Nhập ngày giờ sinh để lập Tứ Trụ: trụ năm đổi ở Lập Xuân, trụ tháng theo tiết khí; xem thập thần, ngũ hành, đại vận và lưu niên.', 'Lập Bát Tự', 'Không rõ giờ sinh (lập ba trụ năm, tháng, ngày)'],
@@ -185,17 +192,22 @@
     syncForm();
   }
   function showView(name) {
-    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds'; $('#view-th').hidden = name !== 'th';
+    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds'; $('#view-th').hidden = name !== 'th'; $('#view-tsh').hidden = name !== 'tsh';
     state.view = name;
-    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds', 'th'].includes(name);
+    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds', 'th', 'tsh'].includes(name);
     $('#btn-json').hidden = name === 'th';
     $('.bar').classList.toggle('in-chart', name !== 'home');
     window.scrollTo(0, 0);
-    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name', th: '#th-name' }[name]);
+    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name', th: '#th-name', tsh: '#tsh-name' }[name]);
     if (h && h.focus) h.focus({ preventScroll: true });
   }
   function route() {
     const h = (location.hash || '').slice(1);
+    if (h.startsWith('than-so-hoc-')) {
+      const inp = fromTshHash(h);
+      if (inp && computeTsh(inp)) { setMode('tsh'); showView('tsh'); return; }
+      toast('Link thần số học không hợp lệ. Hãy lập lại.');
+    }
     if (h.startsWith('tong-hop-')) {
       const inp = fromThHash(h);
       if (inp) {
@@ -1015,6 +1027,94 @@
       + '\n\nHãy luận giải bản đồ sao này.';
   }
 
+  // ---------- Thần số học ----------
+  // Link: #than-so-hoc-Y-M-D-xNĂM-n<họ tên mã base64url>; link có chứa họ tên vì các chỉ số tính từ tên
+  const b64 = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const unb64 = (s) => { try { return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0))); } catch { return ''; } };
+  const toTshHash = (r) => `than-so-hoc-${r.ngay.year}-${r.ngay.month}-${r.ngay.day}-x${r.namXem}-n${b64(r.ten)}`;
+  function fromTshHash(h) {
+    const m = /^than-so-hoc-(\d{3,4})-(\d{1,2})-(\d{1,2})-x(\d{4})-n([A-Za-z0-9_-]+)$/.exec(h);
+    if (!m) return null;
+    return { name: unb64(m[5]), gender: 'nam', calendar: 'duong', day: +m[3], month: +m[2], year: +m[1], leap: false, namXem: +m[4], gio: 'ngo', hour: 12, minute: 0, options: {} };
+  }
+  function computeTsh(inp) {
+    const fail = (msg) => { $('#form-error').textContent = msg; $('#form-error').hidden = false; return false; };
+    if (!TS.chuCai(inp.name || '')) return fail('Thần số học cần họ tên đầy đủ (có thể gõ có dấu).');
+    let d = { day: inp.day, month: inp.month, year: inp.year };
+    if (inp.calendar === 'am') {
+      const s = LunarVN.makeCalendar(7).lunarToSolar(inp.day, inp.month, inp.year, !!inp.leap);
+      if (!s) return fail('Ngày âm lịch không tồn tại (kiểm tra tháng nhuận hoặc ngày 30).');
+      d = { day: s.day, month: s.month, year: s.year };
+    } else {
+      const chk = LunarVN.fromJdn(LunarVN.jdn(inp.day, inp.month, inp.year));
+      if (chk.day !== inp.day || chk.month !== inp.month) return fail('Ngày dương lịch không tồn tại.');
+    }
+    state.tsh = TS.compute({ name: inp.name.trim(), ...d, namXem: inp.namXem });
+    state.tshInput = inp;
+    $('#form-error').hidden = true;
+    renderTsh();
+    return true;
+  }
+  const soTxt = (n) => (n === null ? '–' : TS.hien(n));
+  const soY = (n) => TS.SO[n] || TS.SO[TS.rut(n, false)];
+  function luoiSo(dem, tieuDe) {
+    const hang = [[3, 6, 9], [2, 5, 8], [1, 4, 7]];
+    return `<figure class="tsh-luoi"><div class="tsh-o3">${hang.flat().map((d) => `<span class="${dem[d] ? 'co' : 'trong'}" title="Số ${d}: ${dem[d]} lần">${dem[d] ? String(d).repeat(Math.min(dem[d], 4)) : d}</span>`).join('')}</div><figcaption>${tieuDe}</figcaption></figure>`;
+  }
+  function chuKySvg(r) {
+    const W = 420, H = 190, L = 24, R = 14, T = 20, B = 30, n = r.chuKy.length;
+    const x = (i) => L + (i * (W - L - R)) / (n - 1), y = (v) => T + ((9 - v) * (H - T - B)) / 8;
+    const net = [1, 3, 5, 7, 9].map((v) => `<line class="ck-luoi" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ck-truc" x="${L - 8}" y="${y(v) + 4}">${v}</text>`).join('');
+    const duong = r.chuKy.map((p, i) => `${x(i).toFixed(1)},${y(p.so).toFixed(1)}`).join(' ');
+    const diem = r.chuKy.map((p, i) => `<g class="${p.nam === r.namXem ? 'ck-nay' : ''}"><circle cx="${x(i).toFixed(1)}" cy="${y(p.so).toFixed(1)}" r="${p.nam === r.namXem ? 6 : 4}"/><text class="ck-so" x="${x(i).toFixed(1)}" y="${(y(p.so) - 10).toFixed(1)}">${p.so}</text><text class="ck-nam" x="${x(i).toFixed(1)}" y="${H - 12}">${p.nam}</text></g>`).join('');
+    return `<svg class="ck-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Chu kỳ năm cá nhân">${net}<polyline class="ck-duong" points="${duong}"/>${diem}</svg>`;
+  }
+  function renderTsh() {
+    const r = state.tsh, d = r.ngay;
+    $('#tsh-name').textContent = r.ten;
+    $('#tsh-facts').innerHTML = `<span>Ngày sinh dương lịch <strong class="num">${pad(d.day)}/${pad(d.month)}/${d.year}</strong></span><span>Tên tính theo chữ: <strong>${r.chuCai}</strong></span>`;
+    const o = (k, lon) => `<div class="tsh-o${lon ? ' lon' : ''}" title="${TS.CHI_SO[k][1]}"><span>${TS.CHI_SO[k][0]}</span><b class="num">${soTxt(r[k])}</b>${lon ? `<small>${soY(r[k]).tuKhoa}</small>` : ''}</div>`;
+    $('#tsh-so').innerHTML = o('chuDao', true) + ['linhHon', 'suMenh', 'nhanCach', 'thaiDo', 'ngaySinh', 'truongThanh', 'tuDuy'].map((k) => o(k)).join('');
+    $('#tsh-bd').innerHTML = luoiSo(r.dem, 'Biểu đồ ngày sinh') + luoiSo(r.demTen, 'Biểu đồ tên')
+      + `<div class="tsh-mt">${r.muiTen.co.map((m) => `<span class="cc-tag t-hop">↗ ${m.ten} (${m.k.split('').join('-')})</span>`).join('')}${r.muiTen.trong.map((m) => `<span class="cc-tag t-ky">○ ${m.ten} (${m.k.split('').join('-')} trống)</span>`).join('')}${!r.muiTen.co.length && !r.muiTen.trong.length ? '<span class="muted">Không có mũi tên nào</span>' : ''}</div>`;
+    const nam = TS.NAM[r.namCaNhan];
+    $('#tsh-nam-note').textContent = `Năm ${r.namXem}: năm cá nhân số ${r.namCaNhan}, ${nam[0].toLowerCase()}`;
+    $('#tsh-chuky').innerHTML = chuKySvg(r) + `<div class="tsh-thang">${r.thang.map((s, i) => `<span title="${TS.NAM[s][0]}"><small>T${i + 1}</small><b class="num">${s}</b></span>`).join('')}</div>`;
+
+    const sd = soY(r.chuDao);
+    const chiSo = ['linhHon', 'suMenh', 'nhanCach', 'thaiDo', 'ngaySinh', 'truongThanh', 'tuDuy'].map((k) => `<li><b>${TS.CHI_SO[k][0]} ${soTxt(r[k])}</b> <span class="muted">(${TS.CHI_SO[k][1].toLowerCase()})</span>: ${TS.CHI_SO[k][2]} Số ${soTxt(r[k])} mang nét ${soY(r[k]).tuKhoa}.</li>`).join('');
+    const muiTen = [...r.muiTen.co.map((m) => `<li><b class="t-hop">Mũi tên ${m.ten}</b> (${m.k.split('').join('-')}): ${TS.MUI_TEN_Y[m.ten]}</li>`),
+      ...r.muiTen.trong.map((m) => `<li><b class="t-ky">Mũi tên ${m.ten}</b> (${m.k.split('').join('-')} đều trống): ${TS.MUI_TEN_Y[m.ten][0]}${advice(TS.MUI_TEN_Y[m.ten][1])}</li>`)].join('');
+    const thieu = r.thieu.map((s) => `<li><b>Thiếu số ${s}</b>${r.buTen.includes(s) ? ' <span class="muted">(tên có số này nên được bù phần nào)</span>' : ''}: ${TS.THIEU[s][0]}${advice(TS.THIEU[s][1])}</li>`).join('');
+    const chang = r.dinhCao.map((p, i) => `<tr><td>${i + 1}</td><td>${p.tu}${p.den !== null ? `–${p.den}` : '+'} tuổi <span class="muted">(từ ${p.nam})</span></td><td><b class="num">${TS.hien(p.so)}</b> ${soY(p.so).tuKhoa}</td><td><b class="num">${r.thuThach[i]}</b> ${TS.THU_THACH[r.thuThach[i]]}</td></tr>`).join('');
+    const tuoiNay = r.namXem - d.year;
+    $('#tsh-body').innerHTML = `
+      <section><h3>Số chủ đạo ${soTxt(r.chuDao)}: ${sd.tuKhoa}</h3><p>${sd.moTa}</p>
+        <div class="bt-two"><div><h4 class="t-hop">Điểm mạnh</h4><ul>${sd.manh.map((x) => `<li>${x}</li>`).join('')}</ul></div><div><h4 class="t-ky">Điểm cần lưu ý</h4><ul>${sd.yeu.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+        ${advice(sd.khuyen)}</section>
+      <section><h3>Các chỉ số khác</h3><ul class="bds-list">${chiSo}</ul></section>
+      <section><h3>Mũi tên và số thiếu</h3><p class="muted">Xếp các chữ số của ngày sinh vào lưới 3×3. Một hàng, cột hay đường chéo đủ số là "mũi tên" sức mạnh; trống hoàn toàn là điểm cần rèn.</p>
+        ${muiTen ? `<ul class="bds-list">${muiTen}</ul>` : '<p>Biểu đồ ngày sinh không có mũi tên nào.</p>'}
+        ${thieu ? `<ul class="bds-list">${thieu}</ul>` : '<p>Biểu đồ ngày sinh đủ cả 9 số.</p>'}</section>
+      <section><h3>Năm cá nhân ${r.namXem}: số ${r.namCaNhan}, ${nam[0].toLowerCase()}</h3><p>${nam[1]}</p>${advice(nam[2])}
+        <p class="muted">Năm ${r.namXem + 1} là năm số ${r.chuKy[6].so} (${TS.NAM[r.chuKy[6].so][0].toLowerCase()}). Mỗi 9 năm là một chu kỳ.</p></section>
+      <section><h3>Bốn đỉnh cao và thử thách</h3><p class="muted">Đời chia bốn chặng; chặng đầu kết thúc ở tuổi 36 trừ số chủ đạo. Năm ${r.namXem} bạn ${tuoiNay} tuổi.</p>
+        <table class="bds-tbl tsh-tbl"><thead><tr><th>Chặng</th><th>Tuổi</th><th>Đỉnh cao</th><th>Thử thách</th></tr></thead><tbody>${chang}</tbody></table></section>
+      <p class="note">Thần số học là một cách diễn giải truyền thống, chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')}</p>
+      <p class="ai-bar"><button type="button" class="btn" id="tsh-copy">Sao chép thông tin</button></p>`;
+  }
+  function tshText() {
+    const r = state.tsh, d = r.ngay;
+    return 'Bạn là chuyên gia thần số học Pythagoras. Các chỉ số dưới đây đã được phần mềm tính sẵn; dùng đúng số liệu này, không tự tính lại.\n'
+      + 'Viết tiếng Việt, thẳng thắn và cụ thể: tính cách, điểm mạnh, điểm cần lưu ý, công việc hợp, tình cảm, năm cá nhân hiện tại; mỗi điểm khó kèm một lời khuyên thực tế. Không phán định tuyệt đối. Cuối bài nhắc rằng thần số học là diễn giải truyền thống, chưa được khoa học chứng minh.\n\n'
+      + `Họ tên: ${r.ten}; ngày sinh ${d.day}/${d.month}/${d.year}\n`
+      + Object.keys(TS.CHI_SO).map((k) => `${TS.CHI_SO[k][0]}: ${soTxt(r[k])}`).join('; ')
+      + `\nBiểu đồ ngày sinh (số lần 1–9): ${r.dem.slice(1).join(' ')}; mũi tên: ${[...r.muiTen.co.map((m) => m.ten), ...r.muiTen.trong.map((m) => m.ten + ' (trống)')].join(', ') || 'không có'}; thiếu số: ${r.thieu.join(', ') || 'không'}`
+      + `\nNăm cá nhân ${r.namXem}: ${r.namCaNhan}; tháng cá nhân: ${r.thang.join(', ')}`
+      + `\nĐỉnh cao: ${r.dinhCao.map((p, i) => `chặng ${i + 1} (${p.tu}${p.den !== null ? '–' + p.den : '+'} tuổi) số ${TS.hien(p.so)}, thử thách ${r.thuThach[i]}`).join('; ')}`
+      + '\n\nHãy luận giải thần số học cho người này.';
+  }
+
   // ---------- Tổng hợp 3 hệ (Tử Vi, Bát Tự, Bản đồ sao) cho cùng một người ----------
   const toThHash = (inp) => 'tong-hop-' + toBdsHash(inp).slice('ban-do-sao-'.length);
   const fromThHash = (h) => fromBdsHash('ban-do-sao-' + h.slice('tong-hop-'.length));
@@ -1272,8 +1372,8 @@
   // ---------- Xuất file ----------
   function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 3200); }
   const fileBase = () => {
-    const bt = state.view === 'battu' || state.view === 'bds', goc = state.view === 'bds' ? state.bds : state.bt;
-    const tb = bt ? { name: goc.ten, duongLich: goc.duongLich } : state.chart.thienBan, duoi = state.view === 'bds' ? 'ban-do-sao' : 'bat-tu';
+    const bt = ['battu', 'bds', 'tsh'].includes(state.view), goc = { bds: state.bds, tsh: state.tsh }[state.view] || state.bt;
+    const tb = bt ? { name: goc.ten, duongLich: goc.duongLich || goc.ngay } : state.chart.thienBan, duoi = { bds: 'ban-do-sao', tsh: 'than-so-hoc' }[state.view] || 'bat-tu';
     const n = (tb.name || (bt ? duoi : 'la-so')).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
     return `${n || 'la-so'}${bt && tb.name ? '-' + duoi : ''}-${tb.duongLich.year}${pad(tb.duongLich.month)}${pad(tb.duongLich.day)}`;
   };
@@ -1293,9 +1393,10 @@
   }
   // Tải ảnh: Tử Vi chụp lá số, Bát Tự chụp khung tứ trụ (bỏ các nút có class no-export)
   async function exportPng() {
-    const bt = state.view === 'battu', bds = state.view === 'bds', node = bds ? $('#bds-wheel') : bt ? $('#bt-pillars').closest('section') : $('#chart');
+    const bt = state.view === 'battu', bds = state.view === 'bds', tsh = state.view === 'tsh';
+    const node = tsh ? $('#tsh-so').closest('section') : bds ? $('#bds-wheel') : bt ? $('#bt-pillars').closest('section') : $('#chart');
     if (!window.htmlToImage) { toast('Chưa tải được công cụ xuất ảnh.'); return; }
-    const btn = $(bds ? '#bds-png' : bt ? '#bt-png' : '#btn-png'); btn.disabled = true;
+    const btn = $(tsh ? '#tsh-png' : bds ? '#bds-png' : bt ? '#bt-png' : '#btn-png'); btn.disabled = true;
     try {
       const bg = getComputedStyle(node).backgroundColor;
       const filter = (n) => !(n.classList && (n.classList.contains('no-export') || n.classList.contains('info')));
@@ -1318,7 +1419,7 @@
   function renderRecent() {
     const list = loadRecent();
     $('#recent-wrap').hidden = !list.length;
-    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${{ battu: ' · Bát Tự', bds: ' · Bản đồ sao', tonghop: ' · Tổng hợp' }[x.mode] || ''}</button>`).join('');
+    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${{ battu: ' · Bát Tự', bds: ' · Bản đồ sao', tonghop: ' · Tổng hợp', tsh: ' · Thần số học' }[x.mode] || ''}</button>`).join('');
   }
 
   // ---------- Điều phối ----------
@@ -1369,6 +1470,7 @@
       if (state.mode === 'battu') { openBt(inp); return; }
       if (state.mode === 'bds') { openBds(inp); return; }
       if (state.mode === 'tonghop') { openTh(inp); return; }
+      if (state.mode === 'tsh') { openTsh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (!compute(inp, false)) return;
@@ -1397,6 +1499,13 @@
       saveRecent({ ...inp, mode: 'bds' });
       const h = toBdsHash(inp);
       if (location.hash.slice(1) === h) showView('bds'); else location.hash = h;
+    };
+    // Mở màn thần số học
+    const openTsh = (inp) => {
+      if (!computeTsh(inp)) return;
+      saveRecent({ ...inp, mode: 'tsh' });
+      const h = toTshHash(state.tsh);
+      if (location.hash.slice(1) === h) showView('tsh'); else location.hash = h;
     };
     // Mở màn tổng hợp 3 hệ (từ form hoặc từ nút ở các màn kết quả)
     const openTh = (inp) => {
@@ -1467,6 +1576,7 @@
       if (inp.mode === 'battu') { setMode('battu'); openBt(inp); return; }
       if (inp.mode === 'bds') { setMode('bds'); openBds(inp); return; }
       if (inp.mode === 'tonghop') { setMode('tonghop'); openTh(inp); return; }
+      if (inp.mode === 'tsh') { setMode('tsh'); openTsh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
@@ -1576,16 +1686,18 @@
     $('#btn-png').addEventListener('click', exportPng);
     $('#bt-png').addEventListener('click', exportPng);
     $('#bds-png').addEventListener('click', exportPng);
+    $('#tsh-png').addEventListener('click', exportPng);
+    $('#tsh-body').addEventListener('click', (e) => { if (e.target.closest('#tsh-copy')) copyText(tshText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
     $('#bds-body').addEventListener('click', (e) => { if (e.target.closest('#bds-copy')) copyText(bdsText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
     $('#btn-json').addEventListener('click', async () => {
-      if (state.view === 'battu' || state.view === 'bds') { if (!(await saveFile(fileBase() + '.json', JSON.stringify(state.view === 'bds' ? state.bds : state.bt, null, 2)))) toast('Không lưu được tệp ở đây; dùng nút Sao chép thông tin.'); return; }
+      if (['battu', 'bds', 'tsh'].includes(state.view)) { if (!(await saveFile(fileBase() + '.json', JSON.stringify({ bds: state.bds, tsh: state.tsh }[state.view] || state.bt, null, 2)))) toast('Không lưu được tệp ở đây; dùng nút Sao chép thông tin.'); return; }
       if (!(await saveFile(fileBase() + '.json', chartJson()))) { setTab('json'); toast('Mở tab Dữ liệu JSON để sao chép.'); }
     });
     $('#btn-copy').addEventListener('click', () => copyText(chartJson(), 'Đã chép JSON', $('#json-out')));
     $$('.js-copy-info').forEach((b) => b.addEventListener('click', () => copyText(infoForAi(), 'Đã chép, dán vào AI bạn dùng để hỏi')));
     $('#png-close').addEventListener('click', () => { $('#png-dialog').hidden = true; });
     // Ngoài Claude, địa chỉ trang chính là link của lá số
-    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao', th: 'Đã chép link tổng hợp' }[state.view] || 'Đã chép link lá số')); }
+    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao', th: 'Đã chép link tổng hợp', tsh: 'Đã chép link (link có chứa họ tên)' }[state.view] || 'Đã chép link lá số')); }
 
     const setAi = (fn) => { state.sample = fn; $('#ai-panel').hidden = !fn; $('#ai-off').hidden = !!fn; };
     if (IN_CLAUDE) {

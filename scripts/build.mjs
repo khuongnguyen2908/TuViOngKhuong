@@ -33,6 +33,7 @@ const parts = {
   BANDOSAO: stripExports(read('bandosao.js')),
   SAONGHIA: stripExports(read('bandosao-nghia.js')),
   TONGHOP: stripExports(read('tonghop.js')),
+  THANSO: stripExports(read('thansohoc.js')),
   AI: stripExports(read('ai.js')),
   APP: read('app.js'),
 };

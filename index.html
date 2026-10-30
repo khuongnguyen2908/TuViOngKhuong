@@ -524,6 +524,41 @@ footer a { color: inherit; }
 .bds-list li { line-height: 1.6; }
 @media (max-width: 560px) { .bds-tbl { font-size: 12.5px; } .bds-tbl th, .bds-tbl td { padding: 5px 4px; } .wh-ky, .wh-sao .g { font-size: 24px; } }
 
+/* Thần số học */
+.tsh-ico { color: var(--cinnabar); background: var(--tint); font: 700 22px var(--f-display); }
+.tsh-so { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.tsh-o { display: grid; justify-items: center; align-content: center; gap: 2px; padding: 12px 8px; border: 1px solid var(--rule); border-radius: 12px; background: var(--panel); text-align: center; }
+.tsh-o span { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.tsh-o b { font: 700 34px/1 var(--f-display); color: var(--ink); }
+.tsh-o.lon { grid-column: span 2; grid-row: span 2; border-color: var(--cinnabar); background: var(--sel); }
+.tsh-o.lon b { font-size: 68px; color: var(--cinnabar); }
+.tsh-o.lon small { font-size: 13px; color: var(--ink); }
+.tsh-bd { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: flex-start; }
+.tsh-luoi { margin: 0; display: grid; gap: 6px; justify-items: center; }
+.tsh-luoi figcaption { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.tsh-o3 { display: grid; grid-template-columns: repeat(3, 62px); grid-template-rows: repeat(3, 52px); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--panel); }
+.tsh-o3 span { display: grid; place-items: center; border-right: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font: 700 18px var(--f-display); letter-spacing: 1px; }
+.tsh-o3 span:nth-child(3n) { border-right: 0; } .tsh-o3 span:nth-child(n+7) { border-bottom: 0; }
+.tsh-o3 span.trong { color: var(--rule); font-weight: 500; }
+.tsh-o3 span.co { color: var(--cinnabar); }
+.tsh-mt { display: flex; flex-direction: column; gap: 6px; align-self: center; }
+.tsh-mt .cc-tag { font-size: 12.5px; padding: 3px 10px; }
+.ck-svg { width: 100%; max-width: 540px; height: auto; display: block; }
+.ck-luoi { stroke: var(--rule); stroke-dasharray: 3 4; }
+.ck-truc { fill: var(--muted); font: 500 11px var(--f-ui); text-anchor: end; }
+.ck-duong { fill: none; stroke: var(--gold); stroke-width: 2.4; stroke-linejoin: round; }
+.ck-svg circle { fill: var(--panel); stroke: var(--gold); stroke-width: 2; }
+.ck-nay circle { fill: var(--cinnabar); stroke: var(--cinnabar); }
+.ck-so { fill: var(--ink); font: 700 14px var(--f-ui); text-anchor: middle; }
+.ck-nam { fill: var(--muted); font: 500 11.5px var(--f-ui); text-anchor: middle; }
+.ck-nay .ck-nam { fill: var(--cinnabar); font-weight: 700; }
+.tsh-thang { display: grid; grid-template-columns: repeat(12, minmax(40px, 1fr)); gap: 4px; margin-top: 10px; overflow-x: auto; }
+.tsh-thang span { display: grid; justify-items: center; padding: 4px 2px; border: 1px solid var(--rule); border-radius: 7px; background: var(--panel); }
+.tsh-thang small { font-size: 10.5px; color: var(--muted); }
+.tsh-thang b { font-size: 14px; }
+.tsh-tbl td { white-space: normal; }
+@media (max-width: 560px) { .tsh-o.lon b { font-size: 54px; } .tsh-o3 { grid-template-columns: repeat(3, 52px); grid-template-rows: repeat(3, 46px); } .tsh-thang { grid-template-columns: repeat(6, minmax(40px, 1fr)); } }
+
 /* Tổng hợp 3 hệ */
 .th-ico { color: var(--gold); background: var(--tint); font: 700 22px var(--f-display); }
 .th-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
@@ -771,6 +806,35 @@ html.no-scroll { overflow: hidden; }
   <footer>
     <span>Vị trí hành tinh tính theo công thức thiên văn (Meeus; Schlyter; JPL), sai số khoảng 1–2 phút cung. Hệ nhà Placidus, hoàng đạo nhiệt đới.</span>
     <span>Chiêm tinh là một cách diễn giải truyền thống, chưa được khoa học chứng minh. Luận giải trên trang chỉ để tham khảo, không thay cho tư vấn chuyên môn.</span>
+  </footer>
+</main>
+</div>
+
+<!-- Màn thần số học -->
+<div id="view-tsh" class="view-chart" hidden>
+<main class="page">
+  <section class="who" aria-label="Thông tin thần số học">
+    <div>
+      <h1 id="tsh-name" tabindex="-1">Thần số học</h1>
+      <div class="facts" id="tsh-facts"></div>
+    </div>
+  </section>
+  <section class="decades tsh-top" aria-label="Các chỉ số chính">
+    <div class="decades-head"><h2>Các chỉ số chính <button type="button" class="info" data-info="tshChiSo" aria-label="Giải thích: Cách tính các chỉ số" aria-expanded="false">i</button></h2><button type="button" class="btn btn-sm dl-btn no-export" id="tsh-png" title="Tải các chỉ số thành ảnh PNG"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10"/></svg>Tải ảnh</button></div>
+    <div class="tsh-so" id="tsh-so"></div>
+  </section>
+  <section class="decades" aria-label="Biểu đồ ngày sinh và tên">
+    <div class="decades-head"><h2>Biểu đồ ngày sinh và tên <button type="button" class="info" data-info="tshLuoi" aria-label="Giải thích: Biểu đồ và mũi tên" aria-expanded="false">i</button></h2></div>
+    <div class="tsh-bd" id="tsh-bd"></div>
+  </section>
+  <section class="decades" aria-label="Chu kỳ năm cá nhân">
+    <div class="decades-head"><h2>Chu kỳ năm cá nhân <button type="button" class="info" data-info="tshNam" aria-label="Giải thích: Năm cá nhân" aria-expanded="false">i</button></h2><span class="muted" id="tsh-nam-note"></span></div>
+    <div id="tsh-chuky"></div>
+  </section>
+  <section class="reading"><div class="bt-body prose" id="tsh-body"></div></section>
+  <footer>
+    <span>Thần số học theo hệ Pythagoras: A=1 … I=9, nguyên âm A E I O U (Y tính là phụ âm), giữ số bậc thầy 11, 22, 33. Lời giải nghĩa tự biên soạn.</span>
+    <span>Thần số học là cách diễn giải truyền thống, chưa được khoa học chứng minh. Chỉ để tham khảo, không thay cho tư vấn chuyên môn. Link chia sẻ có chứa họ tên.</span>
   </footer>
 </main>
 </div>
@@ -1646,6 +1710,10 @@ const TuViContent = (() => {
     namXem: ['Năm xem hạn', 'Năm dùng để tính tuổi, đại hạn, tiểu hạn, tháng âm và sao lưu niên. Mặc định là năm nay.'],
     gioDongHo: ['Giờ đồng hồ lúc sinh', 'Miền Bắc dùng giờ UTC+8 đến 08/1967, miền Nam đến 1975. Chọn UTC+8 nếu giờ sinh ghi theo đồng hồ thời đó; web tự đổi về giờ Việt Nam.'],
     gioTy: ['Giờ Tý sớm và muộn', 'Giờ Tý từ 23 giờ đến 1 giờ sáng. Tý muộn (23 đến 24 giờ) mặc định tính sang ngày hôm sau; có thể đổi trong Tùy chọn trường phái.'],
+    // Thần số học
+    tshChiSo: ['Cách tính các chỉ số', 'Số chủ đạo cộng mọi chữ số của ngày sinh dương lịch. Các số từ tên đổi chữ cái thành số theo bảng Pythagoras (A, J, S = 1; B, K, T = 2; …; I, R = 9): linh hồn cộng nguyên âm, nhân cách cộng phụ âm, sứ mệnh cộng tất cả. Rút gọn đến một chữ số, riêng 11, 22, 33 là số bậc thầy được giữ lại.'],
+    tshLuoi: ['Biểu đồ và mũi tên', 'Các chữ số của ngày sinh (bỏ số 0) được xếp vào lưới 3×3: cột trái 1-2-3, giữa 4-5-6, phải 7-8-9 (từ dưới lên). Hàng, cột hay đường chéo có đủ số là mũi tên sức mạnh; trống hẳn là điểm cần rèn. Biểu đồ tên đếm các chữ cái theo số.'],
+    tshNam: ['Năm cá nhân', 'Cộng ngày, tháng sinh với năm đang xem rồi rút gọn còn 1–9. Mỗi 9 năm là một chu kỳ: năm 1 khởi đầu, năm 9 khép lại. Tháng cá nhân bằng năm cá nhân cộng số tháng.'],
     // Bản đồ sao
     bdsNoiSinh: ['Nơi sinh', 'Cần để tính Điểm Mọc và 12 nhà. Chọn tỉnh, thành theo tên cũ (trước sáp nhập 2025); tọa độ lấy ở trung tâm tỉnh lỵ nên Điểm Mọc có thể lệch khoảng 1 độ. Sinh ở huyện xa tỉnh lỵ hoặc ở nước ngoài thì chọn "Nơi khác" và nhập tọa độ, múi giờ.'],
     bdsVong: ['Cách đọc vòng bản đồ sao', 'Vòng ngoài là 12 cung hoàng đạo. Vòng giữa đánh số 12 nhà, bắt đầu từ Điểm Mọc (AC) bên trái, đi ngược chiều kim đồng hồ. Ký hiệu bên trong là hành tinh, chữ R là đang nghịch hành. Đường nối giữa vòng là góc chiếu: xanh là hài hòa, đỏ là căng thẳng, vàng là trùng tụ.'],
@@ -3379,6 +3447,148 @@ const TuViTongHop = (() => {
   return { NET, KHUYEN, TU_VI, BAT_TU, CUNG, GHEP, compare };
 })();
 
+// Thần số học (Pythagoras): chỉ số từ ngày sinh dương lịch và họ tên. Chạy được trong Node như engine.js.
+// Quy ước: A=1 … I=9, J=1 …; nguyên âm A E I O U (Y tính là phụ âm); giữ số bậc thầy 11, 22, 33.
+// Lời giải nghĩa tự biên soạn, mang tính tham khảo.
+const TuViThanSo = (() => {
+  const tong = (n) => String(n).split('').reduce((s, c) => s + (+c || 0), 0);
+  const BAC_THAY = [11, 22, 33];
+  // rút gọn về 1 chữ số; giu = true thì dừng ở 11, 22, 33
+  const rut = (n, giu = true) => { while (n > 9 && !(giu && BAC_THAY.includes(n))) n = tong(n); return n; };
+  const hien = (n) => (n === 22 ? '22/4' : n === 33 ? '33/6' : String(n));
+  const goc = (n) => rut(n, false); // 11 → 2, 22 → 4
+  const chuCai = (ten) => ten.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase().replace(/[^A-Z]/g, '');
+  const giaTri = (c) => ((c.charCodeAt(0) - 65) % 9) + 1;
+  const NGUYEN_AM = 'AEIOU';
+  // Lưới 3×3: cột trái 1-2-3 (dưới lên), giữa 4-5-6, phải 7-8-9
+  const MUI_TEN = [
+    ['123', 'Kế hoạch', 'Thiếu tổ chức'], ['456', 'Ý chí', 'Dễ thất vọng'], ['789', 'Hoạt động', 'Thụ động'],
+    ['147', 'Thực tế', 'Thiếu thực tế'], ['258', 'Cân bằng cảm xúc', 'Nhạy cảm'], ['369', 'Trí tuệ', 'Trí nhớ ngắn hạn'],
+    ['159', 'Quyết tâm', 'Trì hoãn'], ['357', 'Nhạy bén tâm linh', 'Hoài nghi'],
+  ];
+
+  function compute({ name, day, month, year, namXem }) {
+    const chuSoNgay = `${String(day).padStart(2, '0')}${String(month).padStart(2, '0')}${year}`;
+    const chuDao = rut(tong(chuSoNgay));
+    const ngaySinh = rut(day);
+    const thaiDo = rut(tong(day) + tong(month), false);
+    const cc = chuCai(name || '');
+    const am = cc.split('').filter((c) => NGUYEN_AM.includes(c)), phu = cc.split('').filter((c) => !NGUYEN_AM.includes(c));
+    const sum = (ds) => ds.reduce((s, c) => s + giaTri(c), 0);
+    const coTen = cc.length > 0;
+    const linhHon = coTen ? rut(sum(am)) : null, nhanCach = coTen ? rut(sum(phu)) : null, suMenh = coTen ? rut(sum(am) + sum(phu)) : null;
+    const truongThanh = coTen ? rut(chuDao + suMenh) : null;
+    const tuDuy = coTen ? rut(ngaySinh + suMenh) : null;
+    // Năm, tháng cá nhân
+    const namCaNhan = (y) => rut(tong(day) + tong(month) + tong(y), false);
+    const nx = namXem || new Date().getFullYear();
+    const thang = Array.from({ length: 12 }, (_, i) => rut(namCaNhan(nx) + i + 1, false));
+    // Biểu đồ ngày sinh và biểu đồ tên: số lần mỗi số 1–9 xuất hiện
+    const dem = Array(10).fill(0);
+    chuSoNgay.split('').forEach((c) => { if (c !== '0') dem[+c]++; });
+    const demTen = Array(10).fill(0);
+    cc.split('').forEach((c) => { demTen[giaTri(c)]++; });
+    const co = (d) => dem[+d] > 0;
+    const muiTen = { co: MUI_TEN.filter(([k]) => k.split('').every(co)).map(([k, ten]) => ({ k, ten })), trong: MUI_TEN.filter(([k]) => !k.split('').some(co)).map(([k, , ten]) => ({ k, ten })) };
+    const thieu = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter((d) => !dem[d]);
+    const buTen = thieu.filter((d) => demTen[d] > 0);
+    // 4 đỉnh cao và 4 thử thách (tháng, ngày, năm rút gọn về 1 chữ số)
+    const m = goc(month), d = goc(day), y = goc(tong(year)), lp = goc(chuDao);
+    const p1 = rut(m + d), p2 = rut(d + y), p3 = rut(goc(p1) + goc(p2)), p4 = rut(m + y);
+    const tuoi1 = 36 - lp;
+    const dinhCao = [p1, p2, p3, p4].map((so, i) => ({ so, tu: i ? tuoi1 + 9 * (i - 1) + 1 : 0, den: i < 3 ? tuoi1 + 9 * i : null, nam: year + (i ? tuoi1 + 9 * (i - 1) + 1 : 0) }));
+    const c1 = Math.abs(m - d), c2 = Math.abs(d - y);
+    const thuThach = [c1, c2, Math.abs(c1 - c2), Math.abs(m - y)];
+    return {
+      ten: name || '', chuCai: cc, ngay: { day, month, year }, namXem: nx,
+      chuDao, ngaySinh, thaiDo, linhHon, nhanCach, suMenh, truongThanh, tuDuy,
+      namCaNhan: namCaNhan(nx), chuKy: Array.from({ length: 11 }, (_, i) => ({ nam: nx - 5 + i, so: namCaNhan(nx - 5 + i) })), thang,
+      dem, demTen, muiTen, thieu, buTen, dinhCao, thuThach,
+    };
+  }
+
+  // ---------- Giải nghĩa ----------
+  const SO = {
+    1: { tuKhoa: 'độc lập, tiên phong, tự chủ', moTa: 'Người số 1 muốn tự quyết con đường của mình, thích đi đầu và làm theo cách riêng. Bạn có ý chí mạnh, dám nhận trách nhiệm, nhưng dễ cô độc vì ít khi nhờ ai.',
+      manh: ['Tự lập, quyết đoán', 'Dám khởi đầu việc mới', 'Có chính kiến rõ'], yeu: ['Bướng, khó nghe góp ý', 'Thiếu kiên nhẫn với người chậm hơn', 'Ngại nhờ giúp đỡ'], khuyen: 'Tập lắng nghe trước khi quyết; giao bớt việc cho người khác để đi xa hơn.' },
+    2: { tuKhoa: 'nhạy cảm, hòa giải, hợp tác', moTa: 'Người số 2 cảm nhận tinh tế, giỏi đọc cảm xúc người khác và làm cầu nối. Bạn làm tốt nhất khi có người đồng hành, nhưng dễ tổn thương và thiếu tự tin.',
+      manh: ['Tinh tế, biết lắng nghe', 'Hợp tác tốt', 'Trực giác nhạy'], yeu: ['Dễ tổn thương', 'Do dự, sợ làm phật lòng', 'Hay so sánh mình với người khác'], khuyen: 'Tin vào cảm nhận của mình, tập nói "không" khi cần; viết ra điều mình muốn trước khi nghe ý người khác.' },
+    3: { tuKhoa: 'sáng tạo, biểu đạt, vui vẻ', moTa: 'Người số 3 nhanh trí, có óc hài hước và giỏi diễn đạt bằng lời, chữ hay hình ảnh. Bạn cần được thể hiện, nhưng dễ phân tán và chán nhanh.',
+      manh: ['Sáng tạo, nhiều ý tưởng', 'Giao tiếp duyên dáng', 'Lạc quan, truyền cảm hứng'], yeu: ['Thiếu tập trung', 'Dễ nói quá lời', 'Ngại việc lặp lại'], khuyen: 'Chọn một kênh sáng tạo chính và làm đến nơi; ghi lại ý tưởng thay vì nhảy ngay sang việc mới.' },
+    4: { tuKhoa: 'thực tế, kỷ luật, xây dựng', moTa: 'Người số 4 thích trật tự, làm việc chăm chỉ và đáng tin. Bạn giỏi biến kế hoạch thành kết quả cụ thể, nhưng dễ cứng nhắc và ngại thay đổi.',
+      manh: ['Chăm chỉ, đáng tin', 'Tổ chức tốt', 'Kiên trì'], yeu: ['Cứng nhắc', 'Lo lắng về sự an toàn', 'Khó thư giãn'], khuyen: 'Cho phép mình thử cái mới theo bước nhỏ; dành thời gian nghỉ như một phần của kế hoạch.' },
+    5: { tuKhoa: 'tự do, trải nghiệm, linh hoạt', moTa: 'Người số 5 yêu tự do, thích đi, thích thử và học qua trải nghiệm. Bạn thích nghi nhanh, có sức hút, nhưng dễ bồn chồn và thiếu cam kết.',
+      manh: ['Linh hoạt, ứng biến nhanh', 'Ham học hỏi', 'Thu hút, dễ kết nối'], yeu: ['Bồn chồn, dễ chán', 'Thiếu cam kết lâu dài', 'Dễ sa vào hưởng thụ'], khuyen: 'Giữ vài cam kết cốt lõi làm điểm neo; tự do bền nhất là tự do có kỷ luật.' },
+    6: { tuKhoa: 'yêu thương, trách nhiệm, chăm sóc', moTa: 'Người số 6 sống vì gia đình và người thân, giàu tình cảm và có trách nhiệm. Bạn thích chăm lo, có gu thẩm mỹ, nhưng dễ ôm đồm và áp đặt cách yêu thương của mình.',
+      manh: ['Tận tâm, có trách nhiệm', 'Ấm áp, biết chăm sóc', 'Có óc thẩm mỹ'], yeu: ['Ôm đồm, khó từ chối', 'Lo cho người khác quá mức', 'Dễ áp đặt'], khuyen: 'Chăm sóc bản thân cũng là trách nhiệm; để người khác tự lớn lên bằng lựa chọn của họ.' },
+    7: { tuKhoa: 'tìm hiểu, phân tích, nội tâm', moTa: 'Người số 7 thích đi sâu vào bản chất mọi việc và học qua trải nghiệm của chính mình. Bạn có chiều sâu, độc lập trong suy nghĩ, nhưng dễ khép kín và hoài nghi.',
+      manh: ['Sâu sắc, phân tích tốt', 'Độc lập', 'Ham hiểu biết'], yeu: ['Khép kín, khó gần', 'Hoài nghi', 'Hay phải tự vấp mới chịu tin'], khuyen: 'Chia sẻ điều mình nghĩ với vài người tin cậy; học từ kinh nghiệm người khác để bớt phải tự vấp.' },
+    8: { tuKhoa: 'tham vọng, quản lý, tài chính', moTa: 'Người số 8 có khả năng tổ chức, nhạy với tiền bạc và quyền hạn. Bạn độc lập, muốn tự chủ tài chính, nhưng dễ đặt nặng thành công vật chất và khó bày tỏ cảm xúc.',
+      manh: ['Quản lý giỏi', 'Có đầu óc kinh doanh', 'Bền bỉ'], yeu: ['Đặt nặng vật chất', 'Khó bày tỏ cảm xúc', 'Dễ căng thẳng vì công việc'], khuyen: 'Đặt ranh giới giữa công việc và gia đình; thành công bền khi đi cùng sự tử tế.' },
+    9: { tuKhoa: 'lý tưởng, nhân ái, vì cộng đồng', moTa: 'Người số 9 giàu lý tưởng, muốn sống có ích cho nhiều người. Bạn có tầm nhìn rộng, bao dung, nhưng dễ vỡ mộng khi thực tế không như mong muốn.',
+      manh: ['Nhân ái, rộng lượng', 'Có trách nhiệm với cộng đồng', 'Tầm nhìn rộng'], yeu: ['Dễ thất vọng', 'Lý tưởng hóa người khác', 'Quên chăm lo cho bản thân'], khuyen: 'Biến lý tưởng thành việc nhỏ làm được mỗi tuần; chấp nhận thế giới chưa hoàn hảo.' },
+    11: { tuKhoa: 'trực giác, cảm hứng, tâm linh', moTa: 'Số 11 là số bậc thầy: nhạy cảm như số 2 nhưng mạnh hơn về trực giác và khả năng truyền cảm hứng. Bạn hay có linh cảm đúng, giàu lý tưởng, nhưng dễ căng thẳng, lo âu nếu chưa tìm được hướng đi.',
+      manh: ['Trực giác mạnh', 'Truyền cảm hứng', 'Giàu lòng trắc ẩn'], yeu: ['Dễ căng thẳng, lo âu', 'Kỳ vọng quá cao', 'Cảm xúc lên xuống'], khuyen: 'Giữ nếp sinh hoạt đều đặn để tinh thần vững; đặt lý tưởng vào việc cụ thể giúp người.' },
+    22: { tuKhoa: 'kiến tạo lớn, thực tế, tầm nhìn', moTa: 'Số 22/4 là số bậc thầy về xây dựng: có tầm nhìn của người mơ lớn và đôi tay của người làm thật. Bạn có thể làm nên việc lớn, nhưng áp lực tự đặt ra cũng nặng.',
+      manh: ['Tầm nhìn lớn', 'Thực tế, có phương pháp', 'Tổ chức giỏi'], yeu: ['Áp lực lớn lên bản thân', 'Cứng nhắc khi căng thẳng', 'Khó hài lòng'], khuyen: 'Chia mục tiêu lớn thành chặng nhỏ; ghi nhận từng bước tiến thay vì chỉ nhìn đích.' },
+    33: { tuKhoa: 'yêu thương, nâng đỡ, chữa lành', moTa: 'Số 33/6 hiếm gặp, mang năng lượng của số 6 ở mức cao: muốn chăm sóc, nâng đỡ và chữa lành cho nhiều người. Bạn giàu yêu thương, nhưng dễ kiệt sức vì gánh thay người khác.',
+      manh: ['Giàu yêu thương', 'Biết nâng đỡ người khác', 'Có trách nhiệm'], yeu: ['Dễ kiệt sức', 'Hy sinh quá mức', 'Khó nhận sự giúp đỡ'], khuyen: 'Đặt giới hạn cho việc giúp người; nghỉ ngơi đủ để còn sức yêu thương lâu dài.' },
+  };
+  const CHI_SO = {
+    chuDao: ['Số chủ đạo', 'Cộng mọi chữ số của ngày, tháng, năm sinh', 'Con đường chính và bài học lớn nhất của đời bạn.'],
+    linhHon: ['Số linh hồn', 'Cộng các nguyên âm trong họ tên', 'Điều bạn khao khát sâu bên trong.'],
+    suMenh: ['Số sứ mệnh', 'Cộng mọi chữ cái trong họ tên', 'Năng lực và cách bạn thể hiện mình với đời.'],
+    nhanCach: ['Số nhân cách', 'Cộng các phụ âm trong họ tên', 'Ấn tượng bạn để lại cho người khác.'],
+    thaiDo: ['Số thái độ', 'Cộng ngày và tháng sinh', 'Phản ứng đầu tiên của bạn trước mọi việc.'],
+    ngaySinh: ['Số ngày sinh', 'Rút gọn ngày sinh', 'Tài năng tự nhiên bạn mang theo.'],
+    truongThanh: ['Số trưởng thành', 'Số chủ đạo cộng số sứ mệnh', 'Hướng phát triển rõ dần từ khoảng 35–40 tuổi.'],
+    tuDuy: ['Số tư duy', 'Số ngày sinh cộng số sứ mệnh', 'Cách bạn suy nghĩ và ra quyết định.'],
+  };
+  const NAM = {
+    1: ['Khởi đầu', 'Năm mở đầu chu kỳ 9 năm mới: hợp để khởi sự, đặt mục tiêu, thử hướng đi mới.', 'Chọn rõ 1–2 mục tiêu lớn cho cả chu kỳ và bắt tay ngay.'],
+    2: ['Kết nối, kiên nhẫn', 'Năm của hợp tác và chờ đợi: việc tiến chậm, quan hệ quan trọng hơn kết quả.', 'Kiên nhẫn, chăm sóc các mối quan hệ; đừng ép tiến độ.'],
+    3: ['Sáng tạo, thể hiện', 'Năm cởi mở, giao lưu, sáng tạo; dễ có niềm vui nhưng cũng dễ phân tán.', 'Thể hiện bản thân nhưng giữ tập trung vào mục tiêu đã đặt.'],
+    4: ['Xây nền móng', 'Năm làm việc chăm chỉ, sắp xếp lại tài chính, sức khỏe, công việc.', 'Lập kế hoạch chi tiết, giữ kỷ luật; đừng nản khi thấy mệt.'],
+    5: ['Thay đổi, tự do', 'Năm nhiều biến động: đi lại, đổi việc, gặp người mới; có cơ hội bất ngờ.', 'Đón nhận thay đổi nhưng cân nhắc trước quyết định lớn; giữ một khoản an toàn.'],
+    6: ['Gia đình, trách nhiệm', 'Năm hướng về gia đình, nhà cửa và các cam kết; có thể có chuyện cưới hỏi, chăm sóc người thân.', 'Dành thời gian cho người thân; nhận trách nhiệm vừa sức.'],
+    7: ['Nhìn lại, học hỏi', 'Năm lắng lại để học, nghiên cứu và nhìn lại bản thân; không hợp để phô trương.', 'Đầu tư cho kiến thức và sức khỏe tinh thần; chậm lại để nghĩ kỹ.'],
+    8: ['Thành quả, tài chính', 'Năm gặt hái từ nỗ lực trước đó: công việc, tiền bạc, vị trí có thể lên.', 'Quản lý tiền chặt chẽ, nắm cơ hội nhưng giữ chữ tín.'],
+    9: ['Khép lại, buông bỏ', 'Năm kết thúc chu kỳ: hoàn tất việc dang dở, buông những gì không còn hợp.', 'Dọn dẹp, tha thứ, khép lại việc cũ để chuẩn bị chu kỳ mới.'],
+  };
+  const MUI_TEN_Y = {
+    'Kế hoạch': 'Giỏi sắp xếp, lên kế hoạch và làm theo trình tự.', 'Ý chí': 'Ý chí mạnh, đã quyết là làm đến cùng.',
+    'Hoạt động': 'Năng động, thích bắt tay vào làm hơn là ngồi bàn.', 'Thực tế': 'Thực tế, khéo tay, giỏi việc cụ thể.',
+    'Cân bằng cảm xúc': 'Cảm xúc ổn định, biết thấu hiểu người khác.', 'Trí tuệ': 'Trí nhớ tốt, tư duy sắc bén, thích học hỏi.',
+    'Quyết tâm': 'Kiên định, có mục tiêu thì theo đuổi đến cùng.', 'Nhạy bén tâm linh': 'Trực giác tốt, bao dung, dễ cảm thông.',
+    'Thiếu tổ chức': ['Dễ bừa bộn, khó sắp xếp việc theo trình tự.', 'Dùng lịch và danh sách việc; làm xong việc này rồi mới sang việc khác.'],
+    'Dễ thất vọng': ['Dễ hụt hẫng khi mọi việc không như ý.', 'Đặt kỳ vọng vừa phải; chia việc lớn thành bước nhỏ để thấy mình tiến bộ.'],
+    'Thụ động': ['Dễ chần chừ, chờ hoàn cảnh thuận mới làm.', 'Bắt đầu bằng một việc nhỏ ngay hôm nay và đặt hạn chót cho nó.'],
+    'Thiếu thực tế': ['Hay nghĩ nhiều hơn làm, ngại việc chân tay.', 'Làm thử bằng tay, ghi kế hoạch thành từng bước cụ thể.'],
+    'Nhạy cảm': ['Dễ tổn thương, cảm xúc lên xuống.', 'Tập gọi tên cảm xúc và chia sẻ với người tin cậy thay vì giữ trong lòng.'],
+    'Trí nhớ ngắn hạn': ['Dễ quên, khó tập trung lâu.', 'Ghi chép, ôn lại đều đặn; ngủ đủ giấc.'],
+    'Trì hoãn': ['Dễ do dự, để việc đến phút chót.', 'Đặt mục tiêu rõ và hạn chót; nhờ một người nhắc.'],
+    'Hoài nghi': ['Khó tin người, cần bằng chứng mới tin.', 'Hoài nghi vừa đủ để cẩn thận; cho người khác cơ hội chứng minh.'],
+  };
+  const THIEU = {
+    1: ['Khó bày tỏ bản thân, ngại nói ra điều mình muốn.', 'Tập nói rõ mong muốn của mình trong những việc nhỏ hằng ngày.'],
+    2: ['Trực giác và sự kiên nhẫn với người khác cần rèn thêm.', 'Dành thời gian lắng nghe trước khi phản hồi.'],
+    3: ['Dễ thiếu tự tin khi thể hiện ý tưởng, đôi lúc bi quan.', 'Viết, vẽ hoặc kể chuyện để luyện cách diễn đạt.'],
+    4: ['Dễ thiếu ngăn nắp, ngại việc chi tiết.', 'Giữ một nếp sinh hoạt cố định và sắp xếp chỗ làm việc gọn gàng.'],
+    5: ['Dễ thiếu động lực, khó cân bằng giữa tự do và trách nhiệm.', 'Đặt mục tiêu ngắn, thưởng cho mình khi xong.'],
+    6: ['Dễ ngại thể hiện sự quan tâm với người thân.', 'Chủ động hỏi han, giúp đỡ gia đình bằng việc cụ thể.'],
+    7: ['Hay phải học qua trải nghiệm thực tế, đôi khi phải trả giá.', 'Tham khảo kinh nghiệm người đi trước trước khi làm việc lớn.'],
+    8: ['Cần học cách quản lý tiền bạc và chi tiết.', 'Ghi chép thu chi, lập ngân sách đơn giản.'],
+    9: ['Có thể thiếu lý tưởng chung, chủ yếu nghĩ cho mình.', 'Tham gia một việc thiện nguyện hoặc việc chung nhỏ.'],
+  };
+  const THU_THACH = [
+    'Có nhiều hướng đi, thử thách là tự chọn và chịu trách nhiệm với lựa chọn của mình.', 'Khẳng định bản thân mà không áp đặt người khác.',
+    'Bớt nhạy cảm, tin vào chính mình.', 'Thể hiện cảm xúc và ý tưởng đúng cách, đúng lúc.', 'Kiên nhẫn và giữ kỷ luật.',
+    'Tự do có trách nhiệm, không chạy trốn cam kết.', 'Nhận trách nhiệm mà không ôm đồm, không áp đặt.', 'Mở lòng, tin người hơn.',
+    'Cân bằng giữa tiền bạc và giá trị sống.',
+  ];
+  return { compute, rut, hien, chuCai, SO, CHI_SO, NAM, MUI_TEN, MUI_TEN_Y, THIEU, THU_THACH };
+})();
+
 // Luận giải AI khi chạy ngoài Claude: gọi proxy (worker/ai-proxy.js) và đọc luồng sự kiện của Claude API.
 // Trả về hàm cùng dạng với claude.use('sample'): (input, {signal, onText}) => Promise<{text, truncated}>.
 const TuViAI = (() => {
@@ -3418,7 +3628,7 @@ const TuViAI = (() => {
 
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia, TH = TuViTongHop;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia, TH = TuViTongHop, TS = TuViThanSo;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -3571,8 +3781,13 @@ const TuViAI = (() => {
     $('#f-tz').closest('.field').hidden = khac;
     $('#hours').classList.toggle('is-off', noHour);
     $$('#hours input').forEach((x) => { x.disabled = noHour; });
-    $('#exact-row').hidden = noHour;
-    $('#time-row').hidden = noHour || !$('#f-exact').checked;
+    // Thần số học chỉ cần họ tên và ngày sinh
+    const tsh = state.mode === 'tsh';
+    $('#hours').closest('.field').hidden = tsh; $('#f-nohour').closest('.check').hidden = tsh;
+    if (tsh) $('#f-tz').closest('.field').hidden = true;
+    $('#f-name').placeholder = tsh ? 'Họ tên đầy đủ, có dấu (bắt buộc)' : 'Có thể để trống';
+    $('#exact-row').hidden = tsh || noHour;
+    $('#time-row').hidden = tsh || noHour || !$('#f-exact').checked;
     const y = +$('#f-year').value;
     $('#tz-hint').hidden = !(y && y < 1976 && $('#f-tz').value === '7');
   }
@@ -3584,11 +3799,13 @@ const TuViAI = (() => {
     { mode: 'tuvi', hash: 'lap-la-so', ten: 'Lá số Tử Vi', mo: '12 cung, đại hạn, tiểu hạn', ico: () => `<span class="tool-ico bagua-ico">${BAGUA}</span>` },
     { mode: 'battu', hash: 'lap-bat-tu', ten: 'Bát Tự', mo: 'Tứ trụ, ngũ hành, đại vận', ico: () => `<img class="tool-ico" src="assets/can/giap.webp" alt="" width="44" height="44">` },
     { mode: 'bds', hash: 'lap-ban-do-sao', ten: 'Bản đồ sao', mo: 'Chiêm tinh phương Tây', ico: () => '<span class="tool-ico sao-ico">♈︎</span>' },
+    { mode: 'tsh', hash: 'lap-than-so-hoc', ten: 'Thần số học', mo: 'Số chủ đạo, biểu đồ ngày sinh', ico: () => '<span class="tool-ico tsh-ico">7</span>' },
     { mode: 'tonghop', hash: 'lap-tong-hop', ten: 'Tổng hợp 3 hệ', mo: 'Tử Vi, Bát Tự, Bản đồ sao cùng nói gì', ico: () => '<span class="tool-ico th-ico">3</span>' },
   ];
   const homeHash =(m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
   const MODE_TXT = {
     tuvi: ['Lập lá số Tử Vi', 'Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.', 'An lá số', 'Không rõ giờ sinh (xem nhanh cả 12 giờ)'],
+    tsh: ['Thần số học', 'Nhập họ tên đầy đủ và ngày sinh để tính số chủ đạo, các chỉ số từ tên, biểu đồ ngày sinh, mũi tên, năm cá nhân và bốn đỉnh cao của đời.', 'Xem thần số học', ''],
     tonghop: ['Tổng hợp 3 hệ', 'Nhập ngày, giờ và nơi sinh một lần để xem cùng lúc lá số Tử Vi, Bát Tự và Bản đồ sao, và xem ba hệ cùng nói gì về bạn.', 'Xem tổng hợp', 'Không rõ giờ sinh (chỉ dùng Bát Tự ba trụ và Mặt Trời)'],
     bds: ['Lập bản đồ sao', 'Nhập ngày, giờ và nơi sinh để vẽ bản đồ sao chiêm tinh: Mặt Trời, Mặt Trăng, các hành tinh trong 12 cung hoàng đạo và 12 nhà, cùng góc chiếu giữa chúng.', 'Vẽ bản đồ sao', 'Không rõ giờ sinh (bỏ qua Điểm Mọc và 12 nhà)'],
     battu: ['Lập lá số Bát Tự', 'Nhập ngày giờ sinh để lập Tứ Trụ: trụ năm đổi ở Lập Xuân, trụ tháng theo tiết khí; xem thập thần, ngũ hành, đại vận và lưu niên.', 'Lập Bát Tự', 'Không rõ giờ sinh (lập ba trụ năm, tháng, ngày)'],
@@ -3603,17 +3820,22 @@ const TuViAI = (() => {
     syncForm();
   }
   function showView(name) {
-    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds'; $('#view-th').hidden = name !== 'th';
+    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds'; $('#view-th').hidden = name !== 'th'; $('#view-tsh').hidden = name !== 'tsh';
     state.view = name;
-    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds', 'th'].includes(name);
+    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds', 'th', 'tsh'].includes(name);
     $('#btn-json').hidden = name === 'th';
     $('.bar').classList.toggle('in-chart', name !== 'home');
     window.scrollTo(0, 0);
-    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name', th: '#th-name' }[name]);
+    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name', th: '#th-name', tsh: '#tsh-name' }[name]);
     if (h && h.focus) h.focus({ preventScroll: true });
   }
   function route() {
     const h = (location.hash || '').slice(1);
+    if (h.startsWith('than-so-hoc-')) {
+      const inp = fromTshHash(h);
+      if (inp && computeTsh(inp)) { setMode('tsh'); showView('tsh'); return; }
+      toast('Link thần số học không hợp lệ. Hãy lập lại.');
+    }
     if (h.startsWith('tong-hop-')) {
       const inp = fromThHash(h);
       if (inp) {
@@ -4433,6 +4655,94 @@ const TuViAI = (() => {
       + '\n\nHãy luận giải bản đồ sao này.';
   }
 
+  // ---------- Thần số học ----------
+  // Link: #than-so-hoc-Y-M-D-xNĂM-n<họ tên mã base64url>; link có chứa họ tên vì các chỉ số tính từ tên
+  const b64 = (s) => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const unb64 = (s) => { try { return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0))); } catch { return ''; } };
+  const toTshHash = (r) => `than-so-hoc-${r.ngay.year}-${r.ngay.month}-${r.ngay.day}-x${r.namXem}-n${b64(r.ten)}`;
+  function fromTshHash(h) {
+    const m = /^than-so-hoc-(\d{3,4})-(\d{1,2})-(\d{1,2})-x(\d{4})-n([A-Za-z0-9_-]+)$/.exec(h);
+    if (!m) return null;
+    return { name: unb64(m[5]), gender: 'nam', calendar: 'duong', day: +m[3], month: +m[2], year: +m[1], leap: false, namXem: +m[4], gio: 'ngo', hour: 12, minute: 0, options: {} };
+  }
+  function computeTsh(inp) {
+    const fail = (msg) => { $('#form-error').textContent = msg; $('#form-error').hidden = false; return false; };
+    if (!TS.chuCai(inp.name || '')) return fail('Thần số học cần họ tên đầy đủ (có thể gõ có dấu).');
+    let d = { day: inp.day, month: inp.month, year: inp.year };
+    if (inp.calendar === 'am') {
+      const s = LunarVN.makeCalendar(7).lunarToSolar(inp.day, inp.month, inp.year, !!inp.leap);
+      if (!s) return fail('Ngày âm lịch không tồn tại (kiểm tra tháng nhuận hoặc ngày 30).');
+      d = { day: s.day, month: s.month, year: s.year };
+    } else {
+      const chk = LunarVN.fromJdn(LunarVN.jdn(inp.day, inp.month, inp.year));
+      if (chk.day !== inp.day || chk.month !== inp.month) return fail('Ngày dương lịch không tồn tại.');
+    }
+    state.tsh = TS.compute({ name: inp.name.trim(), ...d, namXem: inp.namXem });
+    state.tshInput = inp;
+    $('#form-error').hidden = true;
+    renderTsh();
+    return true;
+  }
+  const soTxt = (n) => (n === null ? '–' : TS.hien(n));
+  const soY = (n) => TS.SO[n] || TS.SO[TS.rut(n, false)];
+  function luoiSo(dem, tieuDe) {
+    const hang = [[3, 6, 9], [2, 5, 8], [1, 4, 7]];
+    return `<figure class="tsh-luoi"><div class="tsh-o3">${hang.flat().map((d) => `<span class="${dem[d] ? 'co' : 'trong'}" title="Số ${d}: ${dem[d]} lần">${dem[d] ? String(d).repeat(Math.min(dem[d], 4)) : d}</span>`).join('')}</div><figcaption>${tieuDe}</figcaption></figure>`;
+  }
+  function chuKySvg(r) {
+    const W = 420, H = 190, L = 24, R = 14, T = 20, B = 30, n = r.chuKy.length;
+    const x = (i) => L + (i * (W - L - R)) / (n - 1), y = (v) => T + ((9 - v) * (H - T - B)) / 8;
+    const net = [1, 3, 5, 7, 9].map((v) => `<line class="ck-luoi" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}"/><text class="ck-truc" x="${L - 8}" y="${y(v) + 4}">${v}</text>`).join('');
+    const duong = r.chuKy.map((p, i) => `${x(i).toFixed(1)},${y(p.so).toFixed(1)}`).join(' ');
+    const diem = r.chuKy.map((p, i) => `<g class="${p.nam === r.namXem ? 'ck-nay' : ''}"><circle cx="${x(i).toFixed(1)}" cy="${y(p.so).toFixed(1)}" r="${p.nam === r.namXem ? 6 : 4}"/><text class="ck-so" x="${x(i).toFixed(1)}" y="${(y(p.so) - 10).toFixed(1)}">${p.so}</text><text class="ck-nam" x="${x(i).toFixed(1)}" y="${H - 12}">${p.nam}</text></g>`).join('');
+    return `<svg class="ck-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Chu kỳ năm cá nhân">${net}<polyline class="ck-duong" points="${duong}"/>${diem}</svg>`;
+  }
+  function renderTsh() {
+    const r = state.tsh, d = r.ngay;
+    $('#tsh-name').textContent = r.ten;
+    $('#tsh-facts').innerHTML = `<span>Ngày sinh dương lịch <strong class="num">${pad(d.day)}/${pad(d.month)}/${d.year}</strong></span><span>Tên tính theo chữ: <strong>${r.chuCai}</strong></span>`;
+    const o = (k, lon) => `<div class="tsh-o${lon ? ' lon' : ''}" title="${TS.CHI_SO[k][1]}"><span>${TS.CHI_SO[k][0]}</span><b class="num">${soTxt(r[k])}</b>${lon ? `<small>${soY(r[k]).tuKhoa}</small>` : ''}</div>`;
+    $('#tsh-so').innerHTML = o('chuDao', true) + ['linhHon', 'suMenh', 'nhanCach', 'thaiDo', 'ngaySinh', 'truongThanh', 'tuDuy'].map((k) => o(k)).join('');
+    $('#tsh-bd').innerHTML = luoiSo(r.dem, 'Biểu đồ ngày sinh') + luoiSo(r.demTen, 'Biểu đồ tên')
+      + `<div class="tsh-mt">${r.muiTen.co.map((m) => `<span class="cc-tag t-hop">↗ ${m.ten} (${m.k.split('').join('-')})</span>`).join('')}${r.muiTen.trong.map((m) => `<span class="cc-tag t-ky">○ ${m.ten} (${m.k.split('').join('-')} trống)</span>`).join('')}${!r.muiTen.co.length && !r.muiTen.trong.length ? '<span class="muted">Không có mũi tên nào</span>' : ''}</div>`;
+    const nam = TS.NAM[r.namCaNhan];
+    $('#tsh-nam-note').textContent = `Năm ${r.namXem}: năm cá nhân số ${r.namCaNhan}, ${nam[0].toLowerCase()}`;
+    $('#tsh-chuky').innerHTML = chuKySvg(r) + `<div class="tsh-thang">${r.thang.map((s, i) => `<span title="${TS.NAM[s][0]}"><small>T${i + 1}</small><b class="num">${s}</b></span>`).join('')}</div>`;
+
+    const sd = soY(r.chuDao);
+    const chiSo = ['linhHon', 'suMenh', 'nhanCach', 'thaiDo', 'ngaySinh', 'truongThanh', 'tuDuy'].map((k) => `<li><b>${TS.CHI_SO[k][0]} ${soTxt(r[k])}</b> <span class="muted">(${TS.CHI_SO[k][1].toLowerCase()})</span>: ${TS.CHI_SO[k][2]} Số ${soTxt(r[k])} mang nét ${soY(r[k]).tuKhoa}.</li>`).join('');
+    const muiTen = [...r.muiTen.co.map((m) => `<li><b class="t-hop">Mũi tên ${m.ten}</b> (${m.k.split('').join('-')}): ${TS.MUI_TEN_Y[m.ten]}</li>`),
+      ...r.muiTen.trong.map((m) => `<li><b class="t-ky">Mũi tên ${m.ten}</b> (${m.k.split('').join('-')} đều trống): ${TS.MUI_TEN_Y[m.ten][0]}${advice(TS.MUI_TEN_Y[m.ten][1])}</li>`)].join('');
+    const thieu = r.thieu.map((s) => `<li><b>Thiếu số ${s}</b>${r.buTen.includes(s) ? ' <span class="muted">(tên có số này nên được bù phần nào)</span>' : ''}: ${TS.THIEU[s][0]}${advice(TS.THIEU[s][1])}</li>`).join('');
+    const chang = r.dinhCao.map((p, i) => `<tr><td>${i + 1}</td><td>${p.tu}${p.den !== null ? `–${p.den}` : '+'} tuổi <span class="muted">(từ ${p.nam})</span></td><td><b class="num">${TS.hien(p.so)}</b> ${soY(p.so).tuKhoa}</td><td><b class="num">${r.thuThach[i]}</b> ${TS.THU_THACH[r.thuThach[i]]}</td></tr>`).join('');
+    const tuoiNay = r.namXem - d.year;
+    $('#tsh-body').innerHTML = `
+      <section><h3>Số chủ đạo ${soTxt(r.chuDao)}: ${sd.tuKhoa}</h3><p>${sd.moTa}</p>
+        <div class="bt-two"><div><h4 class="t-hop">Điểm mạnh</h4><ul>${sd.manh.map((x) => `<li>${x}</li>`).join('')}</ul></div><div><h4 class="t-ky">Điểm cần lưu ý</h4><ul>${sd.yeu.map((x) => `<li>${x}</li>`).join('')}</ul></div></div>
+        ${advice(sd.khuyen)}</section>
+      <section><h3>Các chỉ số khác</h3><ul class="bds-list">${chiSo}</ul></section>
+      <section><h3>Mũi tên và số thiếu</h3><p class="muted">Xếp các chữ số của ngày sinh vào lưới 3×3. Một hàng, cột hay đường chéo đủ số là "mũi tên" sức mạnh; trống hoàn toàn là điểm cần rèn.</p>
+        ${muiTen ? `<ul class="bds-list">${muiTen}</ul>` : '<p>Biểu đồ ngày sinh không có mũi tên nào.</p>'}
+        ${thieu ? `<ul class="bds-list">${thieu}</ul>` : '<p>Biểu đồ ngày sinh đủ cả 9 số.</p>'}</section>
+      <section><h3>Năm cá nhân ${r.namXem}: số ${r.namCaNhan}, ${nam[0].toLowerCase()}</h3><p>${nam[1]}</p>${advice(nam[2])}
+        <p class="muted">Năm ${r.namXem + 1} là năm số ${r.chuKy[6].so} (${TS.NAM[r.chuKy[6].so][0].toLowerCase()}). Mỗi 9 năm là một chu kỳ.</p></section>
+      <section><h3>Bốn đỉnh cao và thử thách</h3><p class="muted">Đời chia bốn chặng; chặng đầu kết thúc ở tuổi 36 trừ số chủ đạo. Năm ${r.namXem} bạn ${tuoiNay} tuổi.</p>
+        <table class="bds-tbl tsh-tbl"><thead><tr><th>Chặng</th><th>Tuổi</th><th>Đỉnh cao</th><th>Thử thách</th></tr></thead><tbody>${chang}</tbody></table></section>
+      <p class="note">Thần số học là một cách diễn giải truyền thống, chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')}</p>
+      <p class="ai-bar"><button type="button" class="btn" id="tsh-copy">Sao chép thông tin</button></p>`;
+  }
+  function tshText() {
+    const r = state.tsh, d = r.ngay;
+    return 'Bạn là chuyên gia thần số học Pythagoras. Các chỉ số dưới đây đã được phần mềm tính sẵn; dùng đúng số liệu này, không tự tính lại.\n'
+      + 'Viết tiếng Việt, thẳng thắn và cụ thể: tính cách, điểm mạnh, điểm cần lưu ý, công việc hợp, tình cảm, năm cá nhân hiện tại; mỗi điểm khó kèm một lời khuyên thực tế. Không phán định tuyệt đối. Cuối bài nhắc rằng thần số học là diễn giải truyền thống, chưa được khoa học chứng minh.\n\n'
+      + `Họ tên: ${r.ten}; ngày sinh ${d.day}/${d.month}/${d.year}\n`
+      + Object.keys(TS.CHI_SO).map((k) => `${TS.CHI_SO[k][0]}: ${soTxt(r[k])}`).join('; ')
+      + `\nBiểu đồ ngày sinh (số lần 1–9): ${r.dem.slice(1).join(' ')}; mũi tên: ${[...r.muiTen.co.map((m) => m.ten), ...r.muiTen.trong.map((m) => m.ten + ' (trống)')].join(', ') || 'không có'}; thiếu số: ${r.thieu.join(', ') || 'không'}`
+      + `\nNăm cá nhân ${r.namXem}: ${r.namCaNhan}; tháng cá nhân: ${r.thang.join(', ')}`
+      + `\nĐỉnh cao: ${r.dinhCao.map((p, i) => `chặng ${i + 1} (${p.tu}${p.den !== null ? '–' + p.den : '+'} tuổi) số ${TS.hien(p.so)}, thử thách ${r.thuThach[i]}`).join('; ')}`
+      + '\n\nHãy luận giải thần số học cho người này.';
+  }
+
   // ---------- Tổng hợp 3 hệ (Tử Vi, Bát Tự, Bản đồ sao) cho cùng một người ----------
   const toThHash = (inp) => 'tong-hop-' + toBdsHash(inp).slice('ban-do-sao-'.length);
   const fromThHash = (h) => fromBdsHash('ban-do-sao-' + h.slice('tong-hop-'.length));
@@ -4690,8 +5000,8 @@ const TuViAI = (() => {
   // ---------- Xuất file ----------
   function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => { t.hidden = true; }, 3200); }
   const fileBase = () => {
-    const bt = state.view === 'battu' || state.view === 'bds', goc = state.view === 'bds' ? state.bds : state.bt;
-    const tb = bt ? { name: goc.ten, duongLich: goc.duongLich } : state.chart.thienBan, duoi = state.view === 'bds' ? 'ban-do-sao' : 'bat-tu';
+    const bt = ['battu', 'bds', 'tsh'].includes(state.view), goc = { bds: state.bds, tsh: state.tsh }[state.view] || state.bt;
+    const tb = bt ? { name: goc.ten, duongLich: goc.duongLich || goc.ngay } : state.chart.thienBan, duoi = { bds: 'ban-do-sao', tsh: 'than-so-hoc' }[state.view] || 'bat-tu';
     const n = (tb.name || (bt ? duoi : 'la-so')).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase();
     return `${n || 'la-so'}${bt && tb.name ? '-' + duoi : ''}-${tb.duongLich.year}${pad(tb.duongLich.month)}${pad(tb.duongLich.day)}`;
   };
@@ -4711,9 +5021,10 @@ const TuViAI = (() => {
   }
   // Tải ảnh: Tử Vi chụp lá số, Bát Tự chụp khung tứ trụ (bỏ các nút có class no-export)
   async function exportPng() {
-    const bt = state.view === 'battu', bds = state.view === 'bds', node = bds ? $('#bds-wheel') : bt ? $('#bt-pillars').closest('section') : $('#chart');
+    const bt = state.view === 'battu', bds = state.view === 'bds', tsh = state.view === 'tsh';
+    const node = tsh ? $('#tsh-so').closest('section') : bds ? $('#bds-wheel') : bt ? $('#bt-pillars').closest('section') : $('#chart');
     if (!window.htmlToImage) { toast('Chưa tải được công cụ xuất ảnh.'); return; }
-    const btn = $(bds ? '#bds-png' : bt ? '#bt-png' : '#btn-png'); btn.disabled = true;
+    const btn = $(tsh ? '#tsh-png' : bds ? '#bds-png' : bt ? '#bt-png' : '#btn-png'); btn.disabled = true;
     try {
       const bg = getComputedStyle(node).backgroundColor;
       const filter = (n) => !(n.classList && (n.classList.contains('no-export') || n.classList.contains('info')));
@@ -4736,7 +5047,7 @@ const TuViAI = (() => {
   function renderRecent() {
     const list = loadRecent();
     $('#recent-wrap').hidden = !list.length;
-    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${{ battu: ' · Bát Tự', bds: ' · Bản đồ sao', tonghop: ' · Tổng hợp' }[x.mode] || ''}</button>`).join('');
+    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${{ battu: ' · Bát Tự', bds: ' · Bản đồ sao', tonghop: ' · Tổng hợp', tsh: ' · Thần số học' }[x.mode] || ''}</button>`).join('');
   }
 
   // ---------- Điều phối ----------
@@ -4787,6 +5098,7 @@ const TuViAI = (() => {
       if (state.mode === 'battu') { openBt(inp); return; }
       if (state.mode === 'bds') { openBds(inp); return; }
       if (state.mode === 'tonghop') { openTh(inp); return; }
+      if (state.mode === 'tsh') { openTsh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (!compute(inp, false)) return;
@@ -4815,6 +5127,13 @@ const TuViAI = (() => {
       saveRecent({ ...inp, mode: 'bds' });
       const h = toBdsHash(inp);
       if (location.hash.slice(1) === h) showView('bds'); else location.hash = h;
+    };
+    // Mở màn thần số học
+    const openTsh = (inp) => {
+      if (!computeTsh(inp)) return;
+      saveRecent({ ...inp, mode: 'tsh' });
+      const h = toTshHash(state.tsh);
+      if (location.hash.slice(1) === h) showView('tsh'); else location.hash = h;
     };
     // Mở màn tổng hợp 3 hệ (từ form hoặc từ nút ở các màn kết quả)
     const openTh = (inp) => {
@@ -4885,6 +5204,7 @@ const TuViAI = (() => {
       if (inp.mode === 'battu') { setMode('battu'); openBt(inp); return; }
       if (inp.mode === 'bds') { setMode('bds'); openBds(inp); return; }
       if (inp.mode === 'tonghop') { setMode('tonghop'); openTh(inp); return; }
+      if (inp.mode === 'tsh') { setMode('tsh'); openTsh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
@@ -4994,16 +5314,18 @@ const TuViAI = (() => {
     $('#btn-png').addEventListener('click', exportPng);
     $('#bt-png').addEventListener('click', exportPng);
     $('#bds-png').addEventListener('click', exportPng);
+    $('#tsh-png').addEventListener('click', exportPng);
+    $('#tsh-body').addEventListener('click', (e) => { if (e.target.closest('#tsh-copy')) copyText(tshText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
     $('#bds-body').addEventListener('click', (e) => { if (e.target.closest('#bds-copy')) copyText(bdsText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
     $('#btn-json').addEventListener('click', async () => {
-      if (state.view === 'battu' || state.view === 'bds') { if (!(await saveFile(fileBase() + '.json', JSON.stringify(state.view === 'bds' ? state.bds : state.bt, null, 2)))) toast('Không lưu được tệp ở đây; dùng nút Sao chép thông tin.'); return; }
+      if (['battu', 'bds', 'tsh'].includes(state.view)) { if (!(await saveFile(fileBase() + '.json', JSON.stringify({ bds: state.bds, tsh: state.tsh }[state.view] || state.bt, null, 2)))) toast('Không lưu được tệp ở đây; dùng nút Sao chép thông tin.'); return; }
       if (!(await saveFile(fileBase() + '.json', chartJson()))) { setTab('json'); toast('Mở tab Dữ liệu JSON để sao chép.'); }
     });
     $('#btn-copy').addEventListener('click', () => copyText(chartJson(), 'Đã chép JSON', $('#json-out')));
     $$('.js-copy-info').forEach((b) => b.addEventListener('click', () => copyText(infoForAi(), 'Đã chép, dán vào AI bạn dùng để hỏi')));
     $('#png-close').addEventListener('click', () => { $('#png-dialog').hidden = true; });
     // Ngoài Claude, địa chỉ trang chính là link của lá số
-    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao', th: 'Đã chép link tổng hợp' }[state.view] || 'Đã chép link lá số')); }
+    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao', th: 'Đã chép link tổng hợp', tsh: 'Đã chép link (link có chứa họ tên)' }[state.view] || 'Đã chép link lá số')); }
 
     const setAi = (fn) => { state.sample = fn; $('#ai-panel').hidden = !fn; $('#ai-off').hidden = !!fn; };
     if (IN_CLAUDE) {
