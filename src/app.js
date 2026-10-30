@@ -161,6 +161,13 @@
 
   // ---------- Hai màn: lập lá số / lá số ----------
   // Trang chủ: chọn lập lá số Tử Vi hay Bát Tự (dùng chung một form)
+  // Menu công cụ ở trang chủ: thêm mục mới thì thêm một dòng ở đây (kèm MODE_TXT và màn riêng)
+  const TOOLS = [
+    { mode: 'tuvi', hash: 'lap-la-so', ten: 'Lá số Tử Vi', mo: '12 cung, đại hạn, tiểu hạn', ico: () => `<span class="tool-ico bagua-ico">${BAGUA}</span>` },
+    { mode: 'battu', hash: 'lap-bat-tu', ten: 'Bát Tự', mo: 'Tứ trụ, ngũ hành, đại vận', ico: () => `<img class="tool-ico" src="assets/can/giap.webp" alt="" width="44" height="44">` },
+    { mode: 'bds', hash: 'lap-ban-do-sao', ten: 'Bản đồ sao', mo: 'Chiêm tinh phương Tây', ico: () => '<span class="tool-ico sao-ico">♈︎</span>' },
+  ];
+  const homeHash = (m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
   const MODE_TXT = {
     tuvi: ['Lập lá số Tử Vi', 'Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.', 'An lá số', 'Không rõ giờ sinh (xem nhanh cả 12 giờ)'],
     bds: ['Lập bản đồ sao', 'Nhập ngày, giờ và nơi sinh để vẽ bản đồ sao chiêm tinh: Mặt Trời, Mặt Trăng, các hành tinh trong 12 cung hoàng đạo và 12 nhà, cùng góc chiếu giữa chúng.', 'Vẽ bản đồ sao', 'Không rõ giờ sinh (bỏ qua Điểm Mọc và 12 nhà)'],
@@ -168,7 +175,8 @@
   };
   function setMode(m) {
     const t = MODE_TXT[m];
-    state.mode = m; $(`#m-${m}`).checked = true;
+    state.mode = m;
+    $$('#tools [data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m)));
     $('#home-title').textContent = t[0]; $('#home-lede').textContent = t[1]; $('#f-submit').textContent = t[2]; $('#nohour-text').textContent = t[3];
     $('#opts').hidden = m !== 'tuvi';
     $('#place-row').hidden = m !== 'bds'; $('#xem-row').hidden = m === 'bds';
@@ -216,7 +224,8 @@
       if (compute(inp, false)) { showView('chart'); return; }
       toast('Link lá số không hợp lệ. Hãy lập lại lá số.');
     } else if (h.startsWith('la-so-')) toast('Link lá số không hợp lệ. Hãy lập lại lá số.');
-    setMode(state.mode);
+    const chon = TOOLS.find((t) => t.hash === h);
+    setMode(chon ? chon.mode : state.mode);
     writeForm(state.input || SAMPLE);
     setSampleNote(!state.input);
     renderRecent();
@@ -1282,7 +1291,14 @@
       state.fromHours = null;
       if (compute({ ...inp, mode: 'tuvi' }, false)) location.hash = toHash(inp);
     };
-    $$('[name=mode]').forEach((x) => x.addEventListener('change', () => setMode(x.value)));
+    $('#tools').innerHTML = TOOLS.map((t) => `<button type="button" class="tool-card" data-mode="${t.mode}" aria-pressed="false">${t.ico()}<span><b>${t.ten}</b><small>${t.mo}</small></span></button>`).join('');
+    $('#tools').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-mode]'); if (!b) return;
+      const m = b.getAttribute('data-mode');
+      setMode(m);
+      history.replaceState(null, '', '#' + homeHash(m));
+      $('#form-error').hidden = true;
+    });
     $('#bt-facts').addEventListener('click', (e) => { if (e.target.closest('#bt-to-tv')) openTuVi(state.btInput); });
     $('#who-facts').addEventListener('click', (e) => { if (e.target.closest('#tv-to-bt')) openBt({ ...state.input, noHour: tryingHour() }); });
     $('#bt-dv').addEventListener('click', (e) => { const b = e.target.closest('[data-dv]'); if (b) { state.btDv = +b.getAttribute('data-dv'); renderBtYears(); } });
@@ -1325,7 +1341,7 @@
       if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
     });
     $('#btn-forget').addEventListener('click', forgetRecent);
-    $('#btn-back').addEventListener('click', () => { location.hash = 'lap-la-so'; });
+    $('#btn-back').addEventListener('click', () => { location.hash = homeHash(state.mode); });
     initTheme();
     $$('.logo-mark, .hub-mark').forEach((el) => { el.innerHTML = BAGUA; });
     initInfo();

@@ -365,6 +365,18 @@ footer a { color: inherit; }
 /* Trang chủ: lập lá số */
 .home { max-width: 1240px; margin: 0 auto; padding-block: clamp(24px, 5vw, 64px) 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: clamp(28px, 5vw, 72px); align-items: start; }
 @media (max-width: 920px) { .home { grid-template-columns: minmax(0, 1fr); } }
+/* Menu công cụ ở trang chủ */
+.tools { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.tool-card { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); transition: border-color 0.12s, background-color 0.12s; }
+.tool-card:hover { border-color: var(--gold); }
+.tool-card[aria-pressed=true] { border-color: var(--cinnabar); background: var(--sel); box-shadow: inset 0 -3px 0 var(--cinnabar); }
+.tool-card:focus-visible { outline: 2px solid var(--cinnabar); outline-offset: 2px; }
+.tool-card b { display: block; font: 700 19px/1.15 var(--f-display); }
+.tool-card small { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+.tool-ico { flex: none; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; }
+.bagua-ico { color: var(--cinnabar); background: var(--tint); padding: 4px; box-sizing: border-box; }
+.sao-ico { color: var(--tam); background: var(--tint); font: 24px "Segoe UI Symbol", "Noto Sans Symbols 2", var(--f-ui); }
+@media (max-width: 560px) { .tools { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; } .tool-card { padding: 10px 12px; gap: 10px; } .tool-ico { width: 36px; height: 36px; } .tool-card b { font-size: 17px; } }
 .intro { display: grid; gap: 18px; align-content: start; padding-top: 8px; }
 .intro h1 { font: 600 clamp(42px, 6.4vw, 76px)/0.98 var(--f-display); letter-spacing: -0.01em; }
 .intro .lede { font-size: 16.5px; line-height: 1.6; color: var(--muted); max-width: 46ch; margin: 0; }
@@ -409,7 +421,6 @@ footer a { color: inherit; }
 .hour-note { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 14px; padding: 9px 14px; background: var(--tint); border: 1px solid var(--gold-soft); border-radius: 10px; font-size: 13.5px; }
 
 /* Bát Tự */
-.mode-pick label { padding-block: 9px; }
 .bt-grid { display: grid; grid-template-columns: max-content repeat(4, minmax(0, 1fr)); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--panel); }
 .bt-lbl, .bt-c { padding: 8px 10px; border-bottom: 1px solid var(--rule); font-size: 13px; line-height: 1.45; }
 .bt-lbl { color: var(--muted); font-size: 12px; font-weight: 600; background: var(--surface); display: flex; align-items: center; }
@@ -619,6 +630,7 @@ html.no-scroll { overflow: hidden; }
 
 <!-- Trang chủ: lập lá số -->
 <main id="view-home" class="home">
+  <nav class="tools" id="tools" aria-label="Chọn loại lá số"></nav>
   <section class="intro" aria-labelledby="home-title">
     <h1 id="home-title" tabindex="-1">Lập lá số Tử Vi</h1>
     <p class="lede" id="home-lede">Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.</p>
@@ -638,8 +650,6 @@ html.no-scroll { overflow: hidden; }
   <form class="form-card" id="form" novalidate aria-labelledby="form-title">
     <div class="fc-head"><h2 id="form-title">Thông tin sinh</h2></div>
     <div class="fc-body">
-      <div class="field"><span class="lbl">Bạn muốn xem</span>
-        <div class="segc mode-pick" role="radiogroup" aria-label="Loại lá số"><input type="radio" name="mode" id="m-tuvi" value="tuvi" checked><label for="m-tuvi">Lá số Tử Vi</label><input type="radio" name="mode" id="m-battu" value="battu"><label for="m-battu">Bát Tự</label><input type="radio" name="mode" id="m-bds" value="bds"><label for="m-bds">Bản đồ sao</label></div></div>
       <div class="sample-note" id="sample-note"><span>Đang điền sẵn ví dụ: nam, 29/8/1998, giờ Thân.</span><button type="button" class="linkish" id="btn-clear">Xóa ví dụ</button></div>
       <label class="field"><span class="lbl">Họ tên</span><input type="text" id="f-name" placeholder="Có thể để trống" autocomplete="off" maxlength="80"></label>
       <div class="field"><span class="lbl">Giới tính</span>
@@ -3459,6 +3469,13 @@ const TuViAI = (() => {
 
   // ---------- Hai màn: lập lá số / lá số ----------
   // Trang chủ: chọn lập lá số Tử Vi hay Bát Tự (dùng chung một form)
+  // Menu công cụ ở trang chủ: thêm mục mới thì thêm một dòng ở đây (kèm MODE_TXT và màn riêng)
+  const TOOLS = [
+    { mode: 'tuvi', hash: 'lap-la-so', ten: 'Lá số Tử Vi', mo: '12 cung, đại hạn, tiểu hạn', ico: () => `<span class="tool-ico bagua-ico">${BAGUA}</span>` },
+    { mode: 'battu', hash: 'lap-bat-tu', ten: 'Bát Tự', mo: 'Tứ trụ, ngũ hành, đại vận', ico: () => `<img class="tool-ico" src="assets/can/giap.webp" alt="" width="44" height="44">` },
+    { mode: 'bds', hash: 'lap-ban-do-sao', ten: 'Bản đồ sao', mo: 'Chiêm tinh phương Tây', ico: () => '<span class="tool-ico sao-ico">♈︎</span>' },
+  ];
+  const homeHash = (m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
   const MODE_TXT = {
     tuvi: ['Lập lá số Tử Vi', 'Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.', 'An lá số', 'Không rõ giờ sinh (xem nhanh cả 12 giờ)'],
     bds: ['Lập bản đồ sao', 'Nhập ngày, giờ và nơi sinh để vẽ bản đồ sao chiêm tinh: Mặt Trời, Mặt Trăng, các hành tinh trong 12 cung hoàng đạo và 12 nhà, cùng góc chiếu giữa chúng.', 'Vẽ bản đồ sao', 'Không rõ giờ sinh (bỏ qua Điểm Mọc và 12 nhà)'],
@@ -3466,7 +3483,8 @@ const TuViAI = (() => {
   };
   function setMode(m) {
     const t = MODE_TXT[m];
-    state.mode = m; $(`#m-${m}`).checked = true;
+    state.mode = m;
+    $$('#tools [data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m)));
     $('#home-title').textContent = t[0]; $('#home-lede').textContent = t[1]; $('#f-submit').textContent = t[2]; $('#nohour-text').textContent = t[3];
     $('#opts').hidden = m !== 'tuvi';
     $('#place-row').hidden = m !== 'bds'; $('#xem-row').hidden = m === 'bds';
@@ -3514,7 +3532,8 @@ const TuViAI = (() => {
       if (compute(inp, false)) { showView('chart'); return; }
       toast('Link lá số không hợp lệ. Hãy lập lại lá số.');
     } else if (h.startsWith('la-so-')) toast('Link lá số không hợp lệ. Hãy lập lại lá số.');
-    setMode(state.mode);
+    const chon = TOOLS.find((t) => t.hash === h);
+    setMode(chon ? chon.mode : state.mode);
     writeForm(state.input || SAMPLE);
     setSampleNote(!state.input);
     renderRecent();
@@ -4580,7 +4599,14 @@ const TuViAI = (() => {
       state.fromHours = null;
       if (compute({ ...inp, mode: 'tuvi' }, false)) location.hash = toHash(inp);
     };
-    $$('[name=mode]').forEach((x) => x.addEventListener('change', () => setMode(x.value)));
+    $('#tools').innerHTML = TOOLS.map((t) => `<button type="button" class="tool-card" data-mode="${t.mode}" aria-pressed="false">${t.ico()}<span><b>${t.ten}</b><small>${t.mo}</small></span></button>`).join('');
+    $('#tools').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-mode]'); if (!b) return;
+      const m = b.getAttribute('data-mode');
+      setMode(m);
+      history.replaceState(null, '', '#' + homeHash(m));
+      $('#form-error').hidden = true;
+    });
     $('#bt-facts').addEventListener('click', (e) => { if (e.target.closest('#bt-to-tv')) openTuVi(state.btInput); });
     $('#who-facts').addEventListener('click', (e) => { if (e.target.closest('#tv-to-bt')) openBt({ ...state.input, noHour: tryingHour() }); });
     $('#bt-dv').addEventListener('click', (e) => { const b = e.target.closest('[data-dv]'); if (b) { state.btDv = +b.getAttribute('data-dv'); renderBtYears(); } });
@@ -4623,7 +4649,7 @@ const TuViAI = (() => {
       if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
     });
     $('#btn-forget').addEventListener('click', forgetRecent);
-    $('#btn-back').addEventListener('click', () => { location.hash = 'lap-la-so'; });
+    $('#btn-back').addEventListener('click', () => { location.hash = homeHash(state.mode); });
     initTheme();
     $$('.logo-mark, .hub-mark').forEach((el) => { el.innerHTML = BAGUA; });
     initInfo();

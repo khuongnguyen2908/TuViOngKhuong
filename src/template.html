@@ -22,6 +22,7 @@
 
 <!-- Trang chủ: lập lá số -->
 <main id="view-home" class="home">
+  <nav class="tools" id="tools" aria-label="Chọn loại lá số"></nav>
   <section class="intro" aria-labelledby="home-title">
     <h1 id="home-title" tabindex="-1">Lập lá số Tử Vi</h1>
     <p class="lede" id="home-lede">Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.</p>
@@ -41,8 +42,6 @@
   <form class="form-card" id="form" novalidate aria-labelledby="form-title">
     <div class="fc-head"><h2 id="form-title">Thông tin sinh</h2></div>
     <div class="fc-body">
-      <div class="field"><span class="lbl">Bạn muốn xem</span>
-        <div class="segc mode-pick" role="radiogroup" aria-label="Loại lá số"><input type="radio" name="mode" id="m-tuvi" value="tuvi" checked><label for="m-tuvi">Lá số Tử Vi</label><input type="radio" name="mode" id="m-battu" value="battu"><label for="m-battu">Bát Tự</label><input type="radio" name="mode" id="m-bds" value="bds"><label for="m-bds">Bản đồ sao</label></div></div>
       <div class="sample-note" id="sample-note"><span>Đang điền sẵn ví dụ: nam, 29/8/1998, giờ Thân.</span><button type="button" class="linkish" id="btn-clear">Xóa ví dụ</button></div>
       <label class="field"><span class="lbl">Họ tên</span><input type="text" id="f-name" placeholder="Có thể để trống" autocomplete="off" maxlength="80"></label>
       <div class="field"><span class="lbl">Giới tính</span>
