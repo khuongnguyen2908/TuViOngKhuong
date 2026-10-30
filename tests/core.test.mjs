@@ -401,3 +401,22 @@ test('Bản đồ sao: 63 tỉnh thành, không rõ giờ, Nam bán cầu, nội
   B.SAO.forEach(([k]) => assert.ok(N.SAO[k], `Thiếu nghĩa ${k}`));
   B.PHAM_TEN.forEach((p) => assert.ok(N.PHAM[p]));
 });
+
+test('Tổng hợp 3 hệ: gắn nét đủ, gom đúng theo hệ, không phán tuyệt đối', () => {
+  const TH = require('../src/tonghop.js');
+  assert.deepEqual(Object.keys(TH.TU_VI).sort(), [...E.CHINH_TINH].sort());
+  assert.equal(TH.BAT_TU.length, 10); assert.equal(TH.CUNG.length, 12);
+  [...Object.values(TH.TU_VI), ...TH.BAT_TU, ...TH.CUNG].flat().forEach((k) => assert.ok(TH.NET[k], `Nét lạ: ${k}`));
+  Object.entries(TH.NET).filter(([, v]) => v[1] === 'luuy').forEach(([k]) => assert.ok(TH.KHUYEN[k], `Thiếu lời khuyên cho ${k}`));
+  // Thiên Tướng ở Mệnh, nhật chủ Mậu, Mặt Trời Xử Nữ, Mặt Trăng và Cung Mọc Bọ Cạp
+  const kq = TH.compare({ tuVi: ['Thiên Tướng'], batTu: 4, sao: { mt: 5, tr: 7, moc: 7 } });
+  const tim = (k) => kq.find((x) => x.key === k);
+  assert.equal(tim('thucte').so, 2); assert.equal(tim('kientri').so, 2); assert.equal(tim('cochap').so, 2);
+  assert.deepEqual(tim('kientri').he.find((h) => h.he === 'Bản đồ sao').vi, ['Mặt Trăng Bọ Cạp', 'Cung Mọc Bọ Cạp']);
+  assert.ok(kq[0].so >= kq[kq.length - 1].so, 'Chưa xếp theo số hệ');
+  // Không rõ giờ: chỉ Bát Tự và Mặt Trời
+  const kg = TH.compare({ tuVi: null, batTu: 0, sao: { mt: 0, tr: null, moc: null } });
+  assert.ok(kg.every((x) => x.he.every((h) => h.he !== 'Tử Vi')));
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  [...Object.values(TH.NET).map((v) => v[0]), ...Object.values(TH.KHUYEN)].forEach((t) => assert.ok(!CAM.test(t), t));
+});

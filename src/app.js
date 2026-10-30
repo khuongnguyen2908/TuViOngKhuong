@@ -1,6 +1,6 @@
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh, BT = TuViBatTu, BDS = TuViBanDoSao, SN = TuViSaoNghia, TH = TuViTongHop;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -148,7 +148,7 @@
   function syncForm() {
     const noHour = $('#f-nohour').checked;
     $('#leap-row').hidden = !$('#f-c-am').checked;
-    const khac = state.mode === 'bds' && $('#f-noi').value === 'khac';
+    const khac = (state.mode === 'bds' || state.mode === 'tonghop') && $('#f-noi').value === 'khac';
     $('#coord-row').hidden = !khac;
     $('#f-tz').closest('.field').hidden = khac;
     $('#hours').classList.toggle('is-off', noHour);
@@ -166,10 +166,12 @@
     { mode: 'tuvi', hash: 'lap-la-so', ten: 'Lá số Tử Vi', mo: '12 cung, đại hạn, tiểu hạn', ico: () => `<span class="tool-ico bagua-ico">${BAGUA}</span>` },
     { mode: 'battu', hash: 'lap-bat-tu', ten: 'Bát Tự', mo: 'Tứ trụ, ngũ hành, đại vận', ico: () => `<img class="tool-ico" src="assets/can/giap.webp" alt="" width="44" height="44">` },
     { mode: 'bds', hash: 'lap-ban-do-sao', ten: 'Bản đồ sao', mo: 'Chiêm tinh phương Tây', ico: () => '<span class="tool-ico sao-ico">♈︎</span>' },
+    { mode: 'tonghop', hash: 'lap-tong-hop', ten: 'Tổng hợp 3 hệ', mo: 'Tử Vi, Bát Tự, Bản đồ sao cùng nói gì', ico: () => '<span class="tool-ico th-ico">3</span>' },
   ];
-  const homeHash = (m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
+  const homeHash =(m) => (TOOLS.find((t) => t.mode === m) || TOOLS[0]).hash;
   const MODE_TXT = {
     tuvi: ['Lập lá số Tử Vi', 'Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.', 'An lá số', 'Không rõ giờ sinh (xem nhanh cả 12 giờ)'],
+    tonghop: ['Tổng hợp 3 hệ', 'Nhập ngày, giờ và nơi sinh một lần để xem cùng lúc lá số Tử Vi, Bát Tự và Bản đồ sao, và xem ba hệ cùng nói gì về bạn.', 'Xem tổng hợp', 'Không rõ giờ sinh (chỉ dùng Bát Tự ba trụ và Mặt Trời)'],
     bds: ['Lập bản đồ sao', 'Nhập ngày, giờ và nơi sinh để vẽ bản đồ sao chiêm tinh: Mặt Trời, Mặt Trăng, các hành tinh trong 12 cung hoàng đạo và 12 nhà, cùng góc chiếu giữa chúng.', 'Vẽ bản đồ sao', 'Không rõ giờ sinh (bỏ qua Điểm Mọc và 12 nhà)'],
     battu: ['Lập lá số Bát Tự', 'Nhập ngày giờ sinh để lập Tứ Trụ: trụ năm đổi ở Lập Xuân, trụ tháng theo tiết khí; xem thập thần, ngũ hành, đại vận và lưu niên.', 'Lập Bát Tự', 'Không rõ giờ sinh (lập ba trụ năm, tháng, ngày)'],
   };
@@ -179,20 +181,29 @@
     $$('#tools [data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute('data-mode') === m)));
     $('#home-title').textContent = t[0]; $('#home-lede').textContent = t[1]; $('#f-submit').textContent = t[2]; $('#nohour-text').textContent = t[3];
     $('#opts').hidden = m !== 'tuvi';
-    $('#place-row').hidden = m !== 'bds'; $('#xem-row').hidden = m === 'bds';
+    $('#place-row').hidden = m !== 'bds' && m !== 'tonghop'; $('#xem-row').hidden = m === 'bds' || m === 'tonghop';
     syncForm();
   }
   function showView(name) {
-    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds';
+    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours'; $('#view-battu').hidden = name !== 'battu'; $('#view-bds').hidden = name !== 'bds'; $('#view-th').hidden = name !== 'th';
     state.view = name;
-    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds'].includes(name);
+    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = !['chart', 'battu', 'bds', 'th'].includes(name);
+    $('#btn-json').hidden = name === 'th';
     $('.bar').classList.toggle('in-chart', name !== 'home');
     window.scrollTo(0, 0);
-    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name' }[name]);
+    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title', battu: '#bt-name', bds: '#bds-name', th: '#th-name' }[name]);
     if (h && h.focus) h.focus({ preventScroll: true });
   }
   function route() {
     const h = (location.hash || '').slice(1);
+    if (h.startsWith('tong-hop-')) {
+      const inp = fromThHash(h);
+      if (inp) {
+        if (state.thInput && toThHash(state.thInput) === h) inp.name = state.thInput.name;
+        if (computeTh(inp)) { setMode('tonghop'); showView('th'); return; }
+      }
+      toast('Link tổng hợp không hợp lệ. Hãy lập lại.');
+    }
     if (h.startsWith('ban-do-sao-')) {
       const inp = fromBdsHash(h);
       if (inp) {
@@ -353,7 +364,7 @@
     $('#who-facts').innerHTML = `<span><strong>${tb.amDuong}</strong></span>
       <span>Dương lịch <strong class="num">${pad(dl.day)}/${pad(dl.month)}/${dl.year}</strong>, ${pad(dl.hour)}:${pad(dl.minute)}</span>
       <span>Âm lịch <strong class="num">${a.day}/${a.month}${a.leap ? ' nhuận' : ''}</strong> năm ${tb.canChi.nam}, giờ ${tb.gioChi}</span>
-      <button type="button" class="linkish" id="tv-to-bt">Xem Bát Tự</button>`;
+      <button type="button" class="linkish" id="tv-to-bt">Xem Bát Tự</button><button type="button" class="linkish" id="tv-to-th">So sánh 3 hệ</button>`;
     $('#who-keys').innerHTML = `
       <div class="key accent"><span>Mệnh tại ${menh.chiTen}</span><b>${chinh}</b></div>
       <div class="key"><span>Thân cư ${info('thanCu')}</span><b>${tb.thanCu}</b></div>
@@ -696,7 +707,7 @@
     $('#bt-facts').innerHTML = `<span><strong>${r.gioiTinh}</strong></span>
       <span>Dương lịch <strong class="num">${pad(dl.day)}/${pad(dl.month)}/${dl.year}</strong>${r.noHour ? ', không rõ giờ' : `, ${pad(dl.hour)}:${pad(dl.minute)}`}</span>
       <span>Âm lịch <strong class="num">${a.day}/${a.month}${a.leap ? ' nhuận' : ''}</strong> năm ${LunarVN.name(LunarVN.yearCanChi(a.year))}</span>
-      <button type="button" class="linkish" id="bt-to-tv">Xem lá số Tử Vi</button>`;
+      <button type="button" class="linkish" id="bt-to-tv">Xem lá số Tử Vi</button><button type="button" class="linkish" id="bt-to-th">So sánh 3 hệ</button>`;
     $('#bt-keys').innerHTML = `
       <div class="key accent"><span>Nhật chủ ${info('btNhatChu')}</span><b class="${HANH_CLASS[nc.hanh]}">${icoCan(nc.can, 'ico-sm')} ${nc.ten} ${nc.hanh}</b></div>
       <div class="key"><span>Tuổi (theo Lập Xuân) ${info('btTiet')}</span><b>${icoChi(nam.chi, 'ico-sm')} ${r.tuoi}</b></div>
@@ -943,7 +954,8 @@
     $('#bds-name').textContent = r.ten || 'Bản đồ sao chưa đặt tên';
     $('#bds-facts').innerHTML = `<span><strong>${r.gioiTinh}</strong></span>
       <span>Dương lịch <strong class="num">${pad(dl.day)}/${pad(dl.month)}/${dl.year}</strong>${r.noHour ? ', không rõ giờ' : `, ${pad(dl.hour)}:${pad(dl.minute)}`} (UTC${r.tz >= 0 ? '+' : ''}${r.tz})</span>
-      <span>Nơi sinh <strong>${esc(r.noiSinh)}</strong></span>`;
+      <span>Nơi sinh <strong>${esc(r.noiSinh)}</strong></span>
+      <button type="button" class="linkish" id="bds-to-th">So sánh 3 hệ</button>`;
     const chu = r.chuTinhMoc ? sao(r.chuTinhMoc) : null;
     $('#bds-keys').innerHTML = `
       <div class="key accent"><span>Mặt Trời ${info('bdsCung')}</span><b>${BDS.KY_CUNG[mt.cung]}${VS} ${mt.cungTen}</b></div>
@@ -1001,6 +1013,106 @@
       + r.sao.map(dong).join('\n') + (r.moc ? `\n${dong(r.moc)}\n${dong(r.dinh)}\nĐỉnh các nhà: ${r.nhaDinh.map((h) => `${h.so}: ${BDS.doPhut(h.do)} ${h.cungTen}`).join('; ')}` : '\n(Không rõ giờ: chưa có Điểm Mọc và nhà)')
       + `\nGóc chiếu: ${r.goc.map((g) => `${r.sao.find((s) => s.key === g.a).ten} ${g.ten} ${r.sao.find((s) => s.key === g.b).ten} (lệch ${g.lech}°)`).join('; ')}`
       + '\n\nHãy luận giải bản đồ sao này.';
+  }
+
+  // ---------- Tổng hợp 3 hệ (Tử Vi, Bát Tự, Bản đồ sao) cho cùng một người ----------
+  const toThHash = (inp) => 'tong-hop-' + toBdsHash(inp).slice('ban-do-sao-'.length);
+  const fromThHash = (h) => fromBdsHash('ban-do-sao-' + h.slice('tong-hop-'.length));
+  const voiNoi = (inp) => (inp.noi ? inp : { ...inp, noi: 'ha-noi' }); // Tử Vi, Bát Tự không có nơi sinh: mặc định Hà Nội
+  function computeTh(inp0) {
+    const inp = voiNoi(inp0), noi = noiSinhOf(inp);
+    const fail = (msg) => { $('#form-error').textContent = msg; $('#form-error').hidden = false; return false; };
+    if (!noi) return fail('Nhập đủ vĩ độ (−66 đến 66), kinh độ (−180 đến 180) và múi giờ của nơi sinh.');
+    try {
+      const tv = inp.noHour ? null : E.compute({ ...inp, noHour: false });
+      const bt = BT.compute(inp);
+      const bds = BDS.compute({ ...inp, viDo: noi.viDo, kinhDo: noi.kinhDo, clockTz: noi.tz, noiSinh: noi.ten });
+      state.th = { inp, tv, cc: tv ? K.detect(tv) : null, bt, bds };
+    } catch (e) { return fail(e.message || 'Không lập được với dữ liệu này.'); }
+    state.thInput = inp;
+    $('#form-error').hidden = true;
+    renderTh();
+    return true;
+  }
+  function thNguon() {
+    const { tv, bt, bds } = state.th;
+    let tuVi = null, muon = false;
+    if (tv) {
+      const P = tv.palaces, m = tv.thienBan.menhCung, chinhO = (c) => P[c].stars.filter((s) => s.kind === 'chinh');
+      let ds = chinhO(m);
+      if (!ds.length) { ds = chinhO(mod(m + 6)); muon = true; }
+      tuVi = ds.map((s) => s.name);
+    }
+    const sao = (k) => bds.sao.find((s) => s.key === k).cung;
+    return { tuVi, muon, batTu: bt.nhatChu.can, sao: { mt: sao('sun'), tr: bds.noHour ? null : sao('moon'), moc: bds.moc ? bds.moc.cung : null } };
+  }
+  function renderTh() {
+    const { inp, tv, cc, bt, bds } = state.th, dl = bds.duongLich;
+    const kq = TH.compare(thNguon());
+    state.thKq = kq;
+    $('#th-name').textContent = inp.name || 'Tổng hợp 3 hệ';
+    $('#th-facts').innerHTML = `<span><strong>${bds.gioiTinh}</strong></span>
+      <span>Dương lịch <strong class="num">${pad(dl.day)}/${pad(dl.month)}/${dl.year}</strong>${bds.noHour ? ', không rõ giờ' : `, ${pad(dl.hour)}:${pad(dl.minute)}`}</span>
+      <span>Nơi sinh <strong>${esc(bds.noiSinh)}</strong></span>`;
+    const dauCau = (t) => (t ? firstSentence(t) : '');
+    // Thẻ Tử Vi
+    let tvHtml = '<p class="muted">Cần giờ sinh để an lá số Tử Vi (cung Mệnh đổi theo giờ).</p>';
+    if (tv) {
+      const tb = tv.thienBan, P = tv.palaces, menh = P[tb.menhCung];
+      const chinh = menh.stars.filter((s) => s.kind === 'chinh'), xung = P[mod(tb.menhCung + 6)].stars.filter((s) => s.kind === 'chinh');
+      const goc = chinh.length ? chinh : xung;
+      const ten = (ds) => ds.map((s) => s.name + (s.bright ? ` (${s.bright})` : '')).join(', ');
+      tvHtml = `<p><b>Mệnh tại ${menh.chiTen}:</b> ${chinh.length ? ten(chinh) : `vô chính diệu, mượn ${ten(xung)}`}</p>
+        <p class="muted">Thân cư ${tb.thanCu} · ${tb.cucTen} · mệnh ${tb.banMenh}${cc && cc.khung.length ? ` · khung ${cc.khung.map((k) => k.ten).join(', ')}` : ''}</p>
+        ${goc.length ? `<p>${esc(dauCau(N.cungOf(goc[0].name, 'Mệnh') || C.CHINH[goc[0].name][0]))}</p>` : ''}`;
+    }
+    const nh = bt.nguHanh, hMax = BT.HANH.reduce((a, x) => (nh.diem[x] > nh.diem[a] ? x : a), BT.HANH[0]);
+    const btHtml = `<p><b>Nhật chủ ${bt.nhatChu.ten} ${bt.nhatChu.hanh}</b> (${BT.HO_SO[bt.nhatChu.can].hinh}), ${MANH_TEN[nh.manh]}</p>
+      <p class="muted">Tứ trụ ${bt.tru.filter(Boolean).map((p) => p.canChi).join(' · ')} · nhiều ${hMax}${nh.thieu.length ? `, thiếu ${nh.thieu.join(', ')}` : ''}</p>
+      <p>${esc(dauCau(BT.HO_SO[bt.nhatChu.can].moTa.split('. ').slice(1).join('. ')))}</p>`;
+    const sao = (k) => bds.sao.find((s) => s.key === k);
+    const nt = bds.dem.nguyenTo, ntMax = BDS.NGUYEN_TO[nt.indexOf(Math.max(...nt))], ntThieu = BDS.NGUYEN_TO.filter((_, i) => !nt[i]);
+    const bdsHtml = `<p><b>${BDS.KY_CUNG[sao('sun').cung]}${VS} Mặt Trời ${sao('sun').cungTen}</b>, Mặt Trăng ${sao('moon').cungTen}${bds.noHour ? ' (có thể lệch)' : ''}, ${bds.moc ? `Cung Mọc ${bds.moc.cungTen}` : 'chưa có Cung Mọc'}</p>
+      <p class="muted">Nhiều ${ntMax}${ntThieu.length ? `, thiếu ${ntThieu.join(', ')}` : ''}</p>
+      <p>${esc(dauCau(SN.CUNG[sao('sun').cung].mt))}</p>`;
+    const the = (ten, ico, html, nut) => `<article class="th-card"><h3>${ico}${ten}</h3>${html}<button type="button" class="btn btn-sm" data-th-mo="${nut}">Xem chi tiết</button></article>`;
+    $('#th-cards').innerHTML = the('Tử Vi', `<span class="tool-ico bagua-ico">${BAGUA}</span>`, tvHtml, 'tuvi')
+      + the('Bát Tự', icoCan(bt.nhatChu.can, 'tool-ico'), btHtml, 'battu')
+      + the('Bản đồ sao', `<span class="tool-ico sao-ico">${BDS.KY_CUNG[sao('sun').cung]}${VS}</span>`, bdsHtml, 'bds');
+
+    const nhan = (so) => `<span class="th-so th-so-${so}">${so === 3 ? 'Cả 3 hệ' : so === 2 ? '2 hệ' : '1 hệ'}</span>`;
+    const dong = (x) => `<li>${nhan(x.so)}<b>${x.ten}</b><small>${x.he.map((h) => `${h.he}: ${h.vi.join(', ')}`).join(' · ')}</small>${x.loai === 'luuy' && x.so >= 2 ? advice(TH.KHUYEN[x.key]) : ''}</li>`;
+    const manh = kq.filter((x) => x.loai === 'manh'), luuy = kq.filter((x) => x.loai === 'luuy');
+    const pct = (arr, i) => { const t = arr.reduce((a, b) => a + b, 0) || 1; return Math.round((arr[i] / t) * 100); };
+    const tongDiem = BT.HANH.reduce((s, x) => s + nh.diem[x], 0) || 1;
+    const ghep = TH.GHEP.map(([h, n]) => `<tr><td>${h ? `<b class="${HANH_CLASS[h]}">${BT.HAN_HANH[h]} ${h}</b>` : '<span class="muted">–</span>'}</td><td class="num">${h ? Math.round((nh.diem[h] / tongDiem) * 100) + '%' : ''}</td>
+      <td>${n ? `<b class="${NT_CLASS[BDS.NGUYEN_TO.indexOf(n)]}">${n}</b>` : '<span class="muted">–</span>'}</td><td class="num">${n ? pct(nt, BDS.NGUYEN_TO.indexOf(n)) + '%' : ''}</td></tr>`).join('');
+    const so3 = kq.filter((x) => x.so === 3).length, so2 = kq.filter((x) => x.so === 2).length;
+    $('#th-body').innerHTML = `
+      <section><h3>Ba hệ cùng nói gì về bạn</h3>
+        <p>Mỗi hệ có quy tắc riêng, nhưng khi nhiều hệ cùng nhắc một nét thì đó thường là nét nổi bật nhất trong cách bạn được mô tả. Lá số này có <b>${so3}</b> nét cả ba hệ cùng nói và <b>${so2}</b> nét hai hệ cùng nói.</p>
+        <div class="bt-two">
+          <div><h4 class="t-hop">Điểm mạnh</h4><ul class="th-list">${manh.map(dong).join('') || '<li class="muted">Chưa có</li>'}</ul></div>
+          <div><h4 class="t-ky">Điểm cần lưu ý</h4><ul class="th-list">${luuy.map(dong).join('') || '<li class="muted">Không hệ nào nhắc</li>'}</ul></div>
+        </div>
+      </section>
+      <section><h3>Ngũ hành và nguyên tố</h3>
+        <p class="muted">Bát Tự chia 5 hành, chiêm tinh chia 4 nguyên tố; chỉ ba cặp gần nghĩa được đặt cùng hàng. Hai cách đếm khác nhau nên tỷ lệ không so trực tiếp được, chỉ để xem hai bên cùng nghiêng về đâu.</p>
+        <table class="bds-tbl th-tbl"><thead><tr><th>Bát Tự</th><th></th><th>Bản đồ sao</th><th></th></tr></thead><tbody>${ghep}</tbody></table>
+      </section>
+      <p class="note">Ba hệ trùng nhau một phần vì nhiều nét tính cách rất chung, ai đọc cũng thấy đúng (hiệu ứng Barnum). Nhiều hệ cùng nói không làm điều đó chắc chắn hơn; hãy đọc như gợi ý để tự soi xét. ${info('docDung')}</p>
+      <p class="ai-bar"><button type="button" class="btn" id="th-copy">Sao chép thông tin</button></p>`;
+  }
+  function thText() {
+    const { tv, bt, bds } = state.th, kq = state.thKq, dl = bds.duongLich;
+    const sao = (k) => bds.sao.find((s) => s.key === k);
+    return 'Bạn am hiểu Tử Vi Đẩu Số, Bát Tự và chiêm tinh phương Tây. Dưới đây là ba lá số của CÙNG MỘT NGƯỜI do phần mềm lập sẵn; dùng đúng dữ liệu này, không tự lập lại.\n'
+      + 'Hãy tổng hợp: ba hệ cùng nói gì, chỗ nào khác nhau, rồi đưa ra lời khuyên thực tế. Viết tiếng Việt, thẳng thắn, cụ thể; không phán định tuyệt đối. Cuối bài nhắc rằng đây là các cách diễn giải truyền thống, chưa được khoa học chứng minh.\n\n'
+      + `Người xem: ${bds.gioiTinh}, sinh ${dl.day}/${dl.month}/${dl.year}${bds.noHour ? ', không rõ giờ' : ` ${pad(dl.hour)}:${pad(dl.minute)}`}, nơi sinh ${bds.noiSinh}\n\n`
+      + (tv ? `TỬ VI:\n${chartText(tv, false)}\n\n` : 'TỬ VI: chưa lập vì không rõ giờ sinh.\n\n')
+      + `BÁT TỰ: tứ trụ ${bt.tru.filter(Boolean).map((p) => `${p.ten} ${p.canChi}`).join(', ')}; nhật chủ ${bt.nhatChu.ten} ${bt.nhatChu.hanh}, ${MANH_TEN[bt.nguHanh.manh]}; ngũ hành ${BT.HANH.map((x) => `${x} ${bt.nguHanh.diem[x]}`).join(', ')}\n\n`
+      + `BẢN ĐỒ SAO: ${bds.sao.map((s) => `${s.ten} ${viTriTxt(s)}${s.nha ? ` nhà ${s.nha}` : ''}`).join('; ')}${bds.moc ? `; Cung Mọc ${viTriTxt(bds.moc)}` : ''}\n\n`
+      + `PHẦN MỀM ĐỐI CHIẾU NÉT TÍNH CÁCH: ${kq.map((x) => `${x.ten} (${x.so} hệ)`).join('; ')}`;
   }
 
   // ---------- Góp ý (worker/gop-y.mjs) ----------
@@ -1206,7 +1318,7 @@
   function renderRecent() {
     const list = loadRecent();
     $('#recent-wrap').hidden = !list.length;
-    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${x.mode === 'battu' ? ' · Bát Tự' : x.mode === 'bds' ? ' · Bản đồ sao' : ''}</button>`).join('');
+    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}${{ battu: ' · Bát Tự', bds: ' · Bản đồ sao', tonghop: ' · Tổng hợp' }[x.mode] || ''}</button>`).join('');
   }
 
   // ---------- Điều phối ----------
@@ -1256,6 +1368,7 @@
       if (inp.year < 1800 || inp.year > 2199) { $('#form-error').textContent = 'Năm sinh cần trong khoảng 1800 đến 2199.'; $('#form-error').hidden = false; return; }
       if (state.mode === 'battu') { openBt(inp); return; }
       if (state.mode === 'bds') { openBds(inp); return; }
+      if (state.mode === 'tonghop') { openTh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (!compute(inp, false)) return;
@@ -1285,6 +1398,13 @@
       const h = toBdsHash(inp);
       if (location.hash.slice(1) === h) showView('bds'); else location.hash = h;
     };
+    // Mở màn tổng hợp 3 hệ (từ form hoặc từ nút ở các màn kết quả)
+    const openTh = (inp) => {
+      if (!computeTh(inp)) return;
+      saveRecent({ ...voiNoi(inp), mode: 'tonghop' });
+      const h = toThHash(voiNoi(inp));
+      if (location.hash.slice(1) === h) showView('th'); else location.hash = h;
+    };
     // Mở lá số Tử Vi của cùng ngày giờ (không rõ giờ thì sang màn 12 giờ)
     const openTuVi = (inp) => {
       if (inp.noHour) { openHours({ ...inp, mode: 'tuvi' }); return; }
@@ -1299,8 +1419,18 @@
       history.replaceState(null, '', '#' + homeHash(m));
       $('#form-error').hidden = true;
     });
-    $('#bt-facts').addEventListener('click', (e) => { if (e.target.closest('#bt-to-tv')) openTuVi(state.btInput); });
-    $('#who-facts').addEventListener('click', (e) => { if (e.target.closest('#tv-to-bt')) openBt({ ...state.input, noHour: tryingHour() }); });
+    $('#bt-facts').addEventListener('click', (e) => { if (e.target.closest('#bt-to-tv')) openTuVi(state.btInput); else if (e.target.closest('#bt-to-th')) openTh(state.btInput); });
+    $('#bds-facts').addEventListener('click', (e) => { if (e.target.closest('#bds-to-th')) openTh(state.bdsInput); });
+    $('#th-cards').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-th-mo]'); if (!b) return;
+      const inp = state.thInput, m = b.getAttribute('data-th-mo');
+      if (m === 'tuvi') openTuVi(inp); else if (m === 'battu') openBt(inp); else openBds(inp);
+    });
+    $('#th-body').addEventListener('click', (e) => { if (e.target.closest('#th-copy')) copyText(thText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
+    $('#who-facts').addEventListener('click', (e) => {
+      if (e.target.closest('#tv-to-bt')) openBt({ ...state.input, noHour: tryingHour() });
+      else if (e.target.closest('#tv-to-th')) openTh({ ...state.input, noHour: tryingHour() });
+    });
     $('#bt-dv').addEventListener('click', (e) => { const b = e.target.closest('[data-dv]'); if (b) { state.btDv = +b.getAttribute('data-dv'); renderBtYears(); } });
     $('#bt-years').addEventListener('click', (e) => { const b = e.target.closest('[data-year]'); if (b) setBtYear(+b.getAttribute('data-year')); });
     $('#bt-body').addEventListener('click', (e) => { if (e.target.closest('#bt-copy')) copyText(btText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
@@ -1336,6 +1466,7 @@
       if (!inp) return;
       if (inp.mode === 'battu') { setMode('battu'); openBt(inp); return; }
       if (inp.mode === 'bds') { setMode('bds'); openBds(inp); return; }
+      if (inp.mode === 'tonghop') { setMode('tonghop'); openTh(inp); return; }
       if (inp.noHour) { openHours(inp); return; }
       state.fromHours = null;
       if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
@@ -1454,7 +1585,7 @@
     $$('.js-copy-info').forEach((b) => b.addEventListener('click', () => copyText(infoForAi(), 'Đã chép, dán vào AI bạn dùng để hỏi')));
     $('#png-close').addEventListener('click', () => { $('#png-dialog').hidden = true; });
     // Ngoài Claude, địa chỉ trang chính là link của lá số
-    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao' }[state.view] || 'Đã chép link lá số')); }
+    if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, { battu: 'Đã chép link Bát Tự', bds: 'Đã chép link bản đồ sao', th: 'Đã chép link tổng hợp' }[state.view] || 'Đã chép link lá số')); }
 
     const setAi = (fn) => { state.sample = fn; $('#ai-panel').hidden = !fn; $('#ai-off').hidden = !!fn; };
     if (IN_CLAUDE) {

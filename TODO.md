@@ -28,6 +28,8 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 
 9. [x] **Bản đồ sao** (xong 30/10): `src/bandosao.js`, màn `#ban-do-sao-...`. Khớp lá mẫu tracuubandosao (Swiss Ephemeris) dưới 2'. Còn: thêm Chiron, Lilith nếu cần; nơi sinh chi tiết tới huyện; vận hạn (transit) theo năm.
 
+10. [x] **Tổng hợp 3 hệ** (xong 30/10): `src/tonghop.js`, màn `#tong-hop-...`. Còn: người am hiểu duyệt bảng gắn nét tính cách.
+
 ## Kỹ thuật
 
 - [ ] Bật Góp ý trên GitHub Pages: deploy `worker/gop-y.mjs` + D1, đặt biến `FEEDBACK_ENDPOINT` (xem README). Cân nhắc bật `DUYET_TRUOC` nếu bị spam.

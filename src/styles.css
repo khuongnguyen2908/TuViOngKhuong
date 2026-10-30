@@ -511,6 +511,22 @@ footer a { color: inherit; }
 .bds-list li { line-height: 1.6; }
 @media (max-width: 560px) { .bds-tbl { font-size: 12.5px; } .bds-tbl th, .bds-tbl td { padding: 5px 4px; } .wh-ky, .wh-sao .g { font-size: 24px; } }
 
+/* Tổng hợp 3 hệ */
+.th-ico { color: var(--gold); background: var(--tint); font: 700 22px var(--f-display); }
+.th-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.th-card { display: grid; gap: 6px; align-content: start; padding: 16px 18px; background: var(--surface); border: 1px solid var(--rule); border-radius: 14px; }
+.th-card h3 { display: flex; align-items: center; gap: 10px; font: 700 22px var(--f-display); margin-bottom: 2px; }
+.th-card p { margin: 0; line-height: 1.55; }
+.th-card .muted { font-size: 13px; }
+.th-card .btn { justify-self: start; margin-top: 6px; }
+.prose ul.th-list { list-style: none; padding: 0; display: grid; gap: 8px; margin-top: 6px; }
+.th-list li { padding: 8px 10px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); line-height: 1.45; }
+.th-list b { font-weight: 700; }
+.th-list small { display: block; color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.th-so { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; margin-right: 8px; border-radius: 999px; border: 1px solid currentColor; vertical-align: 1px; color: var(--muted); }
+.th-so-3 { color: var(--cinnabar); } .th-so-2 { color: var(--gold); }
+.th-tbl { max-width: 460px; margin-top: 8px; }
+
 /* Góp ý */
 .gy-open { display: inline-flex; align-items: center; gap: 6px; }
 .gy-open svg { width: 16px; height: 16px; }
