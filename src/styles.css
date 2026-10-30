@@ -492,6 +492,8 @@ html.no-scroll { overflow: hidden; }
 .gy-h { font: 700 19px var(--f-display); margin-top: 4px; }
 .gy-items { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
 .gy-items li { padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
+.gy-items li.is-new { border-color: var(--gold); box-shadow: inset 3px 0 0 var(--gold); }
+.gy-live { font-size: 12px; }
 .gy-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
 .gy-meta small { color: var(--muted); font-size: 12px; }
 .gy-items p { margin: 4px 0 0; white-space: pre-line; overflow-wrap: anywhere; line-height: 1.55; }

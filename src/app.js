@@ -815,23 +815,32 @@
   }
 
   // ---------- Góp ý (worker/gop-y.mjs) ----------
-  const GY = { items: [], conNua: false, sao: 0, daTai: false, ban: false };
+  const GY = { items: [], conNua: false, sao: 0, daTai: false, ban: false, moi: new Set(), timer: null };
   const GY_TEN_KEY = 'tuvi.gopy.ten';
+  const GY_CHU_KY = 20000; // tự cập nhật mỗi 20 giây khi bảng góp ý đang mở
   const saoTxt = (n) => `<span class="gy-st" role="img" aria-label="${n} trên 5 sao">${'★'.repeat(n)}<i>${'★'.repeat(5 - n)}</i></span>`;
   const gyUrl = (truoc) => { const u = new URL(CFG.feedbackEndpoint, location.href); if (truoc) u.searchParams.set('truoc', truoc); return u.href; };
-  async function gyLoad(them) {
+  // kieu: 'dau' tải lần đầu, 'them' trang tiếp theo, 'moi' lặng lẽ lấy trang đầu để cập nhật (góp ý mới, góp ý vừa bị ẩn)
+  async function gyLoad(kieu) {
     if (GY.ban) return;
     GY.ban = true; $('#gy-more').disabled = true;
-    if (!them) $('#gy-list').innerHTML = '<p class="muted">Đang tải góp ý…</p>';
+    if (kieu === 'dau') $('#gy-list').innerHTML = '<p class="muted">Đang tải góp ý…</p>';
     try {
-      const res = await fetch(gyUrl(them ? GY.items[GY.items.length - 1].id : null));
+      const res = await fetch(gyUrl(kieu === 'them' ? GY.items[GY.items.length - 1].id : null));
       const d = await res.json();
       if (!res.ok) throw new Error(d.error);
-      GY.items = them ? [...GY.items, ...d.items] : d.items; GY.conNua = d.conNua; GY.tk = d; GY.daTai = true;
+      if (kieu === 'them') GY.items = [...GY.items, ...d.items];
+      else if (kieu === 'moi' && GY.daTai) {
+        const cu = new Set(GY.items.map((x) => x.id)), cuoi = d.items.length ? d.items[d.items.length - 1].id : Infinity;
+        GY.moi = new Set(d.items.filter((x) => !cu.has(x.id)).map((x) => x.id));
+        GY.items = [...d.items, ...(d.conNua ? GY.items.filter((x) => x.id < cuoi) : [])];
+      } else GY.items = d.items;
+      if (kieu !== 'them') GY.conNua = d.conNua || (kieu === 'moi' && GY.conNua && GY.items.length > d.items.length);
+      GY.tk = d; GY.daTai = true;
       gyRender();
     } catch {
-      if (!them) $('#gy-list').innerHTML = '<p class="muted">Chưa tải được góp ý. Kiểm tra mạng rồi mở lại.</p>';
-      else toast('Chưa tải thêm được góp ý.');
+      if (kieu === 'dau') $('#gy-list').innerHTML = '<p class="muted">Chưa tải được góp ý. Kiểm tra mạng rồi mở lại.</p>';
+      else if (kieu === 'them') toast('Chưa tải thêm được góp ý.');
     } finally { GY.ban = false; $('#gy-more').disabled = false; }
   }
   function gyRender() {
@@ -840,7 +849,7 @@
       <div class="gy-bars">${[5, 4, 3, 2, 1].map((k) => `<div><span>${k} ★</span><span class="bt-meter"><i style="width:${Math.round((d.dem[k] / d.tong) * 100)}%"></i></span><small class="num">${d.dem[k]}</small></div>`).join('')}</div>`
       : '<p class="muted">Chưa có góp ý nào. Bạn là người đầu tiên nhé!</p>';
     const ngay = (t) => { const x = new Date(t); return `${pad(x.getDate())}/${pad(x.getMonth() + 1)}/${x.getFullYear()}`; };
-    $('#gy-list').innerHTML = GY.items.length ? `<h3 class="gy-h">Mọi người nói gì</h3><ul class="gy-items">${GY.items.map((c) => `<li><div class="gy-meta"><b>${esc(c.ten)}</b>${saoTxt(c.sao)}<small>${ngay(c.luc)}</small></div><p>${esc(c.noiDung)}</p></li>`).join('')}</ul>` : '';
+    $('#gy-list').innerHTML = GY.items.length ? `<h3 class="gy-h">Mọi người nói gì</h3><ul class="gy-items">${GY.items.map((c) => `<li${GY.moi.has(c.id) ? ' class="is-new"' : ''}><div class="gy-meta"><b>${esc(c.ten)}</b>${saoTxt(c.sao)}<small>${ngay(c.luc)}</small></div><p>${esc(c.noiDung)}</p></li>`).join('')}</ul>` : '';
     $('#gy-more').hidden = !GY.conNua;
   }
   function gyPaint() { $$('#gy-pick button').forEach((b) => { const v = +b.getAttribute('data-sao'); b.classList.toggle('on', v <= GY.sao); b.setAttribute('aria-pressed', String(v === GY.sao)); }); }
@@ -849,9 +858,12 @@
     try { if (!$('#gy-ten').value) $('#gy-ten').value = localStorage.getItem(GY_TEN_KEY) || ''; } catch { /* bỏ qua */ }
     $('#gy-ok').textContent = ''; $('#gy-err').hidden = true;
     ($('#gy-ten').value ? $('#gy-pick button') : $('#gy-ten')).focus();
-    if (!GY.daTai) gyLoad(false);
+    GY.moi = new Set();
+    gyLoad(GY.daTai ? 'moi' : 'dau');
+    clearInterval(GY.timer);
+    GY.timer = setInterval(() => { if (!document.hidden) gyLoad('moi'); }, GY_CHU_KY);
   }
-  function gyClose() { $('#gy-dialog').hidden = true; document.documentElement.classList.remove('no-scroll'); $('#btn-gopy').focus(); }
+  function gyClose() { clearInterval(GY.timer); GY.timer = null; $('#gy-dialog').hidden = true; document.documentElement.classList.remove('no-scroll'); $('#btn-gopy').focus(); }
   async function gySend(e) {
     e.preventDefault();
     const ten = $('#gy-ten').value.trim(), noiDung = $('#gy-nd').value.trim(), err = $('#gy-err');
@@ -867,7 +879,7 @@
       try { localStorage.setItem(GY_TEN_KEY, ten); } catch { /* bỏ qua */ }
       $('#gy-nd').value = ''; $('#gy-dem').textContent = '0/1000'; GY.sao = 0; gyPaint();
       $('#gy-ok').textContent = d.choDuyet ? 'Cảm ơn bạn! Góp ý sẽ hiện sau khi được duyệt.' : 'Cảm ơn bạn đã góp ý!';
-      if (!d.choDuyet) gyLoad(false);
+      if (!d.choDuyet) gyLoad('moi');
     } catch { fail('Không kết nối được, kiểm tra mạng rồi thử lại.'); }
     finally { $('#gy-gui').disabled = false; }
   }
@@ -1222,7 +1234,7 @@
       $('#gy-pick').addEventListener('click', (e) => { const b = e.target.closest('[data-sao]'); if (b) { GY.sao = +b.getAttribute('data-sao'); gyPaint(); $('#gy-err').hidden = true; } });
       $('#gy-nd').addEventListener('input', (e) => { $('#gy-dem').textContent = `${e.target.value.length}/1000`; });
       $('#gy-form').addEventListener('submit', gySend);
-      $('#gy-more').addEventListener('click', () => gyLoad(true));
+      $('#gy-more').addEventListener('click', () => gyLoad('them'));
     }
     $('#btn-png').addEventListener('click', exportPng);
     $('#bt-png').addEventListener('click', exportPng);
