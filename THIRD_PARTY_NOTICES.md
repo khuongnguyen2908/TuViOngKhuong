@@ -43,3 +43,11 @@ Be Vietnam Pro và Cormorant Garamond, tải từ Google Fonts.
 ## Thuật toán thiên văn
 
 Công thức tính sóc và kinh độ Mặt Trời theo sách *Astronomical Algorithms* (Jean Meeus, 1998). Mã trong `src/lunar.js` được viết mới, không sao chép mã âm lịch của Hồ Ngọc Đức.
+
+## Công thức thiên văn cho Bản đồ sao (src/bandosao.js)
+
+Không chép mã nguồn; công thức được viết lại từ các tài liệu công khai:
+
+- Jean Meeus, *Astronomical Algorithms* (2nd ed., 1998): Mặt Trăng (chương 47), nút thật, giờ sao, Điểm Mọc, Thiên Đỉnh.
+- Paul Schlyter, *How to compute planetary positions* (stjarnhimlen.se): phần tử quỹ đạo và nhiễu Mộc – Thổ – Thiên Vương.
+- E. M. Standish (JPL), *Keplerian Elements for Approximate Positions of the Major Planets*: phần tử quỹ đạo Diêm Vương.

@@ -8,6 +8,7 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 - Nhận diện cách cục của cung Mệnh (bộ chính tinh, cát cách, hung cách, phá cách); bấm vào một cách để tô các cung liên quan.
 - Lời khuyên cho từng điểm xấu: hung cách, phá cách, chính tinh hãm, sát tinh và hung tinh (khi bấm vào sao), sát tinh ở Mệnh và tiểu hạn.
 - Bát Tự (Tứ Trụ): chọn ngay ở trang chủ. Trụ năm đổi ở Lập Xuân, trụ tháng theo 12 tiết (tính thời điểm giao tiết đến phút); tàng can, thập thần, Trường Sinh, nạp âm, Thai nguyên, Mệnh cung, thần sát chính, ngũ hành và ước lượng nhật chủ mạnh yếu, đại vận, lưu niên; không rõ giờ thì lập ba trụ. Đối chiếu khớp với bazi.vn ở 3 lá số mẫu. Có hồ sơ tính cách 10 nhật chủ, biểu đồ ngũ giác ngũ hành, biểu tượng con giáp (emoji, Mão là mèo) và chữ Hán ngũ hành, nút (i) và bấm vào thập thần / thần sát để xem nghĩa.
+- Bản đồ sao (chiêm tinh phương Tây): lựa chọn thứ ba ở trang chủ, cần nơi sinh (63 tỉnh thành hoặc tự nhập tọa độ, múi giờ). Vòng bản đồ SVG, vị trí 10 hành tinh, Nút Bắc, Điểm Mọc, Thiên Đỉnh, 12 nhà Placidus, nghịch hành, đắc/vượng/hãm/tuyệt, góc chiếu, nguyên tố; luận giải bộ ba Mặt Trời – Mặt Trăng – Cung Mọc và từng hành tinh. Công thức tự viết (Meeus, Schlyter, JPL), khớp Swiss Ephemeris dưới 2 phút cung ở lá mẫu.
 - Không rõ giờ sinh: xem nhanh cung Mệnh, Thân, Cục của cả 12 giờ (lọc theo buổi), bấm để mở lá số từng giờ.
 - So sánh hai lá số (vợ chồng, đối tác, bạn bè): ngũ hành bản mệnh, thiên can, địa chi, cung Mệnh, tuổi rơi vào cung, cung liên quan; mỗi điểm kỵ có lời khuyên; chép được để hỏi AI khác.
 - Đổi năm xem ngay trên lá số (nút ‹ ›, nút Năm nay, dải 10 năm của từng đại hạn); có sao lưu niên (L.) và sao lưu đại hạn (ĐV.), bật tắt riêng.
@@ -35,6 +36,8 @@ src/
   loikhuyen.js          Lời khuyên cho điểm xấu (tự biên soạn)
   sosanh.js             So sánh hai lá số (xem tuổi)
   battu.js              Bát Tự: tứ trụ theo tiết khí, thập thần, đại vận (lời giải nghĩa tự biên soạn)
+  bandosao.js           Bản đồ sao: vị trí hành tinh, nhà Placidus, góc chiếu, tọa độ 63 tỉnh thành
+  bandosao-nghia.js     Giải nghĩa cung hoàng đạo, hành tinh, nhà, góc chiếu (tự biên soạn)
   ai.js                 Gọi proxy AI khi chạy ngoài Claude
   app.js                Giao diện, điều hướng, xuất file
 scripts/build.mjs       Ghép src/ thành một file HTML

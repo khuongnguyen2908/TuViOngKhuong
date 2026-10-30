@@ -111,6 +111,16 @@ const TuViContent = (() => {
     namXem: ['Năm xem hạn', 'Năm dùng để tính tuổi, đại hạn, tiểu hạn, tháng âm và sao lưu niên. Mặc định là năm nay.'],
     gioDongHo: ['Giờ đồng hồ lúc sinh', 'Miền Bắc dùng giờ UTC+8 đến 08/1967, miền Nam đến 1975. Chọn UTC+8 nếu giờ sinh ghi theo đồng hồ thời đó; web tự đổi về giờ Việt Nam.'],
     gioTy: ['Giờ Tý sớm và muộn', 'Giờ Tý từ 23 giờ đến 1 giờ sáng. Tý muộn (23 đến 24 giờ) mặc định tính sang ngày hôm sau; có thể đổi trong Tùy chọn trường phái.'],
+    // Bản đồ sao
+    bdsNoiSinh: ['Nơi sinh', 'Cần để tính Điểm Mọc và 12 nhà. Chọn tỉnh, thành theo tên cũ (trước sáp nhập 2025); tọa độ lấy ở trung tâm tỉnh lỵ nên Điểm Mọc có thể lệch khoảng 1 độ. Sinh ở huyện xa tỉnh lỵ hoặc ở nước ngoài thì chọn "Nơi khác" và nhập tọa độ, múi giờ.'],
+    bdsVong: ['Cách đọc vòng bản đồ sao', 'Vòng ngoài là 12 cung hoàng đạo. Vòng giữa đánh số 12 nhà, bắt đầu từ Điểm Mọc (AC) bên trái, đi ngược chiều kim đồng hồ. Ký hiệu bên trong là hành tinh, chữ R là đang nghịch hành. Đường nối giữa vòng là góc chiếu: xanh là hài hòa, đỏ là căng thẳng, vàng là trùng tụ.'],
+    bdsCung: ['Cung hoàng đạo', '12 phần, mỗi phần 30 độ của đường đi biểu kiến của Mặt Trời, tính từ điểm xuân phân (hoàng đạo nhiệt đới). Cung cho biết hành tinh thể hiện theo phong cách nào.'],
+    bdsNha: ['12 nhà', '12 lĩnh vực của đời sống, chia theo bầu trời lúc bạn sinh ra (hệ Placidus). Nhà cho biết năng lượng của hành tinh dồn vào lĩnh vực nào. Cần giờ và nơi sinh chính xác.'],
+    bdsMoc: ['Điểm Mọc và Thiên Đỉnh', 'Điểm Mọc (AC) là cung đang mọc ở chân trời phía đông lúc bạn sinh, ứng với vẻ ngoài và cách bạn bắt đầu mọi việc. Thiên Đỉnh (MC) là điểm cao nhất trên bầu trời, ứng với sự nghiệp. Điểm Mọc đổi khoảng 1 độ mỗi 4 phút, nên cần giờ sinh chính xác.'],
+    bdsGoc: ['Góc chiếu', 'Góc giữa hai hành tinh trên vòng hoàng đạo: trùng tụ 0°, lục hợp 60°, vuông góc 90°, tam hợp 120°, đối đỉnh 180°, cho phép lệch vài độ. Góc hài hòa giúp hai năng lượng phối hợp, góc căng tạo áp lực nhưng cũng là động lực.'],
+    bdsNghich: ['Nghịch hành (R)', 'Nhìn từ Trái Đất, hành tinh có lúc như đi lùi trên bầu trời. Theo chiêm tinh, năng lượng của hành tinh đó hướng vào trong hơn, thể hiện chậm hoặc theo cách riêng.'],
+    bdsPham: ['Đắc, vượng, hãm, tuyệt', 'Mức thuận lợi của hành tinh trong cung: Đắc địa (nhà riêng), Vượng địa (được tôn vinh) là mạnh; Hãm địa (đối nhà riêng), Tuyệt địa (đối chỗ vượng) là yếu.'],
+    bdsNguyenTo: ['Nguyên tố và thể', 'Đếm các hành tinh và Điểm Mọc theo 4 nguyên tố (Lửa, Đất, Khí, Nước) và 3 thể (Thống lĩnh, Cố định, Biến đổi) để thấy khí chất nổi trội và phần còn thiếu.'],
     // Bát Tự
     btNhatChu: ['Nhật chủ', 'Thiên can của trụ ngày, đại diện cho chính bạn. Mọi thập thần trên lá số đều tính theo quan hệ ngũ hành, âm dương với nhật chủ.'],
     btThapThan: ['Thập thần', 'Mười quan hệ giữa nhật chủ với các can khác: cùng hành (Tỷ Kiên, Kiếp Tài), ta sinh (Thực Thần, Thương Quan), ta khắc (Thiên Tài, Chính Tài), khắc ta (Thất Sát, Chính Quan), sinh ta (Thiên Ấn, Chính Ấn). Cùng âm dương gọi là "thiên", khác âm dương là "chính". Bấm vào một thập thần trong bảng để xem nghĩa.'],

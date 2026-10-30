@@ -366,3 +366,38 @@ test('Góp ý: worker lưu, thống kê, chặn bẫy, giới hạn gửi, duy�
   assert.equal((await w.fetch(new Request('https://x/', { headers: { Origin: 'https://xau.com' } }), env3)).status, 403);
   assert.equal((await w.fetch(new Request('https://x/', { headers: { Origin: 'https://a.github.io' } }), env3)).status, 200);
 });
+
+test('Bản đồ sao: khớp lá mẫu tính bằng Swiss Ephemeris (1/1/1998 14:30 GMT+7, Đồng Văn)', () => {
+  const B = require('../src/bandosao.js');
+  const r = B.compute({ day: 1, month: 1, year: 1998, hour: 14, minute: 30, clockTz: 7, viDo: 23.13, kinhDo: 105.149 });
+  const chuan = { sun: 280.676, moon: 314.396, mercury: 258.664, venus: 303.330, mars: 311.012, jupiter: 322.313, saturn: 13.765, uranus: 307.136, neptune: 298.954, pluto: 246.775, node: 162.312 };
+  const lech = (a, b) => Math.abs((((a - b) % 360) + 540) % 360 - 180) * 60; // phút cung
+  r.sao.forEach((s) => assert.ok(lech(s.lam, chuan[s.key]) < 2, `${s.ten} lệch ${lech(s.lam, chuan[s.key]).toFixed(1)}'`));
+  assert.ok(lech(r.moc.lam, 59.574) < 1 && lech(r.dinh.lam, 315.943) < 1, 'Điểm Mọc / Thiên Đỉnh lệch');
+  const nha = Object.fromEntries(r.sao.map((s) => [s.key, s.nha]));
+  assert.deepEqual([nha.sun, nha.venus, nha.uranus, nha.jupiter], [8, 9, 9, 10]);
+  assert.deepEqual(r.sao.filter((s) => s.nghich).map((s) => s.key), ['venus', 'node']);
+  assert.deepEqual(Object.fromEntries(r.sao.filter((s) => s.pham).map((s) => [s.key, s.pham])), { mercury: 'Hãm địa', saturn: 'Tuyệt địa', uranus: 'Đắc địa', neptune: 'Tuyệt địa' });
+  assert.equal(r.chuTinhMoc, 'venus');
+  // 12 đỉnh nhà theo đúng thứ tự vòng hoàng đạo
+  for (let i = 0; i < 12; i++) { const d = (((r.nhaDinh[(i + 1) % 12].lam - r.nhaDinh[i].lam) % 360) + 360) % 360; assert.ok(d > 10 && d < 60, `Nhà ${i + 1} rộng ${d.toFixed(1)}°`); }
+});
+
+test('Bản đồ sao: 63 tỉnh thành, không rõ giờ, Nam bán cầu, nội dung không phán tuyệt đối', () => {
+  const B = require('../src/bandosao.js');
+  const N = require('../src/bandosao-nghia.js');
+  assert.equal(B.NOI.length, 63);
+  assert.equal(new Set(B.NOI.map((n) => n[0])).size, 63);
+  B.NOI.forEach(([, ten, lat, lon]) => assert.ok(lat > 8 && lat < 23.5 && lon > 102 && lon < 110, `Tọa độ lạ: ${ten}`));
+  const kg = B.compute({ day: 12, month: 5, year: 1990, noHour: true, clockTz: 7, viDo: 10.78, kinhDo: 106.7 });
+  assert.equal(kg.moc, null); assert.equal(kg.nhaDinh, null); assert.ok(kg.sao.every((s) => s.nha === null));
+  const uc = B.compute({ day: 4, month: 2, year: 1985, hour: 6, minute: 0, clockTz: 11, viDo: -33.87, kinhDo: 151.21 });
+  assert.equal(uc.nhaDinh.length, 12);
+  for (let i = 0; i < 12; i++) { const d = (((uc.nhaDinh[(i + 1) % 12].lam - uc.nhaDinh[i].lam) % 360) + 360) % 360; assert.ok(d > 5 && d < 70); }
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  assert.equal(N.CUNG.length, 12); assert.equal(N.NHA.length, 12);
+  const tat = [...N.CUNG.flatMap((c) => [c.tuKhoa, c.mt, c.tr, c.moc, ...c.manh, ...c.yeu]), ...Object.values(N.SAO).flat(), ...N.NHA.flat(), ...Object.values(N.GOC).flat(), ...Object.values(N.PHAM).flat(), ...Object.values(N.NGUYEN_TO).flat(), ...Object.values(N.THE)];
+  tat.forEach((t) => assert.ok(!CAM.test(t), `Có từ phán tuyệt đối: ${t}`));
+  B.SAO.forEach(([k]) => assert.ok(N.SAO[k], `Thiếu nghĩa ${k}`));
+  B.PHAM_TEN.forEach((p) => assert.ok(N.PHAM[p]));
+});

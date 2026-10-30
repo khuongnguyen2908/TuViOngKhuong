@@ -30,6 +30,8 @@ const parts = {
   LOIKHUYEN: stripExports(read('loikhuyen.js')),
   SOSANH: stripExports(read('sosanh.js')),
   BATTU: stripExports(read('battu.js')),
+  BANDOSAO: stripExports(read('bandosao.js')),
+  SAONGHIA: stripExports(read('bandosao-nghia.js')),
   AI: stripExports(read('ai.js')),
   APP: read('app.js'),
 };

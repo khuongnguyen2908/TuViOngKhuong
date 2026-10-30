@@ -214,7 +214,7 @@ const LunarVN = (() => {
   const hourCanChi = (dayCan, hourChi) => ({ can: ((dayCan % 5) * 2 + hourChi) % 10, chi: hourChi });
   const name = (cc) => CAN[cc.can] + ' ' + CHI[cc.chi];
 
-  return { jdn, fromJdn, newMoonUT, sunLongitude, makeCalendar, CAN, CHI, TIET_KHI,
+  return { jdn, fromJdn, newMoonUT, sunLongitude, deltaT, makeCalendar, CAN, CHI, TIET_KHI,
     yearCanChi, monthCanChi, dayCanChi, hourCanChi, name };
 })();
 
