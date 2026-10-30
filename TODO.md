@@ -21,8 +21,9 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
    - [x] Đợt 2: 26 phụ tinh chủ chốt × 4 nhóm cung (Bản thân · Tiền và việc · Người thân, bạn bè · Bên ngoài, sức khỏe) + viết dài 57 phụ tinh còn lại; hiện khi bấm vào sao.
    - Còn bàn: sao mượn ở cung vô chính diệu đang hiện độ sáng của cung gốc (cung xung chiếu); có sách xét lại độ sáng theo cung mượn.
 4. [ ] **Ảnh chia sẻ mạng xã hội** tỉ lệ 4:5 và 9:16, có dòng "Ông Khương phán rằng" và tóm tắt Mệnh.
-5. [ ] **So sánh hai lá số**: hợp tuổi, vợ chồng, đối tác.
-6. [ ] **Không rõ giờ sinh**: xem nhanh Mệnh, Thân của cả 12 giờ.
+5. [x] **So sánh hai lá số** (xong 30/10): tab So sánh, `src/sosanh.js`. Còn: người am hiểu xác nhận cách chấm hợp / kỵ và bảng "tuổi rơi vào cung" (đang để mức Tham khảo).
+6. [x] **Không rõ giờ sinh** (xong 30/10): màn `#12-gio-...`, 13 khung giờ (có Tý muộn), lọc theo buổi.
+7. [x] **Lời khuyên cho điểm xấu** (xong 30/10): `src/loikhuyen.js`. Chờ người am hiểu đọc góp ý.
 
 ## Kỹ thuật
 

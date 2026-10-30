@@ -216,3 +216,53 @@ test('Cách cục: cát và hung không lệch quá (hung ít nhất 70 % số c
   laSoNgauNhien(2000, 77).forEach((ch) => K.detect(ch).cach.forEach((h) => { if (h.nhom in dem) dem[h.nhom]++; }));
   assert.ok(dem.hung >= 0.7 * dem.cat, `Cát ${dem.cat}, hung ${dem.hung}: lệch về cát`);
 });
+
+test('Lời khuyên: đủ cho mọi hung cách, chính tinh hãm, hung tinh; không phán tuyệt đối', () => {
+  const LK = require('../src/loikhuyen.js');
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  const kiem = (t, ten) => { assert.ok(typeof t === 'string' && t.length >= 40 && t.length <= 300, `${ten}: dài ${t && t.length} ký tự`); assert.ok(!CAM.test(t), `${ten}: có từ phán tuyệt đối`); };
+  const ids = K.RULES.map((r) => r.id);
+  K.RULES.filter((r) => r.nhom === 'hung').forEach((r) => assert.ok(LK.CACH[r.id], `Thiếu lời khuyên cho hung cách ${r.ten}`));
+  Object.keys(LK.CACH).forEach((id) => { assert.ok(ids.includes(id), `CACH có id lạ: ${id}`); kiem(LK.CACH[id], id); });
+  kiem(LK.PHA, 'PHA');
+  assert.deepEqual(Object.keys(LK.CHINH_HAM).sort(), [...E.CHINH_TINH].sort());
+  Object.entries(LK.CHINH_HAM).forEach(([k, t]) => kiem(t, k));
+  const hung = new Set(laSoNgauNhien(400, 9).flatMap((ch) => ch.palaces.flatMap((p) => p.stars.filter((s) => s.kind === 'hung').map((s) => s.name))));
+  hung.forEach((n) => assert.ok(LK.SAO[n], `Thiếu lời khuyên cho hung tinh ${n}`));
+  Object.entries(LK.SAO).forEach(([k, t]) => kiem(t, k));
+  Object.entries({ ...LK.TONG, ...LK.SO_SANH }).forEach(([k, t]) => kiem(t, k));
+  const tb = laSoNgauNhien(200, 3).map((ch) => ch.thienBan);
+  ['Cục khắc Bản Mệnh', 'Âm dương nghịch lý'].forEach((k) => assert.ok(tb.some((t) => t.quanHeMenhCuc === k || t.amDuongLy === k), `Khóa TONG không khớp engine: ${k}`));
+});
+
+test('So sánh: quan hệ chi, can, ngũ hành và đối xứng hai chiều', () => {
+  const SS = require('../src/sosanh.js');
+  const LK = require('../src/loikhuyen.js');
+  const q = (a, b) => SS.chiQuanHe(a, b).loai;
+  assert.equal(q(0, 4), 'tamHop'); assert.equal(q(8, 0), 'tamHop');      // Tý Thìn, Thân Tý
+  assert.equal(q(0, 1), 'lucHop'); assert.equal(q(5, 8), 'lucHop');      // Tý Sửu, Tỵ Thân
+  assert.equal(q(0, 6), 'xung'); assert.equal(q(2, 8), 'xung');          // Tý Ngọ, Dần Thân
+  assert.equal(q(0, 7), 'hai'); assert.equal(q(9, 10), 'hai');           // Tý Mùi, Dậu Tuất
+  assert.equal(q(0, 3), 'khac'); assert.equal(q(4, 4), 'trung');
+  const la = (year, month = 6, hour = 10) => E.compute({ gender: 'nam', calendar: 'duong', day: 15, month, year, hour, minute: 0, namXem: 2026 });
+  const muc = (r, k) => r.muc.find((x) => x.key === k);
+  // 1984 Giáp Tý (Hải Trung Kim), 1989 Kỷ Tỵ (Đại Lâm Mộc), 1990 Canh Ngọ (Lộ Bàng Thổ), 1992 Nhâm Thân (Kiếm Phong Kim)
+  assert.equal(muc(SS.compare(la(1984), la(1989)), 'can').muc, 'hop');   // Giáp Kỷ ngũ hợp
+  assert.equal(muc(SS.compare(la(1984), la(1990)), 'can').muc, 'ky');    // Giáp Canh xung
+  assert.equal(muc(SS.compare(la(1984), la(1990)), 'chi').muc, 'ky');    // Tý Ngọ xung
+  assert.equal(muc(SS.compare(la(1984), la(1992)), 'chi').muc, 'hop');   // Tý Thân tam hợp
+  assert.equal(muc(SS.compare(la(1984), la(1992)), 'nguHanh').muc, 'binh'); // Kim Kim
+  assert.equal(muc(SS.compare(la(1984), la(1989)), 'nguHanh').muc, 'ky'); // Kim khắc Mộc
+  // Đổi chỗ hai người thì số hợp / bình / kỵ không đổi; mục kỵ nào cũng có lời khuyên
+  const ds = laSoNgauNhien(300, 41);
+  for (let i = 0; i + 1 < ds.length; i += 2) {
+    const r1 = SS.compare(ds[i], ds[i + 1]), r2 = SS.compare(ds[i + 1], ds[i]);
+    assert.deepEqual(r1.dem, r2.dem);
+    r1.muc.filter((x) => x.muc === 'ky').forEach((x) => assert.ok(LK.SO_SANH[x.khuyen], `Mục kỵ ${x.key} thiếu lời khuyên`));
+  }
+  // Không rõ giờ: bỏ mục cung Mệnh và cung liên quan của người đó
+  const r = SS.compare(la(1984), la(1992), { gioB: false, quanHe: 'vochong' });
+  assert.ok(!muc(r, 'menh'));
+  assert.ok(r.thieuGio);
+  assert.deepEqual(r.lienQuan.map((x) => x.nguoi), ['Người thứ nhất']);
+});

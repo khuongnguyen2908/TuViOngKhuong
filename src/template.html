@@ -54,7 +54,8 @@
       </div>
       <label class="check" id="leap-row"><input type="checkbox" id="f-leap"> Tháng nhuận</label>
       <div class="field"><span class="lbl" id="hours-lbl">Giờ sinh <button type="button" class="info" data-info="gioTy" aria-label="Giải thích: Giờ Tý sớm và muộn" aria-expanded="false">i</button></span><div class="hours" id="hours" role="radiogroup" aria-labelledby="hours-lbl"></div></div>
-      <label class="check"><input type="checkbox" id="f-exact"> Nhập giờ phút chính xác</label>
+      <label class="check"><input type="checkbox" id="f-nohour"> Không rõ giờ sinh (xem nhanh cả 12 giờ)</label>
+      <label class="check" id="exact-row"><input type="checkbox" id="f-exact"> Nhập giờ phút chính xác</label>
       <label class="field" id="time-row"><span class="lbl">Giờ phút</span><input type="time" id="f-time"></label>
       <label class="field"><span class="lbl">Giờ đồng hồ lúc sinh <button type="button" class="info" data-info="gioDongHo" aria-label="Giải thích: Giờ đồng hồ lúc sinh" aria-expanded="false">i</button></span>
         <select id="f-tz"><option value="7">UTC+7, giờ Việt Nam hiện nay</option><option value="8">UTC+8, giờ cũ (tự đổi về UTC+7)</option></select></label>
@@ -74,9 +75,24 @@
   </form>
 </main>
 
+<!-- Màn không rõ giờ sinh: xem nhanh 12 giờ -->
+<main id="view-hours" class="hours-view" hidden>
+  <section class="hv-head">
+    <h1 id="hours-title" tabindex="-1">Chưa rõ giờ sinh</h1>
+    <p class="lede" id="hv-facts"></p>
+    <ul class="hv-tips">
+      <li>Giờ sinh quyết định cung Mệnh và Thân, nên mỗi giờ cho một lá số khác. Năm sinh, bản mệnh, tuổi thì giờ nào cũng như nhau.</li>
+      <li>Nếu nhớ sinh buổi nào, chọn buổi đó để còn 3, 4 giờ. Đọc phần Mệnh, chọn giờ có tính cách giống mình nhất, rồi mở lá số đối chiếu với vài việc lớn đã qua (đại hạn).</li>
+    </ul>
+    <div class="segc hv-filter" role="radiogroup" aria-label="Lọc theo buổi" id="hv-filter"></div>
+  </section>
+  <div class="hv-grid" id="hv-grid"></div>
+</main>
+
 <!-- Màn lá số -->
 <div id="view-chart" class="view-chart" hidden>
 <main class="page">
+  <div class="hour-note" id="hour-note" hidden><span id="hour-note-text"></span><button type="button" class="linkish" id="btn-hours-back">Xem lại cả 12 giờ</button></div>
   <section class="who" aria-label="Thông tin lá số">
     <div>
       <h1 id="who-name" tabindex="-1">Lá số</h1>
@@ -113,10 +129,34 @@
   <section class="reading" aria-label="Luận giải">
     <div class="tabs" role="tablist">
       <button type="button" role="tab" data-tab="summary" aria-selected="true">Tổng quan</button>
+      <button type="button" role="tab" data-tab="compare" aria-selected="false">So sánh</button>
       <button type="button" role="tab" data-tab="ai" aria-selected="false">Luận giải AI</button>
       <button type="button" role="tab" data-tab="json" aria-selected="false">Dữ liệu JSON</button>
     </div>
     <div role="tabpanel" id="tab-summary"><div class="prose" id="summary"></div></div>
+    <div role="tabpanel" id="tab-compare" hidden>
+      <form class="cmp-form" id="cmp-form" novalidate>
+        <p class="muted prose">So lá số này với một người khác theo các cách xem tuổi phổ biến: ngũ hành bản mệnh, thiên can, địa chi, cung Mệnh và cung liên quan đến mối quan hệ.</p>
+        <div class="cmp-grid">
+          <label class="field"><span class="lbl">Mối quan hệ</span><select id="c-qh"></select></label>
+          <label class="field"><span class="lbl">Họ tên người thứ hai</span><input type="text" id="c-name" placeholder="Có thể để trống" autocomplete="off" maxlength="80"></label>
+          <div class="field"><span class="lbl">Giới tính</span>
+            <div class="segc"><input type="radio" name="cg" id="c-g-nam" value="nam"><label for="c-g-nam">Nam</label><input type="radio" name="cg" id="c-g-nu" value="nu" checked><label for="c-g-nu">Nữ</label></div></div>
+          <div class="field"><span class="lbl">Ngày sinh theo</span>
+            <div class="segc"><input type="radio" name="ccal" id="c-c-duong" value="duong" checked><label for="c-c-duong">Dương lịch</label><input type="radio" name="ccal" id="c-c-am" value="am"><label for="c-c-am">Âm lịch</label></div></div>
+          <div class="field"><span class="lbl">Ngày sinh</span><div class="date3">
+            <label>Ngày<input type="number" id="c-day" min="1" max="31" inputmode="numeric"></label>
+            <label>Tháng<input type="number" id="c-month" min="1" max="12" inputmode="numeric"></label>
+            <label>Năm<input type="number" id="c-year" min="1800" max="2199" inputmode="numeric"></label>
+          </div><label class="check" id="c-leap-row" hidden><input type="checkbox" id="c-leap"> Tháng nhuận</label></div>
+          <label class="field"><span class="lbl">Giờ sinh</span><select id="c-gio"></select></label>
+        </div>
+        <div class="field" id="c-recent-wrap" hidden><span class="lbl">Hoặc lấy từ lá số gần đây</span><div class="recent" id="c-recent"></div></div>
+        <p class="err" id="c-error" role="alert" hidden></p>
+        <p><button type="submit" class="btn btn-primary">So sánh</button></p>
+      </form>
+      <div class="prose cmp-out" id="cmp-out"></div>
+    </div>
     <div role="tabpanel" id="tab-ai" hidden>
       <p id="ai-off" class="muted prose">Luận giải AI chưa bật cho trang này.</p>
       <div id="ai-panel" hidden>
@@ -160,6 +200,8 @@
 /*CONTENT*/
 /*CACHCUC*/
 /*NGHIASAO*/
+/*LOIKHUYEN*/
+/*SOSANH*/
 /*AI*/
 /*APP*/
 </script>

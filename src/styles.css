@@ -260,6 +260,28 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .cc-q { display: inline-grid; place-items: center; width: 15px; height: 15px; margin-left: 5px; font-size: 10.5px; font-weight: 700; border-radius: 50%; background: var(--gold-soft); color: var(--ink); vertical-align: 1px; }
 .cc-nghia { display: block; margin-top: 3px; }
 .cc-pha { display: block; margin-top: 3px; color: var(--cinnabar); font-size: 13.5px; }
+/* Lời khuyên cho điểm xấu */
+.advice { display: block; margin: 6px 0 2px; padding: 7px 11px; border-left: 3px solid var(--moc); background: var(--tint); border-radius: 0 6px 6px 0; font-size: 13.5px; line-height: 1.55; max-width: 70ch; }
+.advice > b { color: var(--moc); font-weight: 700; }
+.prose .advice ul { margin: 3px 0 0; padding-left: 18px; }
+.prose .advice li { line-height: 1.55; }
+.advice i { font-style: normal; font-weight: 600; }
+.cc-item .advice { margin-top: 6px; background: var(--surface); }
+.star-note .advice { margin-top: 6px; background: var(--surface); }
+/* So sánh hai lá số */
+.cmp-form { display: grid; gap: 14px; max-width: 820px; }
+.cmp-form > p { margin: 0; }
+.cmp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px 18px; align-items: start; }
+.cmp-grid .check { margin-top: 8px; }
+.cmp-out:not(:empty) { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--rule); }
+.prose ul.cmp-who { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 2px; }
+.cmp-score { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 4px; }
+.cmp-score span { font-weight: 700; font-size: 13.5px; padding: 3px 12px; border-radius: 999px; border: 1px solid currentColor; }
+.t-hop { color: var(--moc); } .t-binh { color: var(--muted); } .t-ky { color: var(--cinnabar); } .t-tt { color: var(--tam); }
+.prose ul.cmp-list { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 8px; }
+.cmp-item { padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
+.cmp-text { display: block; margin-top: 3px; }
+.cmp-item .advice { background: var(--surface); }
 .cc-item small { display: block; margin-top: 3px; color: var(--muted); font-size: 12.5px; }
 .topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; margin-bottom: 16px; }
 .topic { all: unset; cursor: pointer; display: grid; gap: 2px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--rule); background: var(--panel); }
@@ -298,6 +320,7 @@ pre#json-out { font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, mon
 .hours label span { font-size: 10.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
 .hours input:checked + label { border-color: var(--cinnabar); background: var(--sel); }
 .hours input:focus-visible + label { outline: 2px solid var(--cinnabar); }
+.hours.is-off { opacity: 0.4; pointer-events: none; }
 .check { display: flex; gap: 8px; align-items: center; font-size: 13.5px; cursor: pointer; }
 .hint { font-size: 12.5px; color: var(--cinnabar); margin: 0; }
 details.opts { border: 1px solid var(--rule); border-radius: 10px; background: var(--panel); }
@@ -353,6 +376,24 @@ footer a { color: inherit; }
 .linkish:focus-visible { outline: 2px solid var(--cinnabar); }
 .recent-head { display: flex; justify-content: space-between; align-items: baseline; }
 .privacy { font-size: 12px; color: var(--muted); margin: 0; }
+
+/* Màn không rõ giờ sinh: 12 giờ */
+.hours-view { max-width: 1240px; margin: 0 auto; padding-block: clamp(20px, 4vw, 44px) 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; }
+.hv-head { display: grid; gap: 12px; }
+.hv-head h1 { font: 600 clamp(34px, 5vw, 56px)/1 var(--f-display); }
+.hv-head .lede { font-size: 16px; line-height: 1.6; margin: 0; max-width: 70ch; }
+.hv-tips { margin: 0; padding-left: 20px; display: grid; gap: 4px; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 80ch; }
+.hv-filter { max-width: 520px; }
+.hv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.hcard { display: grid; gap: 6px; align-content: start; padding: 14px 16px; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; }
+.hcard h2 { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 700 22px/1.1 var(--f-display); }
+.hcard h2 span { font: 500 12.5px var(--f-ui); color: var(--muted); font-variant-numeric: tabular-nums; }
+.hcard p { margin: 0; }
+.hc-menh strong { font-weight: 700; }
+.hc-meta { font-size: 13px; color: var(--muted); }
+.hc-trait { font-size: 13.5px; line-height: 1.55; }
+.hcard .btn { justify-self: start; margin-top: 4px; }
+.hour-note { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 14px; padding: 9px 14px; background: var(--tint); border: 1px solid var(--gold-soft); border-radius: 10px; font-size: 13.5px; }
 
 /* Màn lá số */
 .back { display: inline-flex; align-items: center; gap: 6px; }

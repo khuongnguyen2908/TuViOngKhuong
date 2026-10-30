@@ -1,6 +1,6 @@
 // Giao diện lá số (sơn mài)
 (() => {
-  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao;
+  const E = TuViEngine, C = TuViContent, K = TuViCachCuc, N = TuViNghiaSao, LK = TuViLoiKhuyen, SS = TuViSoSanh;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = (s) => String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -29,6 +29,9 @@
     ['than', 'Thân', '15–17', 16, 0], ['dau', 'Dậu', '17–19', 18, 0], ['tuat', 'Tuất', '19–21', 20, 0], ['hoi', 'Hợi', '21–23', 22, 0],
   ];
   const ALL_GIO = [...GIO, ['ty1', 'Tý muộn', '23–24', 23, 30]];
+  // Lọc màn 12 giờ theo buổi trong ngày
+  const BUOI = [['all', 'Tất cả', 'Cả 13 khung giờ'], ['khuya', 'Khuya', '23 đến 5 giờ'], ['sang', 'Sáng', '5 đến 11 giờ'], ['chieu', 'Chiều', '11 đến 17 giờ'], ['toi', 'Tối', '17 đến 23 giờ']];
+  const buoiOf = (h) => (h >= 23 || h < 5 ? 'khuya' : h < 11 ? 'sang' : h < 17 ? 'chieu' : 'toi');
   const OPTION_LABELS = {
     menhChu: ['Mệnh chủ tính theo', { chiNam: 'Chi năm sinh', cungMenh: 'Chi cung Mệnh' }],
     hoaLinhTyDauSuu: ['Hỏa, Linh với tuổi Tỵ Dậu Sửu', { 'mao-tuat': 'Hỏa khởi Mão, Linh khởi Tuất', 'tuat-mao': 'Hỏa khởi Tuất, Linh khởi Mão' }],
@@ -74,6 +77,14 @@
     return { name: '', gender: m[6], calendar: m[7] === 'dl' ? 'duong' : 'am', leap: m[7] === 'aln', year: +m[1], month: +m[2], day: +m[3],
       gio: gio[0], exact: !(gio[3] === hour && gio[4] === minute), hour, minute, clockTz: +m[8], namXem: +m[9], options };
   }
+  // Link màn không rõ giờ (#12-gio-...): như link lá số nhưng không có giờ phút
+  const toHoursHash = (inp) => '12-gio-' + toHash({ ...inp, hour: 0, minute: 0 }).slice(6).replace(/^(\d+-\d+-\d+)-\d{4}-/, '$1-');
+  function fromHoursHash(h) {
+    const inp = fromHash('la-so-' + h.slice(7).replace(/^(\d+-\d+-\d+)-/, '$1-0000-'));
+    return inp && { ...inp, noHour: true };
+  }
+  // Cùng ngày sinh, giới tính, tùy chọn (không tính giờ và năm xem): để biết lá số đang xem có phải giờ thử từ màn 12 giờ
+  const dayKey = (inp) => toHoursHash({ ...inp, namXem: 0 });
 
 
   // ---------- Form ----------
@@ -86,6 +97,9 @@
     $('#topics').innerHTML = TOPICS.map(([k, t, d]) => `<button type="button" class="topic" data-topic="${k}" aria-pressed="${k === state.topic}"><b>${t}</b><span>${d}</span></button>`).join('');
     const names = [...E.CHINH_TINH, ...Object.keys(C.PHU)];
     $('#star-list').innerHTML = [...new Set(names)].map((n) => `<option value="${n}"></option>`).join('');
+    $('#hv-filter').innerHTML = BUOI.map(([v, t, r], i) => `<input type="radio" name="buoi" id="b-${v}" value="${v}"${i ? '' : ' checked'}><label for="b-${v}" title="${r}">${t}</label>`).join('');
+    $('#c-qh').innerHTML = Object.entries(SS.QUAN_HE).map(([k, v]) => `<option value="${k}">${v.ten}</option>`).join('');
+    $('#c-gio').innerHTML = '<option value="">Không rõ giờ</option>' + ALL_GIO.map(([v, n, r]) => `<option value="${v}">${n} (${r} giờ)</option>`).join('');
   }
   function writeForm(inp) {
     $('#f-name').value = inp.name || '';
@@ -95,6 +109,7 @@
     $('#f-leap').checked = !!inp.leap;
     const h = $(`#h-${inp.gio || 'than'}`); if (h) h.checked = true;
     $('#f-exact').checked = !!inp.exact;
+    $('#f-nohour').checked = !!inp.noHour;
     $('#f-time').value = pad(inp.hour) + ':' + pad(inp.minute);
     $('#f-tz').value = String(inp.clockTz || 7);
     $('#f-xem').value = inp.namXem;
@@ -115,27 +130,39 @@
       day: +$('#f-day').value, month: +$('#f-month').value, year: +$('#f-year').value,
       leap: $('#f-c-am').checked && $('#f-leap').checked, gio: gio[0], exact, hour, minute,
       clockTz: +$('#f-tz').value, namXem: +$('#f-xem').value || new Date().getFullYear(), options,
+      noHour: $('#f-nohour').checked,
     };
   }
   function syncForm() {
+    const noHour = $('#f-nohour').checked;
     $('#leap-row').hidden = !$('#f-c-am').checked;
-    $('#time-row').hidden = !$('#f-exact').checked;
+    $('#hours').classList.toggle('is-off', noHour);
+    $$('#hours input').forEach((x) => { x.disabled = noHour; });
+    $('#exact-row').hidden = noHour;
+    $('#time-row').hidden = noHour || !$('#f-exact').checked;
     const y = +$('#f-year').value;
     $('#tz-hint').hidden = !(y && y < 1976 && $('#f-tz').value === '7');
   }
 
   // ---------- Hai màn: lập lá số / lá số ----------
   function showView(name) {
-    const home = name === 'home';
-    $('#view-home').hidden = !home; $('#view-chart').hidden = home;
-    $('#btn-back').hidden = home; $('#chart-actions').hidden = home;
-    $('.bar').classList.toggle('in-chart', !home);
+    $('#view-home').hidden = name !== 'home'; $('#view-chart').hidden = name !== 'chart'; $('#view-hours').hidden = name !== 'hours';
+    $('#btn-back').hidden = name === 'home'; $('#chart-actions').hidden = name !== 'chart';
+    $('.bar').classList.toggle('in-chart', name !== 'home');
     window.scrollTo(0, 0);
-    const h = home ? $('#home-title') : $('#who-name');
+    const h = $({ home: '#home-title', chart: '#who-name', hours: '#hours-title' }[name]);
     if (h && h.focus) h.focus({ preventScroll: true });
   }
   function route() {
     const h = (location.hash || '').slice(1);
+    if (h.startsWith('12-gio-')) {
+      const inp = fromHoursHash(h);
+      if (inp) {
+        if (state.hoursInput && toHoursHash(state.hoursInput) === h) inp.name = state.hoursInput.name;
+        if (showHours(inp)) { showView('hours'); return; }
+      }
+      toast('Link không hợp lệ. Hãy lập lại lá số.');
+    }
     const inp = h.startsWith('la-so-') ? fromHash(h) : null;
     if (inp) {
       const last = state.input;
@@ -153,6 +180,12 @@
   // ---------- Lá số ----------
   const SIGN = (v) => (v > 0 ? '+' : '–');
   const CUNG_TAT = ['Mệnh', 'Phụ', 'Phúc', 'Điền', 'Quan', 'Nô', 'Di', 'Tật', 'Tài', 'Tử', 'Phối', 'Huynh'];
+  // Lời khuyên cho điểm xấu: một câu, hoặc danh sách theo từng sao
+  const advice = (t) => (t ? `<span class="advice"><b>Lời khuyên:</b> ${esc(t)}</span>` : '');
+  const adviceStars = (names) => {
+    const list = [...new Set(names)].filter((n) => LK.SAO[n]);
+    return list.length ? `<div class="advice"><b>Lời khuyên</b><ul>${list.map((n) => `<li><i>${esc(n)}:</i> ${esc(LK.SAO[n])}</li>`).join('')}</ul></div>` : '';
+  };
   const info = (key) => C.INFO[key] ? `<button type="button" class="info" data-info="${key}" aria-label="Giải thích: ${esc(C.INFO[key][0])}" aria-expanded="false">i</button>` : '';
   const starHtml = (s, cls = '') => `<span class="star ${HANH_CLASS[s.hanh] || ''} ${cls}${state.found === s.name ? ' hit' : ''}" data-star="${esc(s.name)}" title="${esc(s.name)}${s.amDuong ? (s.amDuong > 0 ? ', dương' : ', âm') : ''}${s.hanh ? ' ' + s.hanh : ''}${s.bright ? ', ' + BRIGHT_WORD[s.bright].toLowerCase() : ''}">${s.amDuong ? `<span class="sg">${SIGN(s.amDuong)}</span>` : ''}${esc(s.name)}${s.bright ? `<span class="br">(${s.bright})</span>` : ''}</span>`;
   // Tháng âm lịch hôm nay (để đánh dấu nguyệt vận)
@@ -293,6 +326,7 @@
       <h3><span class="${HANH_CLASS[s.hanh] || ''}">${s.amDuong ? SIGN(s.amDuong) + ' ' : ''}${s.name}<small class="o-cung"> ở ${cung}${muon ? ` (mượn từ ${muon})` : ''}</small></span><span class="badge ${['M', 'V', 'Đ'].includes(s.bright) ? 'good' : s.bright === 'H' ? 'bad' : ''}">${s.bright ? BRIGHT_WORD[s.bright] : 'Không xét'}${s.hoa ? ', ' + s.hoa : ''}</span></h3>
       <p>${o || inf[0]}</p>
       <p class="bright-line">${brightLine(s)}</p>
+      ${s.bright === 'H' ? advice(LK.CHINH_HAM[s.name]) : ''}
       ${o ? `<p class="gen">Tính chất chung: ${inf[0]}</p>` : ''}
     </div>`;
   }
@@ -307,13 +341,16 @@
     const cung = state.chart.palaces[state.selected].cung;
     const oCung = N.cungOf(base, cung), oNhom = N.phuCungOf(base, cung);
     const where = oCung ? { head: `Ở ${cung}`, text: oCung } : oNhom ? { head: `Ở ${cung} (nhóm ${N.nhomOf(cung).toLowerCase()})`, text: oNhom } : null;
-    return { title: (isLuu ? 'Lưu ' : isDv ? 'Lưu đại hạn ' : '') + base, text: pre + txt, where };
+    // Lời khuyên: hung tinh luôn có; chính tinh chỉ khi đang hãm ở cung này
+    const ham = state.chart.palaces[state.selected].stars.some((s) => s.name === base && s.bright === 'H');
+    const tip = LK.SAO[base] || (ham ? LK.CHINH_HAM[base] : null);
+    return { title: (isLuu ? 'Lưu ' : isDv ? 'Lưu đại hạn ' : '') + base, text: pre + txt, where, tip };
   }
   function showStarNote(name) {
     const m = starMeaning(name);
     const box = $('#star-note');
     box.hidden = false;
-    box.innerHTML = `<b>${esc(m.title)}</b><span>${esc(m.text)}</span>${m.where ? `<span class="sn-cung"><i>${esc(m.where.head)}:</i> ${esc(m.where.text)}</span>` : ''}`;
+    box.innerHTML = `<b>${esc(m.title)}</b><span>${esc(m.text)}</span>${m.where ? `<span class="sn-cung"><i>${esc(m.where.head)}:</i> ${esc(m.where.text)}</span>` : ''}${advice(m.tip)}`;
     $$('#inspector .chip').forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-star') === name)));
   }
   function renderInspector() {
@@ -404,6 +441,7 @@
         <span class="cc-tag t-${h.nhom}">${CC_TAG[h.nhom]}</span><b>${esc(h.ten)}</b>${h.chuaChac ? '<span class="cc-q" title="Các sách còn nói khác nhau">?</span>' : ''}
         <span class="cc-nghia">${esc(h.nghia)}</span>
         ${h.pha.length ? `<span class="cc-pha">Bị phá bởi ${esc(h.pha.join(', '))} ở Mệnh: sức tốt của cách giảm đi.</span>` : ''}
+        ${advice(LK.CACH[h.id] || (h.pha.length ? LK.PHA : ''))}
         <small>Căn cứ: ${esc(h.canCu)}</small>
         ${h.chuaChac ? `<small>Còn tranh cãi: ${esc(h.chuaChac)}</small>` : ''}
       </button></li>`).join('');
@@ -439,29 +477,147 @@
       <section><h3>Thiên bàn</h3>
         <p>${tb.gender} sinh giờ ${tb.gioChi} ngày ${tb.amLich.day} tháng ${tb.amLich.month}${tb.amLich.leap ? ' nhuận' : ''} năm ${tb.canChi.nam}, ${tb.amDuong}, mệnh ${tb.banMenh}, ${tb.cucTen}.</p>
         <p>${C.AM_DUONG_Y[tb.amDuongLy]} ${C.MENH_CUC_Y[tb.quanHeMenhCuc]}</p>
+        ${advice([LK.TONG[tb.amDuongLy], LK.TONG[tb.quanHeMenhCuc]].filter(Boolean).join(' '))}
         <p>Mệnh đóng ở ${menh.chiTen}, Thân cư ${tb.thanCu} (${than.chiTen}): từ khoảng 30 tuổi trở đi, đời sống xoay quanh ${C.THAN_CU[tb.thanCu] || 'cung này'}.</p>
       </section>
       <section><h3>Cung Mệnh</h3>${borrow}
-        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s, 'Mệnh')}</li>`).join('')}</ul>
+        <ul>${menhStars.map((s) => `<li><b>${s.name}</b>${s.hoa ? ` (${s.hoa})` : ''}: ${starLine(s, 'Mệnh')}${s.bright === 'H' ? advice(LK.CHINH_HAM[s.name]) : ''}</li>`).join('')}</ul>
         ${catIn(menh).length ? `<p>Cát tinh tại Mệnh: ${catIn(menh).join(', ')}.</p>` : ''}
-        ${hungIn(menh).length ? `<p>Sát tinh tại Mệnh: ${hungIn(menh).join(', ')}. Nên giữ bình tĩnh, tránh quyết định vội.</p>` : ''}
-        ${tt(menh) ? `<p>Mệnh gặp ${tt(menh)}: thời trẻ thường chậm hoặc trắc trở, càng về sau càng nhẹ.</p>` : ''}
+        ${hungIn(menh).length ? `<p>Sát tinh tại Mệnh: ${hungIn(menh).join(', ')}.</p>${adviceStars(hungIn(menh))}` : ''}
+        ${tt(menh) ? `<p>Mệnh gặp ${tt(menh)}: thời trẻ thường chậm hoặc trắc trở, càng về sau càng nhẹ.</p>${advice(LK.TONG.tuanTrietMenh)}` : ''}
       </section>
       ${ccSection()}
       <section><h3>Tam phương tứ chính</h3>
         <p>${tam.map((p) => `${p.cung} (${p.chiTen}): ${nameList(p)}`).join('; ')}.</p>
         <p>Bốn cung Mệnh, Tài, Quan, Di có ${cat.length} sao lục cát${cat.length ? ` (${cat.join(', ')})` : ''} và ${sat.length} sao lục sát${sat.length ? ` (${sat.join(', ')})` : ''}. ${cat.length > sat.length ? 'Cát nhiều hơn sát: thuận lợi, dễ được nâng đỡ.' : cat.length < sat.length ? 'Sát nhiều hơn cát: đời nhiều thử thách, thành công nhờ bản lĩnh.' : 'Cát và sát cân bằng.'}</p>
+        ${cat.length < sat.length ? advice(LK.TONG.satNhieu) : ''}
       </section>
       <section><h3>Vận hạn</h3>
         ${dh ? `<p>Năm ${tb.namXem} (${tb.tuoi} tuổi) đang ở đại hạn ${dh.daiHan}–${dh.daiHanEnd} tại cung ${dh.cung} (${dh.chiTen}): ${nameList(dh)}. ${C.CUNG_Y[dh.cung]}</p>` : `<p>Năm ${tb.namXem} chưa vào đại hạn đầu tiên (bắt đầu từ ${tb.cuc} tuổi).</p>`}
         <p>Tiểu hạn năm ${tb.namXemCanChi} ở cung ${th.cung} (${th.chiTen}): ${nameList(th)}${catIn(th).length ? `, có ${catIn(th).join(', ')}` : ''}${hungIn(th).length ? `, gặp ${hungIn(th).join(', ')}` : ''}.</p>
+        ${adviceStars(hungIn(th))}
       </section>
       <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao theo sách truyền thống. Tử Vi chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')} Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
   }
 
+  // ---------- Không rõ giờ sinh: xem nhanh 12 giờ ----------
+  const firstSentence = (t) => (t.match(/^.*?[.!?](?=\s|$)/) || [t])[0];
+  function showHours(inp) {
+    let list;
+    try { list = ALL_GIO.map((g) => ({ g, ch: E.compute({ ...inp, gio: g[0], hour: g[3], minute: g[4], exact: false }) })); }
+    catch (e) { $('#form-error').textContent = e.message || 'Không an được lá số với dữ liệu này.'; $('#form-error').hidden = false; return false; }
+    state.hoursInput = inp;
+    const t0 = list[6].ch.thienBan, dl = t0.duongLich, a = t0.amLich; // giờ Ngọ: phần không phụ thuộc giờ
+    $('#hv-facts').textContent = `${inp.name ? inp.name + ', ' + t0.gender.toLowerCase() : t0.gender}, sinh ngày ${pad(dl.day)}/${pad(dl.month)}/${dl.year} (âm lịch ${a.day}/${a.month}${a.leap ? ' nhuận' : ''} năm ${t0.canChi.nam}), mệnh ${t0.banMenh}. Dưới đây là cung Mệnh theo từng giờ sinh.`;
+    $('#hv-grid').innerHTML = list.map(({ g, ch }) => {
+      const t = ch.thienBan, P = ch.palaces, menh = P[t.menhCung];
+      let chinh = menh.stars.filter((s) => s.kind === 'chinh'), muon = '';
+      if (!chinh.length) { const opp = P[mod(t.menhCung + 6)]; chinh = opp.stars.filter((s) => s.kind === 'chinh'); muon = opp.cung; }
+      const names = chinh.map((s) => s.name + (s.bright ? ` (${s.bright})` : '')).join(', ');
+      const trait = chinh.length ? firstSentence(N.cungOf(chinh[0].name, 'Mệnh') || C.CHINH[chinh[0].name][0]) : '';
+      return `<article class="hcard" data-buoi="${buoiOf(g[3])}">
+        <h2><b>Giờ ${g[1]}</b><span>${g[2]} giờ</span></h2>
+        <p class="hc-menh">Mệnh tại ${menh.chiTen}: <strong>${muon ? 'Vô chính diệu' : esc(names)}</strong>${muon ? `<span class="muted">, mượn ${esc(names) || 'chính tinh'} từ ${muon}</span>` : ''}</p>
+        <p class="hc-meta">Thân cư ${t.thanCu} · ${t.cucTen}</p>
+        ${trait ? `<p class="hc-trait">${esc(trait)}</p>` : ''}
+        <button type="button" class="btn btn-sm" data-pick="${g[0]}">Xem lá số giờ ${g[1]}</button>
+      </article>`;
+    }).join('');
+    filterHours();
+    return true;
+  }
+  function filterHours() {
+    const v = ($$('#hv-filter input').find((x) => x.checked) || {}).value || 'all';
+    $$('#hv-grid .hcard').forEach((c) => { c.hidden = v !== 'all' && c.getAttribute('data-buoi') !== v; });
+  }
+  // Lá số đang xem là một giờ thử từ màn 12 giờ
+  const tryingHour = () => !!state.fromHours && !!state.input && dayKey(state.input) === state.fromHours;
+  function paintHourNote() {
+    const on = tryingHour();
+    $('#hour-note').hidden = !on;
+    if (on) $('#hour-note-text').textContent = `Chưa rõ giờ sinh: đang xem thử giờ ${state.chart.thienBan.gioChi}.`;
+  }
+
+  // ---------- So sánh hai lá số ----------
+  const MUC_TAG = { hop: ['Hợp', 't-hop'], binh: ['Bình', 't-binh'], ky: ['Kỵ', 't-ky'], tt: ['Tham khảo', 't-tt'] };
+  function readCmp() {
+    const g = ALL_GIO.find((x) => x[0] === $('#c-gio').value), am = $('#c-c-am').checked;
+    return { name: $('#c-name').value.trim(), gender: $('#c-g-nu').checked ? 'nu' : 'nam', calendar: am ? 'am' : 'duong',
+      day: +$('#c-day').value, month: +$('#c-month').value, year: +$('#c-year').value, leap: am && $('#c-leap').checked,
+      gio: g ? g[0] : 'ngo', hour: g ? g[3] : 12, minute: g ? g[4] : 0, exact: false, noHour: !g,
+      clockTz: 7, namXem: state.input.namXem, options: state.input.options };
+  }
+  function writeCmp(inp) {
+    $('#c-name').value = inp.name || '';
+    $(`#c-g-${inp.gender === 'nu' ? 'nu' : 'nam'}`).checked = true;
+    $(`#c-c-${inp.calendar === 'am' ? 'am' : 'duong'}`).checked = true;
+    $('#c-day').value = inp.day; $('#c-month').value = inp.month; $('#c-year').value = inp.year;
+    $('#c-leap').checked = !!inp.leap; $('#c-leap-row').hidden = inp.calendar !== 'am';
+    $('#c-gio').value = inp.noHour ? '' : (inp.gio || '');
+  }
+  function renderCmpRecent() {
+    const list = loadRecent();
+    $('#c-recent-wrap').hidden = !list.length;
+    $('#c-recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}</button>`).join('');
+  }
+  function runCompare(e) {
+    if (e) e.preventDefault();
+    const inp = readCmp(), err = $('#c-error');
+    const fail = (msg) => { err.textContent = msg; err.hidden = false; };
+    if (!inp.day || !inp.month || !inp.year) return fail('Nhập đủ ngày, tháng và năm sinh của người thứ hai.');
+    if (inp.year < 1800 || inp.year > 2199) return fail('Năm sinh cần trong khoảng 1800 đến 2199.');
+    let chB;
+    try { chB = E.compute(inp); } catch (x) { return fail(x.message || 'Không an được lá số với dữ liệu này.'); }
+    err.hidden = true;
+    const tenA = state.chart.thienBan.name || 'Người thứ nhất';
+    let tenB = inp.name || 'Người thứ hai';
+    if (tenB === tenA) tenB += ' (2)';
+    const gioA = !tryingHour(), gioB = !inp.noHour, qh = $('#c-qh').value;
+    state.cmp = { inp, chart: chB, tenA, tenB, gioA, gioB, qh, res: SS.compare(state.chart, chB, { tenA, tenB, gioA, gioB, quanHe: qh }) };
+    renderCompare();
+  }
+  function renderCompare() {
+    const { res, chart: chB, tenA, tenB, gioA, gioB, qh } = state.cmp;
+    const who = (t, ten, gio) => `<li><b>${esc(ten)}</b>: ${t.gender.toLowerCase()}, sinh ${pad(t.duongLich.day)}/${pad(t.duongLich.month)}/${t.duongLich.year}${gio ? `, giờ ${t.gioChi}` : ', chưa rõ giờ'}; tuổi ${t.canChi.nam}, mệnh ${t.banMenh}</li>`;
+    const items = res.muc.map((m) => `<li class="cmp-item"><span class="cc-tag ${MUC_TAG[m.muc][1]}">${MUC_TAG[m.muc][0]}</span><b>${esc(m.ten)}</b><span class="cmp-text">${esc(m.text)}</span>${m.khuyen ? advice(LK.SO_SANH[m.khuyen]) : ''}</li>`).join('');
+    const sat = (names) => names.filter((n) => C.LUC_SAT.includes(n) || n === 'Hóa Kỵ');
+    const lq = res.lienQuan.map((x) => {
+      const ten = (list) => list.map((s) => s.name + (s.bright ? ` (${s.bright})` : '')).join(', ');
+      const goc = x.chinh.length ? x.chinh : (x.muon ? x.muon.chinh : []);
+      const chinh = x.chinh.length ? ten(x.chinh) : `vô chính diệu${x.muon && x.muon.chinh.length ? `, mượn ${ten(x.muon.chinh)} từ ${x.muon.cung}` : ''}`;
+      const y = goc.length ? N.cungOf(goc[0].name, x.cung) : '';
+      const tt = [x.tuan ? 'Tuần' : '', x.triet ? 'Triệt' : ''].filter(Boolean).join(', ');
+      return `<li><b>${esc(x.nguoi)}</b>, cung ${x.cung} tại ${x.chiTen}: ${chinh}${sat(x.hung).length ? `; gặp ${sat(x.hung).join(', ')}` : ''}${tt ? `; có ${tt}` : ''}.${y ? ` ${esc(y)}` : ''}${adviceStars(sat(x.hung))}</li>`;
+    }).join('');
+    const thieu = [gioA ? '' : tenA, gioB ? '' : tenB].filter(Boolean);
+    $('#cmp-out').innerHTML = `
+      <section><h3>${esc(tenA)} và ${esc(tenB)}</h3>
+        <p class="muted">Mối quan hệ: ${res.quanHe.toLowerCase()}.</p>
+        <ul class="cmp-who">${who(state.chart.thienBan, tenA, gioA)}${who(chB.thienBan, tenB, gioB)}</ul>
+        <div class="cmp-score"><span class="t-hop">${res.dem.hop} hợp</span><span class="t-binh">${res.dem.binh} bình</span><span class="t-ky">${res.dem.ky} kỵ</span></div>
+        <p><strong>${res.ketLuan}</strong></p>
+        <ul class="cmp-list">${items}</ul>
+      </section>
+      ${lq ? `<section><h3>Cung ${SS.QUAN_HE[qh].cung.join(' và ')}</h3><ul>${lq}</ul></section>` : ''}
+      ${thieu.length ? `<p class="note">Chưa rõ giờ sinh của ${esc(thieu.join(' và '))} nên bỏ qua phần cần cung Mệnh của người đó.</p>` : ''}
+      <p class="note">Xem tuổi là cách nhìn truyền thống, chưa được khoa học chứng minh. Hợp hay không phụ thuộc nhiều nhất vào cách hai người đối xử với nhau; đừng dùng kết quả này để quyết định hôn nhân hay hợp tác. ${info('docDung')}</p>
+      <p class="ai-bar"><button type="button" class="btn" id="btn-copy-cmp">Sao chép thông tin so sánh</button></p>`;
+  }
+  function compareText() {
+    const { res, chart: chB, tenA, tenB, gioA, gioB } = state.cmp;
+    const brief = (ch) => { const t = ch.thienBan; return `Giới tính: ${t.gender}; sinh ${t.duongLich.day}/${t.duongLich.month}/${t.duongLich.year}, chưa rõ giờ; âm lịch năm ${t.canChi.nam}; bản mệnh ${t.banMenh}`; };
+    return 'Bạn là người xem tuổi và luận giải Tử Vi Đẩu Số theo phái Việt Nam. Hai lá số dưới đây đã được an sẵn bằng phần mềm; dùng đúng dữ liệu này, không tự an lại.\n'
+      + `Hãy so sánh hai người cho mối quan hệ: ${res.quanHe.toLowerCase()}. Viết tiếng Việt, thẳng thắn và cụ thể; nêu cả điểm hợp lẫn điểm vênh, mỗi điểm vênh kèm một lời khuyên thực tế. `
+      + 'Không phán định tuyệt đối, không khuyên cưới hay chia tay. Cuối bài nhắc một câu rằng xem tuổi là diễn giải truyền thống, chưa được khoa học chứng minh.\n\n'
+      + `NGƯỜI THỨ NHẤT (${tenA}):\n${gioA ? chartText(state.chart, false) : brief(state.chart)}\n\n`
+      + `NGƯỜI THỨ HAI (${tenB}):\n${gioB ? chartText(chB, false) : brief(chB)}\n\n`
+      + 'KẾT QUẢ XEM TUỔI (phần mềm tính):\n' + res.muc.map((m) => `- ${m.ten} [${MUC_TAG[m.muc][0]}]: ${m.text}`).join('\n')
+      + `\nTổng: ${res.dem.hop} hợp, ${res.dem.binh} bình, ${res.dem.ky} kỵ.`;
+  }
+
   // ---------- Dữ liệu cho AI và JSON ----------
-  function chartText() {
-    const ch = state.chart, tb = ch.thienBan;
+  function chartText(ch = state.chart, withCc = true) {
+    const tb = ch.thienBan;
     const lines = [
       `Giới tính: ${tb.gender} (${tb.amDuong}); sinh ${tb.duongLich.day}/${tb.duongLich.month}/${tb.duongLich.year} ${pad(tb.duongLich.hour)}:${pad(tb.duongLich.minute)} giờ Việt Nam`,
       `Âm lịch: ngày ${tb.amLich.day} tháng ${tb.amLich.month}${tb.amLich.leap ? ' nhuận' : ''} năm ${tb.canChi.nam}; tháng ${tb.canChi.thang}, ngày ${tb.canChi.ngay}, giờ ${tb.canChi.gio}`,
@@ -474,7 +630,7 @@
       const f = (k) => p.stars.filter((s) => s.kind === k).map((s) => s.name + (s.bright ? `(${s.bright})` : '')).join(', ') || '—';
       lines.push(`- ${p.cung}${p.isThan ? ' [Thân]' : ''} | ${p.canTen} ${p.chiTen} | ĐH ${p.daiHan}-${p.daiHanEnd} | Chính: ${f('chinh')} | Cát: ${f('cat')} | Hung: ${f('hung')} | ${p.trangSinh}${p.tuan ? ' | Tuần' : ''}${p.triet ? ' | Triệt' : ''}${p.luuNien.length ? ' | Lưu: ' + p.luuNien.join(', ') : ''}${p.daiVan.length ? ' | Lưu đại hạn: ' + p.daiVan.join(', ') : ''}`);
     });
-    if (state.cc) lines.push('Cách cục (máy nhận diện theo cung Mệnh): ' + (ccAll().map((h) => `${h.ten} [${CC_TAG[h.nhom]}${h.pha.length ? ', bị phá bởi ' + h.pha.join(', ') : ''}] (${h.canCu})`).join('; ') || 'không có'));
+    if (withCc && state.cc) lines.push('Cách cục (máy nhận diện theo cung Mệnh): ' + (ccAll().map((h) => `${h.ten} [${CC_TAG[h.nhom]}${h.pha.length ? ', bị phá bởi ' + h.pha.join(', ') : ''}] (${h.canCu})`).join('; ') || 'không có'));
     return lines.join('\n');
   }
   const chartJson = () => JSON.stringify({ version: 1, school: 'vn', input: state.chart.input, thien_ban: state.chart.thienBan, dia_ban: state.chart.palaces, cach_cuc: state.cc }, null, 2);
@@ -484,6 +640,7 @@
     + 'Viết tiếng Việt, giọng điềm đạm, thẳng thắn và cụ thể. Mỗi nhận định nêu rõ sao hoặc cung làm căn cứ. '
     + 'Nêu điểm xấu rõ ràng và ngang hàng với điểm tốt, không nói giảm, không khen để làm vui lòng người xem; sao hãm, sát tinh, Hóa Kỵ, hung cách thì nói thẳng ảnh hưởng của chúng. '
     + 'Tránh những câu chung chung ai đọc cũng thấy đúng; câu nào cũng phải gắn với một đặc điểm riêng của lá số này. '
+    + 'Với mỗi điểm xấu, kèm một lời khuyên thực tế, cụ thể để giảm bớt ảnh hưởng. '
     + 'Không phán định tuyệt đối, không nói chuyện sống chết, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
     + 'Cuối bài nhắc một câu ngắn rằng Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh. '
     + 'Định dạng: các mục có tiêu đề dạng "## Tiêu đề", gạch đầu dòng bằng "- ", in đậm bằng **...**.\n\nLÁ SỐ:\n' + chartText();
@@ -588,7 +745,7 @@
   function renderRecent() {
     const list = loadRecent();
     $('#recent-wrap').hidden = !list.length;
-    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}</button>`).join('');
+    $('#recent').innerHTML = list.map((x, i) => `<button type="button" data-recent="${i}">${esc(x.name || 'Không tên')}, ${x.day}/${x.month}/${x.year}${x.calendar === 'am' ? ' âm lịch' : ''}${x.noHour ? ', chưa rõ giờ' : ''}</button>`).join('');
   }
 
   // ---------- Điều phối ----------
@@ -607,6 +764,8 @@
       $('#json-out').textContent = chartJson();
       $('#ai-out').innerHTML = ''; $('#ai-ask').hidden = true; $('#ai-note').textContent = '';
       $('#find').value = '';
+      state.cmp = null; $('#cmp-out').innerHTML = ''; $('#c-error').hidden = true; renderCmpRecent();
+      paintHourNote();
       return true;
     } catch (e) {
       $('#form-error').textContent = e.message || 'Không an được lá số với dữ liệu này.';
@@ -634,11 +793,30 @@
       const inp = readForm();
       if (!inp.day || !inp.month || !inp.year) { $('#form-error').textContent = 'Nhập đủ ngày, tháng và năm sinh.'; $('#form-error').hidden = false; return; }
       if (inp.year < 1800 || inp.year > 2199) { $('#form-error').textContent = 'Năm sinh cần trong khoảng 1800 đến 2199.'; $('#form-error').hidden = false; return; }
+      if (inp.noHour) { openHours(inp); return; }
+      state.fromHours = null;
       if (!compute(inp, false)) return;
       saveRecent(inp);
       const h = toHash(inp);
       if (location.hash.slice(1) === h) showView('chart'); else location.hash = h;
     });
+    // Mở màn 12 giờ (từ form hoặc lá số gần đây)
+    const openHours = (inp) => {
+      if (!showHours(inp)) return;
+      $('#form-error').hidden = true;
+      saveRecent(inp);
+      const h = toHoursHash(inp);
+      if (location.hash.slice(1) === h) showView('hours'); else location.hash = h;
+    };
+    $('#hv-filter').addEventListener('change', filterHours);
+    $('#hv-grid').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-pick]'); if (!b) return;
+      const g = ALL_GIO.find((x) => x[0] === b.getAttribute('data-pick'));
+      const inp = { ...state.hoursInput, noHour: false, gio: g[0], hour: g[3], minute: g[4], exact: false };
+      state.fromHours = dayKey(inp);
+      if (compute(inp, false)) location.hash = toHash(inp);
+    });
+    $('#btn-hours-back').addEventListener('click', () => { location.hash = toHoursHash({ ...state.input, name: '' }); });
     $('#form').addEventListener('change', syncForm);
     $('#form').addEventListener('input', () => { if (state.formSample) setSampleNote(false); $('#form-error').hidden = true; });
     $('#f-year').addEventListener('input', syncForm);
@@ -649,7 +827,10 @@
     $('#recent').addEventListener('click', (e) => {
       const b = e.target.closest('[data-recent]'); if (!b) return;
       const inp = loadRecent()[+b.getAttribute('data-recent')];
-      if (inp && compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
+      if (!inp) return;
+      if (inp.noHour) { openHours(inp); return; }
+      state.fromHours = null;
+      if (compute(inp, false)) { const h = toHash(inp); if (location.hash.slice(1) === h) showView('chart'); else location.hash = h; }
     });
     $('#btn-forget').addEventListener('click', forgetRecent);
     $('#btn-back').addEventListener('click', () => { location.hash = 'lap-la-so'; });
@@ -727,6 +908,15 @@
       state.topic = b.getAttribute('data-topic');
       $$('.topic').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     });
+    $('#cmp-form').addEventListener('submit', runCompare);
+    $('#cmp-form').addEventListener('input', () => { $('#c-error').hidden = true; });
+    $$('[name=ccal]').forEach((x) => x.addEventListener('change', () => { $('#c-leap-row').hidden = !$('#c-c-am').checked; }));
+    $('#c-recent').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-recent]'); if (!b) return;
+      const inp = loadRecent()[+b.getAttribute('data-recent')];
+      if (inp) { writeCmp(inp); runCompare(); }
+    });
+    $('#cmp-out').addEventListener('click', (e) => { if (e.target.closest('#btn-copy-cmp')) copyText(compareText(), 'Đã chép, dán vào AI bạn dùng để hỏi'); });
     $('#ai-run').addEventListener('click', () => runAi());
     $('#ai-stop').addEventListener('click', () => state.ai.ctl?.abort());
     $('#ai-ask').addEventListener('submit', (e) => { e.preventDefault(); const q = $('#ai-q').value.trim(); if (!q) return; $('#ai-q').value = ''; runAi(q); });

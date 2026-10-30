@@ -6,6 +6,9 @@ Web lập lá số Tử Vi Đẩu Số theo phái Việt Nam. Người dùng nh�
 - Engine an sao phái Việt với 9 tùy chọn trường phái.
 - Luận giải cơ bản ghép từ nghĩa sao và cung (kho nghĩa tự biên soạn: 14 chính tinh × 12 cung, 26 phụ tinh chủ chốt × 4 nhóm cung, 57 phụ tinh khác; đọc duyệt ở `docs/nghia-sao.md`); luận giải AI theo chủ đề khi có cấu hình.
 - Nhận diện cách cục của cung Mệnh (bộ chính tinh, cát cách, hung cách, phá cách); bấm vào một cách để tô các cung liên quan.
+- Lời khuyên cho từng điểm xấu: hung cách, phá cách, chính tinh hãm, sát tinh và hung tinh (khi bấm vào sao), sát tinh ở Mệnh và tiểu hạn.
+- Không rõ giờ sinh: xem nhanh cung Mệnh, Thân, Cục của cả 12 giờ (lọc theo buổi), bấm để mở lá số từng giờ.
+- So sánh hai lá số (vợ chồng, đối tác, bạn bè): ngũ hành bản mệnh, thiên can, địa chi, cung Mệnh, tuổi rơi vào cung, cung liên quan; mỗi điểm kỵ có lời khuyên; chép được để hỏi AI khác.
 - Đổi năm xem ngay trên lá số (nút ‹ ›, nút Năm nay, dải 10 năm của từng đại hạn); có sao lưu niên (L.) và sao lưu đại hạn (ĐV.), bật tắt riêng.
 - Mỗi lá số có link riêng (`#la-so-...`), chỉ chứa ngày giờ, năm xem và tùy chọn, không chứa họ tên.
 - Lá số gần đây lưu trong trình duyệt của từng người, có nút xóa.
@@ -28,11 +31,13 @@ src/
   content.js            Nghĩa cung, nghĩa sao chung (tự biên soạn)
   nghiasao.js           Nghĩa sao theo cung / nhóm cung (tự biên soạn; trang đọc duyệt: docs/nghia-sao.md)
   cachcuc.js            Nhận diện cách cục (luật + nghĩa tự biên soạn; danh sách ở docs/cach-cuc.md)
+  loikhuyen.js          Lời khuyên cho điểm xấu (tự biên soạn)
+  sosanh.js             So sánh hai lá số (xem tuổi)
   ai.js                 Gọi proxy AI khi chạy ngoài Claude
   app.js                Giao diện, điều hướng, xuất file
 scripts/build.mjs       Ghép src/ thành một file HTML
 scripts/nghia-sao-doc.mjs  Tạo docs/nghia-sao.md (npm run build tự chạy)
-tests/core.test.mjs     Kiểm thử âm lịch, lá số mẫu, proxy AI
+tests/core.test.mjs     Kiểm thử âm lịch, lá số mẫu, cách cục, lời khuyên, so sánh, proxy AI
 worker/ai-proxy.js      Cloudflare Worker gọi Claude API
 .github/workflows/      Kiểm thử và đưa lên GitHub Pages (pages.yml)
 ```
