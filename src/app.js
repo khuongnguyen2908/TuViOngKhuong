@@ -487,6 +487,8 @@
     + 'Không phán định tuyệt đối, không nói chuyện sống chết, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
     + 'Cuối bài nhắc một câu ngắn rằng Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh. '
     + 'Định dạng: các mục có tiêu đề dạng "## Tiêu đề", gạch đầu dòng bằng "- ", in đậm bằng **...**.\n\nLÁ SỐ:\n' + chartText();
+  // Nút Sao chép thông tin: lời dặn + lá số để người xem dán vào AI khác
+  const infoForAi = () => rules() + '\n\nHãy luận giải tổng quan lá số này: tính cách, công danh, tài lộc, tình cảm, sức khỏe và vận hạn năm xem. Sau đó tôi có thể hỏi thêm.';
   function md(text) {
     const out = []; let list = false;
     esc(text).split('\n').forEach((raw) => {
@@ -732,6 +734,7 @@
     $('#btn-png').addEventListener('click', exportPng);
     $('#btn-json').addEventListener('click', async () => { if (!(await saveFile(fileBase() + '.json', chartJson()))) { setTab('json'); toast('Mở tab Dữ liệu JSON để sao chép.'); } });
     $('#btn-copy').addEventListener('click', () => copyText(chartJson(), 'Đã chép JSON', $('#json-out')));
+    $$('.js-copy-info').forEach((b) => b.addEventListener('click', () => copyText(infoForAi(), 'Đã chép, dán vào AI bạn dùng để hỏi')));
     $('#png-close').addEventListener('click', () => { $('#png-dialog').hidden = true; });
     // Ngoài Claude, địa chỉ trang chính là link của lá số
     if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, 'Đã chép link lá số')); }

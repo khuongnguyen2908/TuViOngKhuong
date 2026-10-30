@@ -269,6 +269,11 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .topic[aria-pressed=true] { border-color: var(--cinnabar); background: var(--sel); }
 .topic:focus-visible { outline: 2px solid var(--cinnabar); }
 .ai-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 14px; }
+.ai-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.ai-copy p { margin: 0 0 10px; }
+.thanks { margin: 22px auto 0; max-width: 300px; text-align: center; }
+.thanks img { display: block; width: 100%; height: auto; border-radius: 14px; }
+.thanks figcaption { margin-top: 10px; font: 600 17px var(--f-display); }
 #ai-out { min-height: 24px; }
 #ai-out .q { margin-top: 20px; padding: 9px 14px; background: var(--tint); border-radius: 8px; font-weight: 600; max-width: 70ch; }
 #ai-ask { display: flex; gap: 8px; margin-top: 18px; max-width: 70ch; }

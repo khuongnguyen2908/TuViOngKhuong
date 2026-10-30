@@ -282,6 +282,11 @@ h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
 .topic[aria-pressed=true] { border-color: var(--cinnabar); background: var(--sel); }
 .topic:focus-visible { outline: 2px solid var(--cinnabar); }
 .ai-bar { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 14px; }
+.ai-copy { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule); }
+.ai-copy p { margin: 0 0 10px; }
+.thanks { margin: 22px auto 0; max-width: 300px; text-align: center; }
+.thanks img { display: block; width: 100%; height: auto; border-radius: 14px; }
+.thanks figcaption { margin-top: 10px; font: 600 17px var(--f-display); }
 #ai-out { min-height: 24px; }
 #ai-out .q { margin-top: 20px; padding: 9px 14px; background: var(--tint); border-radius: 8px; font-weight: 600; max-width: 70ch; }
 #ai-ask { display: flex; gap: 8px; margin-top: 18px; max-width: 70ch; }
@@ -532,10 +537,18 @@ footer a { color: inherit; }
         <div class="prose" id="ai-out"></div>
         <form id="ai-ask" hidden><input type="text" id="ai-q" placeholder="Hỏi thêm về lá số này" autocomplete="off" maxlength="500"><button type="submit" class="btn" id="ai-ask-btn">Hỏi</button></form>
       </div>
+      <div class="ai-copy">
+        <p class="muted prose">Muốn hỏi AI khác: bấm Sao chép thông tin, mở ChatGPT, Gemini hoặc Claude, dán vào rồi gửi. Nội dung chép gồm lá số dạng chữ và lời dặn cách luận giải.</p>
+        <p><button type="button" class="btn js-copy-info">Sao chép thông tin</button></p>
+      </div>
+      <figure class="thanks">
+        <img src="assets/qr-momo.webp" alt="Mã QR chuyển khoản (VietQR, MoMo)" width="1170" height="1280" loading="lazy">
+        <figcaption>Xin Cảm Ơn</figcaption>
+      </figure>
     </div>
     <div role="tabpanel" id="tab-json" hidden>
       <p class="muted prose">Thiên bàn và địa bàn 12 cung ở dạng JSON, dùng làm đầu vào cho luận giải tự động hoặc AI.</p>
-      <p><button type="button" class="btn" id="btn-copy">Chép JSON</button></p>
+      <p class="ai-bar"><button type="button" class="btn" id="btn-copy">Chép JSON</button><button type="button" class="btn js-copy-info">Sao chép thông tin</button></p>
       <pre id="json-out"></pre>
     </div>
   </section>
@@ -2535,6 +2548,8 @@ const TuViAI = (() => {
     + 'Không phán định tuyệt đối, không nói chuyện sống chết, không chẩn đoán y tế hay khuyên đầu tư cụ thể. '
     + 'Cuối bài nhắc một câu ngắn rằng Tử Vi là diễn giải truyền thống, chưa được khoa học chứng minh. '
     + 'Định dạng: các mục có tiêu đề dạng "## Tiêu đề", gạch đầu dòng bằng "- ", in đậm bằng **...**.\n\nLÁ SỐ:\n' + chartText();
+  // Nút Sao chép thông tin: lời dặn + lá số để người xem dán vào AI khác
+  const infoForAi = () => rules() + '\n\nHãy luận giải tổng quan lá số này: tính cách, công danh, tài lộc, tình cảm, sức khỏe và vận hạn năm xem. Sau đó tôi có thể hỏi thêm.';
   function md(text) {
     const out = []; let list = false;
     esc(text).split('\n').forEach((raw) => {
@@ -2780,6 +2795,7 @@ const TuViAI = (() => {
     $('#btn-png').addEventListener('click', exportPng);
     $('#btn-json').addEventListener('click', async () => { if (!(await saveFile(fileBase() + '.json', chartJson()))) { setTab('json'); toast('Mở tab Dữ liệu JSON để sao chép.'); } });
     $('#btn-copy').addEventListener('click', () => copyText(chartJson(), 'Đã chép JSON', $('#json-out')));
+    $$('.js-copy-info').forEach((b) => b.addEventListener('click', () => copyText(infoForAi(), 'Đã chép, dán vào AI bạn dùng để hỏi')));
     $('#png-close').addEventListener('click', () => { $('#png-dialog').hidden = true; });
     // Ngoài Claude, địa chỉ trang chính là link của lá số
     if (!IN_CLAUDE) { $('#btn-link').hidden = false; $('#btn-link').addEventListener('click', () => copyText(location.href, 'Đã chép link lá số')); }

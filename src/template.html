@@ -125,10 +125,18 @@
         <div class="prose" id="ai-out"></div>
         <form id="ai-ask" hidden><input type="text" id="ai-q" placeholder="Hỏi thêm về lá số này" autocomplete="off" maxlength="500"><button type="submit" class="btn" id="ai-ask-btn">Hỏi</button></form>
       </div>
+      <div class="ai-copy">
+        <p class="muted prose">Muốn hỏi AI khác: bấm Sao chép thông tin, mở ChatGPT, Gemini hoặc Claude, dán vào rồi gửi. Nội dung chép gồm lá số dạng chữ và lời dặn cách luận giải.</p>
+        <p><button type="button" class="btn js-copy-info">Sao chép thông tin</button></p>
+      </div>
+      <figure class="thanks">
+        <img src="assets/qr-momo.webp" alt="Mã QR chuyển khoản (VietQR, MoMo)" width="1170" height="1280" loading="lazy">
+        <figcaption>Xin Cảm Ơn</figcaption>
+      </figure>
     </div>
     <div role="tabpanel" id="tab-json" hidden>
       <p class="muted prose">Thiên bàn và địa bàn 12 cung ở dạng JSON, dùng làm đầu vào cho luận giải tự động hoặc AI.</p>
-      <p><button type="button" class="btn" id="btn-copy">Chép JSON</button></p>
+      <p class="ai-bar"><button type="button" class="btn" id="btn-copy">Chép JSON</button><button type="button" class="btn js-copy-info">Sao chép thông tin</button></p>
       <pre id="json-out"></pre>
     </div>
   </section>
