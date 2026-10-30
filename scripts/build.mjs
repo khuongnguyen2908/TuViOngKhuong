@@ -2,6 +2,7 @@
 // Chạy: node scripts/build.mjs                         → index.html (đầy đủ)
 //       node scripts/build.mjs out.html --fragment    → bản cho artifact Claude
 //       AI_ENDPOINT=https://... node scripts/build.mjs   → bật Luận giải AI qua proxy
+//       FEEDBACK_ENDPOINT=https://... node scripts/build.mjs → bật nút Góp ý
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
@@ -14,6 +15,9 @@ let config = read('config.js');
 if (process.env.AI_ENDPOINT) {
   config = config.replace(/aiEndpoint:\s*'[^']*'/, `aiEndpoint: ${JSON.stringify(process.env.AI_ENDPOINT).replace(/"/g, "'")}`);
 }
+if (process.env.FEEDBACK_ENDPOINT) {
+  config = config.replace(/feedbackEndpoint:\s*'[^']*'/, `feedbackEndpoint: ${JSON.stringify(process.env.FEEDBACK_ENDPOINT).replace(/"/g, "'")}`);
+}
 
 const parts = {
   CSS: read('styles.css'),
@@ -25,6 +29,7 @@ const parts = {
   NGHIASAO: stripExports(read('nghiasao.js')),
   LOIKHUYEN: stripExports(read('loikhuyen.js')),
   SOSANH: stripExports(read('sosanh.js')),
+  BATTU: stripExports(read('battu.js')),
   AI: stripExports(read('ai.js')),
   APP: read('app.js'),
 };

@@ -111,6 +111,19 @@ const TuViContent = (() => {
     namXem: ['Năm xem hạn', 'Năm dùng để tính tuổi, đại hạn, tiểu hạn, tháng âm và sao lưu niên. Mặc định là năm nay.'],
     gioDongHo: ['Giờ đồng hồ lúc sinh', 'Miền Bắc dùng giờ UTC+8 đến 08/1967, miền Nam đến 1975. Chọn UTC+8 nếu giờ sinh ghi theo đồng hồ thời đó; web tự đổi về giờ Việt Nam.'],
     gioTy: ['Giờ Tý sớm và muộn', 'Giờ Tý từ 23 giờ đến 1 giờ sáng. Tý muộn (23 đến 24 giờ) mặc định tính sang ngày hôm sau; có thể đổi trong Tùy chọn trường phái.'],
+    // Bát Tự
+    btNhatChu: ['Nhật chủ', 'Thiên can của trụ ngày, đại diện cho chính bạn. Mọi thập thần trên lá số đều tính theo quan hệ ngũ hành, âm dương với nhật chủ.'],
+    btThapThan: ['Thập thần', 'Mười quan hệ giữa nhật chủ với các can khác: cùng hành (Tỷ Kiên, Kiếp Tài), ta sinh (Thực Thần, Thương Quan), ta khắc (Thiên Tài, Chính Tài), khắc ta (Thất Sát, Chính Quan), sinh ta (Thiên Ấn, Chính Ấn). Cùng âm dương gọi là "thiên", khác âm dương là "chính". Bấm vào một thập thần trong bảng để xem nghĩa.'],
+    btTangCan: ['Tàng can', 'Các thiên can ẩn trong mỗi địa chi. Can đầu là bản khí (mạnh nhất), sau là trung khí và dư khí. Chữ nhỏ bên cạnh là thập thần viết tắt.'],
+    btTruongSinh: ['Vòng Trường Sinh', 'Mười hai giai đoạn sức mạnh của nhật chủ khi đứng ở từng địa chi: Trường Sinh, Lâm Quan, Đế Vượng là mạnh; Bệnh, Tử, Tuyệt là yếu. Can dương đi thuận, can âm đi nghịch.'],
+    btNapAm: ['Nạp âm', 'Ngũ hành nạp âm của từng cặp can chi trong 60 Hoa Giáp, ví dụ Mậu Dần là Thành Đầu Thổ (đất trên thành).'],
+    btThanSat: ['Thần sát', 'Các sao tốt xấu tra theo can ngày và chi ngày. Chỉ là yếu tố phụ, không quyết định cả lá số. Bấm vào tên sao trong bảng để xem nghĩa.'],
+    btThai: ['Thai nguyên và Mệnh cung', 'Thai nguyên lấy can tháng cộng 1, chi tháng cộng 3, chỉ khoảng thời điểm thụ thai. Mệnh cung tính từ tháng (theo trung khí) và giờ sinh, tương tự cung Mệnh của Tử Vi.'],
+    btTiet: ['Tiết khí và trụ tháng', 'Bát Tự không dùng tháng âm lịch mà dùng 12 tiết: tháng Dần bắt đầu ở Lập Xuân, tháng Mão ở Kinh Trập, và cứ thế. Trụ năm cũng đổi ở Lập Xuân (khoảng 4/2), không phải ở Tết.'],
+    btDaiVan: ['Đại vận', 'Mỗi đại vận 10 năm, đi từ trụ tháng: nam năm dương, nữ năm âm đi thuận; còn lại đi nghịch. Số ngày từ lúc sinh tới tiết gần nhất (theo chiều đi) chia 3 ra tuổi khởi vận. Bấm một đại vận để xem 10 năm của nó.'],
+    btNguHanh: ['Điểm ngũ hành', 'Mỗi thiên can tính 1 điểm; mỗi địa chi 1 điểm chia theo tàng can (bản khí nhiều nhất). Nhãn dưới mỗi hành cho biết hành đó là nhóm thập thần nào với nhật chủ.'],
+    btManh: ['Nhật chủ mạnh yếu', 'Ước lượng đơn giản: so phần trợ giúp nhật chủ (cùng hành và hành sinh ra nhật chủ, cộng thêm nếu được lệnh tháng) với phần còn lại. Không thay cho việc định dụng thần của người có chuyên môn.'],
+    btLuuNien: ['Lưu niên', 'Can chi của từng năm, xét quan hệ với nhật chủ (thập thần) và với chi ngày (xung, hợp, hại). Bấm một năm trong dải năm để đổi năm xem.'],
     truongPhai: ['Tùy chọn trường phái', 'Các phái Tử Vi an một vài sao khác nhau. Mặc định theo cách phổ biến ở Việt Nam; chỉ đổi khi bạn theo một sách hoặc thầy cụ thể.'],
   };
   return { INFO, THAN_CU, CUNG_Y, CHINH, PHU, LUC_CAT, LUC_SAT, BRIGHT_TEN, AM_DUONG_Y, MENH_CUC_Y };

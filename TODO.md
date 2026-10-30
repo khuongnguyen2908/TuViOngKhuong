@@ -24,8 +24,11 @@ Cập nhật 30/10/2026. Đánh dấu `[x]` khi xong.
 5. [x] **So sánh hai lá số** (xong 30/10): tab So sánh, `src/sosanh.js`. Còn: người am hiểu xác nhận cách chấm hợp / kỵ và bảng "tuổi rơi vào cung" (đang để mức Tham khảo).
 6. [x] **Không rõ giờ sinh** (xong 30/10): màn `#12-gio-...`, 13 khung giờ (có Tý muộn), lọc theo buổi.
 7. [x] **Lời khuyên cho điểm xấu** (xong 30/10): `src/loikhuyen.js`. Chờ người am hiểu đọc góp ý.
+8. [x] **Bát Tự** (xong 30/10): `src/battu.js`, màn `#bat-tu-...`, chọn ở trang chủ. Đã khớp bazi.vn 3 lá số. Còn: đối chiếu thêm lá số sinh sát giờ giao tiết; cách ước lượng nhật chủ mạnh yếu / dụng thần đang đơn giản, cần người am hiểu góp ý; thêm thần sát theo chi năm nếu cần.
 
 ## Kỹ thuật
+
+- [ ] Bật Góp ý trên GitHub Pages: deploy `worker/gop-y.mjs` + D1, đặt biến `FEEDBACK_ENDPOINT` (xem README). Cân nhắc bật `DUYET_TRUOC` nếu bị spam.
 
 - [ ] Chọn giấy phép cho mã của dự án (repo **đang công khai** mà chưa có giấy phép).
 - [ ] Bật Luận giải AI trên GitHub Pages: deploy `worker/ai-proxy.js`, đặt `ANTHROPIC_API_KEY`, `ALLOWED_ORIGINS`, giới hạn số lần gọi, hạn mức chi tiêu; gọi thử Claude API thật lần đầu (hiện mới thử với dữ liệu giả lập).

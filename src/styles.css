@@ -395,6 +395,107 @@ footer a { color: inherit; }
 .hcard .btn { justify-self: start; margin-top: 4px; }
 .hour-note { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 14px; padding: 9px 14px; background: var(--tint); border: 1px solid var(--gold-soft); border-radius: 10px; font-size: 13.5px; }
 
+/* Bát Tự */
+.mode-pick label { padding-block: 9px; }
+.bt-grid { display: grid; grid-template-columns: max-content repeat(4, minmax(0, 1fr)); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--panel); }
+.bt-lbl, .bt-c { padding: 8px 10px; border-bottom: 1px solid var(--rule); font-size: 13px; line-height: 1.45; }
+.bt-lbl { color: var(--muted); font-size: 12px; font-weight: 600; background: var(--surface); display: flex; align-items: center; }
+.bt-c { text-align: center; border-left: 1px solid var(--rule); min-width: 0; overflow-wrap: anywhere; }
+.bt-c.is-day { background: var(--tint); }
+.bt-grid > :nth-last-child(-n+5) { border-bottom: 0; }
+.bt-head { font: 700 17px/1.2 var(--f-display); display: grid; gap: 1px; }
+.bt-head small { font: 500 12px var(--f-ui); color: var(--muted); }
+.bt-big { display: block; font: 700 26px/1.1 var(--f-display); white-space: nowrap; overflow-wrap: normal; }
+.bt-c small { display: block; font-size: 11.5px; }
+.bt-c i { font-style: normal; color: var(--muted); font-size: 11.5px; }
+.bt-extra { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 10px; font-size: 13.5px; }
+.bt-track { grid-template-columns: repeat(10, minmax(84px, 1fr)); }
+.bt-track .seg b { font-size: 17px; white-space: nowrap; }
+.bt-track .seg b > span { font-size: inherit; overflow: visible; }
+.bt-track .seg b > .h-kim { color: var(--kim); } .bt-track .seg b > .h-moc { color: var(--moc); } .bt-track .seg b > .h-thuy { color: var(--thuy); } .bt-track .seg b > .h-hoa { color: var(--hoa); } .bt-track .seg b > .h-tho { color: var(--tho); }
+.yr span + span { color: var(--gold); }
+.bt-body { padding: 22px 24px 26px; }
+.dl-btn { display: inline-flex; align-items: center; gap: 6px; }
+.dl-btn svg { width: 15px; height: 15px; }
+.bt-tiet { margin: -4px 0 10px; font-size: 13px; }
+.bt-tap { all: unset; box-sizing: border-box; display: block; width: 100%; cursor: pointer; border-radius: 6px; padding: 1px 2px; }
+.bt-tap:hover, .bt-tap[aria-pressed=true] { background: var(--sel); }
+.bt-tap:focus-visible { outline: 2px solid var(--cinnabar); }
+.ico { display: inline-block; vertical-align: middle; object-fit: contain; }
+.ico-sm { width: 22px; height: 22px; margin: -3px 2px 0 0; }
+.bt-ico { display: block; width: 40px; height: 40px; margin: 0 auto 4px; }
+#bt-note { margin-top: 10px; }
+.bt-extra .info { margin-left: -14px; }
+.bt-hero { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: start; }
+.bt-badge { width: 96px; height: 96px; position: relative; }
+.bt-badge-img { width: 96px; height: 96px; display: block; }
+.bt-badge b { position: absolute; right: -4px; bottom: -4px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: currentColor; font: 700 16px/1 serif; }
+.bt-badge b i { font-style: normal; color: var(--panel); }
+.bt-hero h3 { margin-bottom: 2px; }
+.bt-hero p { margin: 4px 0; }
+.bt-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 24px; }
+.prose .bt-two h4 { font: 700 16px var(--f-ui); margin: 6px 0 2px; }
+.bt-hanh { display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr); gap: 10px 28px; align-items: center; }
+.bt-radar { width: 100%; max-width: 340px; height: auto; display: block; }
+.rd-grid { fill: none; stroke: var(--rule); stroke-width: 1; }
+.rd-area { fill: var(--gold-soft); stroke: var(--gold); stroke-width: 2; stroke-linejoin: round; }
+.rd-ring { fill: none; stroke: currentColor; stroke-width: 2; stroke-dasharray: 3 3; }
+.rd-han { fill: var(--panel); font: 700 15px/1 serif; text-anchor: middle; }
+.rd-name { fill: var(--ink); font: 700 13px var(--f-ui); text-anchor: middle; }
+.rd-sub { fill: var(--muted); font: 500 11px var(--f-ui); text-anchor: middle; }
+@media (max-width: 700px) { .bt-hanh { grid-template-columns: minmax(0, 1fr); justify-items: center; } .bt-hanh .bt-bars { width: 100%; } }
+@media (max-width: 480px) { .bt-hero { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 560px) { .bt-ico { width: 30px; height: 30px; } }
+.bt-bars { display: grid; gap: 6px; margin: 8px 0 12px; max-width: 520px; }
+.bt-bar { display: grid; grid-template-columns: 46px minmax(0, 1fr) 34px 46px; gap: 10px; align-items: center; font-size: 13.5px; }
+.bt-bar > span:first-child { font-weight: 600; }
+.bt-meter { display: block; height: 9px; border-radius: 99px; background: var(--tint); overflow: hidden; }
+.bt-bar i { display: block; height: 100%; background: currentColor; border-radius: 99px; min-width: 2px; }
+.bt-bar small { color: var(--muted); font-size: 12px; }
+@media (max-width: 560px) {
+  .bt-lbl, .bt-c { padding: 7px 5px; font-size: 12px; }
+  .bt-lbl { font-size: 10.5px; }
+  .bt-big { font-size: 18px; }
+  .bt-body { padding: 18px 16px 22px; }
+}
+
+/* Góp ý */
+.gy-open { display: inline-flex; align-items: center; gap: 6px; }
+.gy-open svg { width: 16px; height: 16px; }
+@media (max-width: 560px) { .gy-open span { display: none; } .gy-open { padding: 7px 9px; } }
+html.no-scroll { overflow: hidden; }
+.gy-wrap { position: fixed; inset: 0; z-index: 45; background: rgba(12, 8, 6, 0.55); display: grid; place-items: start center; padding: max(16px, 4vh) 16px; overflow-y: auto; }
+.gy-box { width: min(620px, 100%); background: var(--surface); color: var(--ink); border: 1px solid var(--rule); border-radius: 14px; box-shadow: var(--shadow); padding: 18px 20px 22px; display: grid; gap: 14px; }
+.gy-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.gy-head h2 { font: 700 24px var(--f-display); }
+.gy-sum { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; padding: 12px 14px; background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; }
+.gy-sum p { margin: 0; }
+.gy-avg { display: grid; justify-items: center; gap: 2px; }
+.gy-avg b { font: 700 38px/1 var(--f-display); }
+.gy-avg small { color: var(--muted); font-size: 12px; }
+.gy-bars { display: grid; gap: 3px; flex: 1; min-width: 200px; }
+.gy-bars div { display: grid; grid-template-columns: 34px minmax(0, 1fr) 28px; gap: 8px; align-items: center; font-size: 12.5px; }
+.gy-bars i { display: block; height: 100%; background: var(--gold); border-radius: 99px; }
+.gy-st { color: var(--gold); letter-spacing: 1px; white-space: nowrap; }
+.gy-st i { font-style: normal; color: var(--rule); }
+.gy-form { display: grid; gap: 12px; }
+.gy-form textarea { width: 100%; min-width: 0; padding: 9px 11px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit; resize: vertical; }
+.gy-dem { justify-self: end; color: var(--muted); font-size: 11.5px; }
+.gy-pick { display: flex; gap: 4px; }
+.gy-pick button { all: unset; cursor: pointer; font-size: 30px; line-height: 1; color: var(--rule); padding: 0 2px; border-radius: 6px; }
+.gy-pick button.on { color: var(--gold); }
+.gy-pick button:hover { transform: scale(1.08); }
+.gy-pick button:focus-visible { outline: 2px solid var(--cinnabar); }
+.gy-bay { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.gy-actions { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 0; }
+.gy-form .note { margin: 0; }
+.gy-h { font: 700 19px var(--f-display); margin-top: 4px; }
+.gy-items { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
+.gy-items li { padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--panel); }
+.gy-meta { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+.gy-meta small { color: var(--muted); font-size: 12px; }
+.gy-items p { margin: 4px 0 0; white-space: pre-line; overflow-wrap: anywhere; line-height: 1.55; }
+
 /* Màn lá số */
 .back { display: inline-flex; align-items: center; gap: 6px; }
 .back svg { width: 16px; height: 16px; }

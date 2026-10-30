@@ -12,11 +12,11 @@
 <header class="bar"><div class="bar-in">
   <button type="button" class="btn btn-ghost back" id="btn-back" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg>Lập lá số khác</button>
   <div class="logo"><span class="logo-mark" aria-hidden="true"></span><b>Tử Vi Ông Khương</b></div>
+  <button type="button" class="btn btn-ghost gy-open" id="btn-gopy" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2.5 3.5h11v7h-6l-3 2.5v-2.5h-2z"/></svg><span>Góp ý</span></button>
   <button type="button" class="btn btn-ghost icon-btn" id="btn-theme" aria-pressed="false"><svg id="theme-moon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9Z"/></svg><svg id="theme-sun" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" hidden><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10H4M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6"/></svg></button>
   <span class="chart-actions" id="chart-actions" hidden>
     <button type="button" class="btn btn-ghost hide-sm" id="btn-link" hidden>Chép link</button>
     <button type="button" class="btn btn-ghost hide-sm" id="btn-json">Tải JSON</button>
-    <button type="button" class="btn btn-ghost" id="btn-png">Tải ảnh</button>
   </span>
 </div></header>
 
@@ -24,7 +24,7 @@
 <main id="view-home" class="home">
   <section class="intro" aria-labelledby="home-title">
     <h1 id="home-title" tabindex="-1">Lập lá số Tử Vi</h1>
-    <p class="lede">Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.</p>
+    <p class="lede" id="home-lede">Nhập ngày giờ sinh để an lá số 12 cung theo Tử Vi Đẩu Số phái Việt Nam, xem đại hạn, tiểu hạn và luận giải từng cung.</p>
     <ul class="facts-list">
       <li><span><b>Tính ngay trên máy của bạn.</b> Ngày giờ sinh không được gửi hay lưu ở máy chủ nào.</span></li>
       <li><span><b>Âm lịch Việt Nam.</b> Tính theo giờ Hà Nội (UTC+7), đúng cả những năm Tết lệch với lịch Trung Quốc.</span></li>
@@ -41,6 +41,8 @@
   <form class="form-card" id="form" novalidate aria-labelledby="form-title">
     <div class="fc-head"><h2 id="form-title">Thông tin sinh</h2></div>
     <div class="fc-body">
+      <div class="field"><span class="lbl">Bạn muốn xem</span>
+        <div class="segc mode-pick" role="radiogroup" aria-label="Loại lá số"><input type="radio" name="mode" id="m-tuvi" value="tuvi" checked><label for="m-tuvi">Lá số Tử Vi</label><input type="radio" name="mode" id="m-battu" value="battu"><label for="m-battu">Bát Tự (Tứ Trụ)</label></div></div>
       <div class="sample-note" id="sample-note"><span>Đang điền sẵn ví dụ: nam, 29/8/1998, giờ Thân.</span><button type="button" class="linkish" id="btn-clear">Xóa ví dụ</button></div>
       <label class="field"><span class="lbl">Họ tên</span><input type="text" id="f-name" placeholder="Có thể để trống" autocomplete="off" maxlength="80"></label>
       <div class="field"><span class="lbl">Giới tính</span>
@@ -54,14 +56,14 @@
       </div>
       <label class="check" id="leap-row"><input type="checkbox" id="f-leap"> Tháng nhuận</label>
       <div class="field"><span class="lbl" id="hours-lbl">Giờ sinh <button type="button" class="info" data-info="gioTy" aria-label="Giải thích: Giờ Tý sớm và muộn" aria-expanded="false">i</button></span><div class="hours" id="hours" role="radiogroup" aria-labelledby="hours-lbl"></div></div>
-      <label class="check"><input type="checkbox" id="f-nohour"> Không rõ giờ sinh (xem nhanh cả 12 giờ)</label>
+      <label class="check"><input type="checkbox" id="f-nohour"> <span id="nohour-text">Không rõ giờ sinh (xem nhanh cả 12 giờ)</span></label>
       <label class="check" id="exact-row"><input type="checkbox" id="f-exact"> Nhập giờ phút chính xác</label>
       <label class="field" id="time-row"><span class="lbl">Giờ phút</span><input type="time" id="f-time"></label>
       <label class="field"><span class="lbl">Giờ đồng hồ lúc sinh <button type="button" class="info" data-info="gioDongHo" aria-label="Giải thích: Giờ đồng hồ lúc sinh" aria-expanded="false">i</button></span>
         <select id="f-tz"><option value="7">UTC+7, giờ Việt Nam hiện nay</option><option value="8">UTC+8, giờ cũ (tự đổi về UTC+7)</option></select></label>
       <p class="hint" id="tz-hint">Miền Bắc dùng UTC+8 đến tháng 8/1967, miền Nam đến năm 1975. Nếu sinh trước mốc này, chọn UTC+8.</p>
       <label class="field"><span class="lbl">Năm xem hạn <button type="button" class="info" data-info="namXem" aria-label="Giải thích: Năm xem hạn" aria-expanded="false">i</button></span><input type="number" id="f-xem" min="1900" max="2199" inputmode="numeric"></label>
-      <details class="opts"><summary>Tùy chọn trường phái <button type="button" class="info" data-info="truongPhai" aria-label="Giải thích: Tùy chọn trường phái" aria-expanded="false">i</button></summary><div class="opt-grid" id="f-options"></div></details>
+      <details class="opts" id="opts"><summary>Tùy chọn trường phái <button type="button" class="info" data-info="truongPhai" aria-label="Giải thích: Tùy chọn trường phái" aria-expanded="false">i</button></summary><div class="opt-grid" id="f-options"></div></details>
       <div class="field" id="recent-wrap" hidden>
         <div class="recent-head"><span class="lbl">Lá số gần đây trên máy này</span><button type="button" class="linkish" id="btn-forget">Xóa danh sách</button></div>
         <div class="recent" id="recent"></div>
@@ -69,7 +71,7 @@
     </div>
     <div class="fc-foot">
       <p class="err" id="form-error" role="alert" hidden></p>
-      <button type="submit" class="btn btn-primary">An lá số</button>
+      <button type="submit" class="btn btn-primary" id="f-submit">An lá số</button>
       <p class="privacy">Tử Vi là một cách diễn giải truyền thống, chưa được khoa học chứng minh. Hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. <button type="button" class="info" data-info="docDung" aria-label="Giải thích: Đọc lá số thế nào cho đúng" aria-expanded="false">i</button></p>
     </div>
   </form>
@@ -88,6 +90,35 @@
   </section>
   <div class="hv-grid" id="hv-grid"></div>
 </main>
+
+<!-- Màn Bát Tự -->
+<div id="view-battu" class="view-chart" hidden>
+<main class="page">
+  <section class="who" aria-label="Thông tin Bát Tự">
+    <div>
+      <h1 id="bt-name" tabindex="-1">Bát Tự</h1>
+      <div class="facts" id="bt-facts"></div>
+    </div>
+    <div class="keys" id="bt-keys"></div>
+  </section>
+  <section class="decades bt-card" aria-label="Tứ trụ">
+    <div class="decades-head"><h2>Tứ trụ <button type="button" class="info" data-info="btTiet" aria-label="Giải thích: Tiết khí và trụ tháng" aria-expanded="false">i</button></h2><button type="button" class="btn btn-sm dl-btn no-export" id="bt-png" title="Tải bảng tứ trụ thành ảnh PNG"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10"/></svg>Tải ảnh</button></div>
+    <p class="muted bt-tiet" id="bt-tiet"></p>
+    <div class="bt-pillars" id="bt-pillars"></div>
+    <div class="bt-extra" id="bt-extra"></div>
+  </section>
+  <section class="decades" aria-label="Đại vận">
+    <div class="decades-head"><h2>Đại vận <button type="button" class="info" data-info="btDaiVan" aria-label="Giải thích: Đại vận" aria-expanded="false">i</button></h2><span class="muted" id="bt-dv-note"></span></div>
+    <div class="track bt-track" id="bt-dv"></div>
+    <div class="years" id="bt-years"></div>
+  </section>
+  <section class="reading"><div class="bt-body prose" id="bt-body"></div></section>
+  <footer>
+    <span>Tiết khí tính thiên văn theo công thức của Jean Meeus, giờ Hà Nội (UTC+7). Trụ năm đổi ở Lập Xuân, trụ tháng theo 12 tiết; đại vận lấy 3 ngày tới tiết bằng 1 năm.</span>
+    <span>Bát Tự là một cách diễn giải truyền thống, chưa được khoa học chứng minh. Luận giải trên trang chỉ để tham khảo, không thay cho tư vấn chuyên môn.</span>
+  </footer>
+</main>
+</div>
 
 <!-- Màn lá số -->
 <div id="view-chart" class="view-chart" hidden>
@@ -110,6 +141,7 @@
           <button type="button" class="yb-step" id="y-next" aria-label="Năm sau">›</button>
         </div>
         <button type="button" class="btn btn-sm" id="y-today">Năm nay</button>
+        <button type="button" class="btn btn-sm dl-btn" id="btn-png" title="Tải lá số dưới đây thành ảnh PNG"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2v8M4.5 6.5 8 10l3.5-3.5M3 13h10"/></svg>Tải ảnh lá số</button>
         <span class="tool"><label class="switch"><input type="checkbox" id="t-luu" checked> Sao lưu niên</label><button type="button" class="info" data-info="luuNien" aria-label="Giải thích: Sao lưu niên" aria-expanded="false">i</button></span>
         <span class="tool"><label class="switch"><input type="checkbox" id="t-dv" checked> Sao lưu đại hạn</label><button type="button" class="info" data-info="daiVan" aria-label="Giải thích: Sao lưu đại hạn" aria-expanded="false">i</button></span>
         <span class="tool"><label class="switch"><input type="checkbox" id="t-lines" checked> Đường tam phương</label><button type="button" class="info" data-info="tamPhuong" aria-label="Giải thích: Đường tam phương" aria-expanded="false">i</button></span>
@@ -190,6 +222,23 @@
 
 <div id="pop" role="tooltip" hidden></div>
 <div id="toast" role="status" hidden></div>
+<div id="gy-dialog" class="gy-wrap" hidden>
+  <section class="gy-box" role="dialog" aria-modal="true" aria-labelledby="gy-title">
+    <div class="gy-head"><h2 id="gy-title">Góp ý và đánh giá</h2><button type="button" class="btn btn-ghost icon-btn" id="gy-close" aria-label="Đóng"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button></div>
+    <div class="gy-sum" id="gy-sum" aria-live="polite"></div>
+    <form class="gy-form" id="gy-form" novalidate>
+      <label class="field"><span class="lbl">Tên của bạn</span><input type="text" id="gy-ten" maxlength="40" autocomplete="nickname" placeholder="Ví dụ: Lan, Hà Nội"></label>
+      <div class="field"><span class="lbl" id="gy-sao-lbl">Đánh giá</span><div class="gy-pick" id="gy-pick" role="group" aria-labelledby="gy-sao-lbl"></div></div>
+      <label class="field"><span class="lbl">Góp ý</span><textarea id="gy-nd" maxlength="1000" rows="4" placeholder="Bạn thấy trang thế nào, muốn thêm hay sửa gì?"></textarea><small class="gy-dem" id="gy-dem">0/1000</small></label>
+      <input type="text" id="gy-web" class="gy-bay" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="err" id="gy-err" role="alert" hidden></p>
+      <p class="gy-actions"><button type="submit" class="btn btn-primary" id="gy-gui">Gửi góp ý</button><span class="muted" id="gy-ok" role="status"></span></p>
+      <p class="note">Tên và góp ý sẽ hiện công khai cho mọi người xem. Đừng ghi số điện thoại, địa chỉ hay ngày giờ sinh.</p>
+    </form>
+    <div id="gy-list"></div>
+    <p><button type="button" class="btn btn-sm" id="gy-more" hidden>Xem thêm góp ý</button></p>
+  </section>
+</div>
 <div id="png-dialog" hidden><div class="box"><p>Nhấn giữ hoặc nhấp chuột phải vào ảnh để lưu.</p><img id="png-preview" alt="Ảnh lá số"><button type="button" class="btn" id="png-close">Đóng</button></div></div>
 
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
@@ -202,6 +251,7 @@
 /*NGHIASAO*/
 /*LOIKHUYEN*/
 /*SOSANH*/
+/*BATTU*/
 /*AI*/
 /*APP*/
 </script>

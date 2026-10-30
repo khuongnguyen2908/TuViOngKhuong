@@ -382,7 +382,7 @@ const TuViEngine = (() => {
     };
   }
 
-  return { compute, DEFAULT_OPTIONS, CUNG, CHINH_TINH, CAN, CHI };
+  return { compute, napAm, DEFAULT_OPTIONS, CUNG, CHINH_TINH, CAN, CHI };
 })();
 
 if (typeof module !== 'undefined') module.exports = TuViEngine;

@@ -1,0 +1,19 @@
+# Worker góp ý. Đổi tên file này thành gop-y.wrangler.toml rồi làm theo README (mục "Bật góp ý").
+name = "tuvi-gop-y"
+main = "gop-y.mjs"
+compatibility_date = "2025-06-01"
+
+[vars]
+# Domain GitHub Pages của bạn, nhiều domain cách nhau bằng dấu phẩy
+ALLOWED_ORIGINS = "https://TEN-TAI-KHOAN.github.io"
+# "1" = góp ý mới ẩn cho tới khi bạn duyệt; "0" = hiện ngay
+DUYET_TRUOC = "0"
+
+# Tạo bằng: npx wrangler d1 create tuvi-gop-y   (lệnh in ra database_id để dán vào đây)
+[[d1_databases]]
+binding = "DB"
+database_name = "tuvi-gop-y"
+database_id = "DAN-ID-VAO-DAY"
+
+# Chuỗi bí mật để băm IP, đặt bằng lệnh (không ghi vào file):
+#   npx wrangler secret put SALT -c gop-y.wrangler.toml

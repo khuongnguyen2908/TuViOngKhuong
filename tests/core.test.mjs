@@ -266,3 +266,103 @@ test('So sánh: quan hệ chi, can, ngũ hành và đối xứng hai chiều', (
   assert.ok(r.thieuGio);
   assert.deepEqual(r.lienQuan.map((x) => x.nguoi), ['Người thứ nhất']);
 });
+
+test('Bát Tự: khớp ba lá số đối chiếu với bazi.vn (trụ, Thai nguyên, Mệnh cung, đại vận)', () => {
+  globalThis.TuViEngine = E;
+  const BT = require('../src/battu.js');
+  const lap = (i) => BT.compute({ calendar: 'duong', namXem: 2026, ...i });
+  const mau = [
+    // Nam, năm dương: đại vận thuận
+    [{ gender: 'nam', day: 29, month: 8, year: 1998, hour: 10, minute: 30 }, 'Mậu Dần|Canh Thân|Mậu Thân|Đinh Tỵ', 'Tân Hợi', 'Ất Mão', 'Tân Dậu', 2001, 4],
+    // Nữ, năm âm, sinh 2 giờ sau Lập Xuân: đã sang năm Ất Sửu, đại vận thuận
+    [{ gender: 'nu', day: 4, month: 2, year: 1985, hour: 6, minute: 0 }, 'Ất Sửu|Mậu Dần|Giáp Tuất|Đinh Mão', 'Kỷ Tỵ', 'Bính Tý', 'Kỷ Mão', 1994, 10],
+    // Nam, năm âm, sinh trước Kinh Trập: vẫn tháng Dần, đại vận nghịch
+    [{ gender: 'nam', day: 5, month: 3, year: 2001, hour: 10, minute: 0 }, 'Tân Tỵ|Canh Dần|Đinh Mão|Ất Tỵ', 'Tân Tỵ', 'Đinh Dậu', 'Kỷ Sửu', 2010, 10],
+  ];
+  for (const [inp, tru, tn, mc, dv1, namDv, tuoiDv] of mau) {
+    const r = lap(inp), ten = `${inp.day}/${inp.month}/${inp.year}`;
+    assert.equal(r.tru.map((p) => p.canChi).join('|'), tru, ten);
+    assert.equal(r.thaiNguyen.canChi, tn, ten + ' Thai nguyên');
+    assert.equal(r.menhCung.canChi, mc, ten + ' Mệnh cung');
+    assert.deepEqual([r.daiVan[0].canChi, r.daiVan[0].namBatDau, r.daiVan[0].tuoi], [dv1, namDv, tuoiDv], ten + ' đại vận');
+  }
+  const r = lap(mau[0][0]);
+  assert.deepEqual(r.tru.map((p) => p.thapThan), ['Tỷ Kiên', 'Thực Thần', 'Nhật Chủ', 'Chính Ấn']);
+  assert.deepEqual(r.tru.map((p) => p.truongSinh), ['Trường Sinh', 'Bệnh', 'Bệnh', 'Lâm Quan']);
+  const ts = Object.fromEntries(r.thanSat.map((t) => [t.ten, t.chi.join(' ')]));
+  assert.deepEqual(ts, { 'Thiên Ất Quý Nhân': 'Sửu Mùi', 'Văn Xương': 'Thân', 'Lộc Thần': 'Tỵ', 'Dương Nhận': 'Ngọ', 'Đào Hoa': 'Dậu', 'Dịch Mã': 'Dần', 'Hoa Cái': 'Thìn', 'Không Vong': 'Dần Mão' });
+  // Lập Xuân 1985 lúc 04:12–04:13 giờ Việt Nam: 4 giờ sáng vẫn là năm Giáp Tý, tháng Đinh Sửu
+  const truoc = lap({ gender: 'nu', day: 4, month: 2, year: 1985, hour: 4, minute: 0 });
+  assert.equal(truoc.tru[0].canChi + '|' + truoc.tru[1].canChi, 'Giáp Tý|Đinh Sửu');
+  // Không rõ giờ: ba trụ, không có Mệnh cung
+  const kg = lap({ ...mau[0][0], noHour: true });
+  assert.equal(kg.tru[3], null); assert.equal(kg.menhCung, null);
+  assert.equal(kg.tru.slice(0, 3).map((p) => p.canChi).join('|'), 'Mậu Dần|Canh Thân|Mậu Thân');
+});
+
+test('Bát Tự: lá số ngẫu nhiên đủ dữ liệu, đại vận nối tiếp, nội dung không phán tuyệt đối', () => {
+  const BT = require('../src/battu.js');
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  [...BT.NHAT_CHU, ...Object.values(BT.THAP_THAN).flat(), ...Object.values(BT.THAN_SAT_Y), ...Object.values(BT.THAN_SAT_KHUYEN), ...Object.values(BT.HANH_BO), ...Object.values(BT.MANH_Y)]
+    .forEach((t) => assert.ok(!CAM.test(t), `Có từ phán tuyệt đối: ${t}`));
+  let s = 7;
+  const rnd = (k) => { s = (s * 1103515245 + 12345) % 2147483648; return s % k; };
+  for (let i = 0; i < 300; i++) {
+    const r = BT.compute({ gender: rnd(2) ? 'nam' : 'nu', calendar: 'duong', day: 1 + rnd(28), month: 1 + rnd(12), year: 1920 + rnd(100), hour: rnd(24), minute: rnd(60), namXem: 2026 });
+    assert.equal(r.tru.length, 4);
+    assert.ok(r.khoiVan.tuoi >= 1 && r.khoiVan.tuoi <= 12, `Tuổi khởi vận ${r.khoiVan.tuoi}`);
+    r.daiVan.forEach((v, k) => { if (k) assert.equal(v.namBatDau - r.daiVan[k - 1].namBatDau, 10); });
+    r.tru.forEach((p) => { assert.ok(BT.THAP_THAN[p.thapThan] || p.thapThan === 'Nhật Chủ'); p.tangCan.forEach((t) => assert.ok(BT.THAP_THAN[t.thapThan] || t.thapThan === 'Tỷ Kiên')); });
+    assert.ok(Math.abs(Object.values(r.nguHanh.diem).reduce((a, b) => a + b, 0) - 8) < 0.05);
+  }
+});
+
+test('Bát Tự: hồ sơ 10 nhật chủ, biểu tượng, Trường Sinh đủ và không phán tuyệt đối', () => {
+  const BT = require('../src/battu.js');
+  const C = require('../src/content.js');
+  const CAM = /chắc chắn sẽ|nhất định sẽ|tuyệt mệnh|chết|yểu|ung thư|tai họa lớn|không thể tránh/i;
+  assert.equal(BT.HO_SO.length, 10); assert.equal(BT.HINH_CAN.length, 10); assert.equal(BT.HINH_CHI.length, 12); assert.equal(BT.CON_GIAP[3], 'Mèo');
+  BT.HO_SO.forEach((h, i) => {
+    assert.ok(h.moTa.length >= 120 && h.tot.length >= 4 && h.xau.length >= 3, `Hồ sơ can ${i} thiếu`);
+    [h.moTa, ...h.tot, ...h.xau].forEach((t) => assert.ok(!CAM.test(t), `Có từ phán tuyệt đối: ${t}`));
+  });
+  assert.equal(Object.keys(BT.TRUONG_SINH_Y).length, 12);
+  Object.values(BT.TRUONG_SINH_Y).forEach((t) => assert.ok(!CAM.test(t), t));
+  ['btNhatChu', 'btThapThan', 'btTangCan', 'btTruongSinh', 'btNapAm', 'btThanSat', 'btThai', 'btTiet', 'btDaiVan', 'btNguHanh', 'btManh', 'btLuuNien'].forEach((k) => assert.ok(C.INFO[k], `Thiếu nút (i) ${k}`));
+  assert.deepEqual(['Mộc', 'Thủy', 'Hỏa', 'Kim', 'Thổ'].map((x) => BT.nhomTT('Mộc', x)), ['Tỷ Kiếp', 'Ấn', 'Thực Thương', 'Quan Sát', 'Tài']);
+});
+
+test('Góp ý: worker lưu, thống kê, chặn bẫy, giới hạn gửi, duyệt trước', async () => {
+  const { default: w } = await import('../worker/gop-y.mjs');
+  const { d1Local } = await import('../scripts/d1-local.mjs');
+  const env = { DB: d1Local(), SALT: 'kiem-thu' };
+  const gui = (body, ip = '1.1.1.1', e = env) => w.fetch(new Request('https://x/', { method: 'POST', headers: { 'content-type': 'application/json', 'CF-Connecting-IP': ip }, body: JSON.stringify(body) }), e);
+  const lay = async (q = '') => (await w.fetch(new Request('https://x/' + q), env)).json();
+
+  assert.equal((await gui({ ten: 'Lan', sao: 5, noiDung: 'Trang <b>đẹp</b> lắm' })).status, 200);
+  assert.equal((await gui({ ten: 'Hùng', sao: 3, noiDung: 'Ổn' }, '2.2.2.2')).status, 400);          // quá ngắn
+  assert.equal((await gui({ ten: 'Hùng', sao: 6, noiDung: 'Được đấy' }, '2.2.2.2')).status, 400);     // sao sai
+  assert.equal((await gui({ ten: '', sao: 4, noiDung: 'Được đấy' }, '2.2.2.2')).status, 400);          // thiếu tên
+  assert.equal((await gui({ ten: 'Bot', sao: 5, noiDung: 'spam spam', web: 'x' }, '3.3.3.3')).status, 200); // bẫy: giả thành công nhưng không lưu
+  assert.equal((await gui({ ten: 'Hùng', sao: 3, noiDung: 'Được đấy, cần thêm Bát Tự' }, '2.2.2.2')).status, 200);
+  const d = await lay();
+  assert.equal(d.tong, 2); assert.equal(d.trungBinh, 4); assert.deepEqual(d.dem, { 1: 0, 2: 0, 3: 1, 4: 0, 5: 1 });
+  assert.deepEqual(d.items.map((x) => x.ten), ['Hùng', 'Lan']);            // mới nhất trước
+  assert.equal(d.items[1].noiDung, 'Trang <b>đẹp</b> lắm');                // lưu nguyên văn, trang tự escape khi hiện
+  // Giới hạn 3 lần / 10 phút mỗi IP
+  for (let i = 0; i < 2; i++) assert.equal((await gui({ ten: 'Lan', sao: 4, noiDung: 'Góp ý số ' + i })).status, 200);
+  assert.equal((await gui({ ten: 'Lan', sao: 4, noiDung: 'Góp ý thứ tư' })).status, 429);
+  // Phân trang 20 một lần
+  for (let i = 0; i < 25; i++) await gui({ ten: 'Người ' + i, sao: 1 + (i % 5), noiDung: 'Nội dung ' + i }, '9.9.9.' + i);
+  const p1 = await lay(), p2 = await lay('?truoc=' + p1.items[19].id);
+  assert.equal(p1.items.length, 20); assert.ok(p1.conNua); assert.equal(p2.items.length, 9); assert.ok(!p2.conNua);
+  // Duyệt trước: góp ý mới không hiện
+  const env2 = { DB: d1Local(), SALT: 's', DUYET_TRUOC: '1' };
+  const r = await (await gui({ ten: 'Mai', sao: 5, noiDung: 'Chờ duyệt nhé' }, '4.4.4.4', env2)).json();
+  assert.ok(r.choDuyet);
+  assert.equal((await (await w.fetch(new Request('https://x/'), env2)).json()).tong, 0);
+  // Chặn nguồn lạ khi đã đặt ALLOWED_ORIGINS
+  const env3 = { ...env, ALLOWED_ORIGINS: 'https://a.github.io' };
+  assert.equal((await w.fetch(new Request('https://x/', { headers: { Origin: 'https://xau.com' } }), env3)).status, 403);
+  assert.equal((await w.fetch(new Request('https://x/', { headers: { Origin: 'https://a.github.io' } }), env3)).status, 200);
+});

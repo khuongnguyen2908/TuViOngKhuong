@@ -1,6 +1,7 @@
 # Mỗi lần đẩy lên main: chạy kiểm thử, ghép index.html rồi đăng lên GitHub Pages.
 # Cần bật: Settings → Pages → Source = GitHub Actions.
 # Bật Luận giải AI: Settings → Secrets and variables → Actions → Variables → AI_ENDPOINT = URL proxy.
+# Bật Góp ý: thêm biến FEEDBACK_ENDPOINT = URL worker góp ý.
 name: Kiểm thử và đăng trang
 
 on:
@@ -25,12 +26,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
       - name: Kiểm thử
         run: npm test
       - name: Ghép trang
         env:
           AI_ENDPOINT: ${{ vars.AI_ENDPOINT }}
+          FEEDBACK_ENDPOINT: ${{ vars.FEEDBACK_ENDPOINT }}
         run: |
           npm run build
           mkdir -p _site

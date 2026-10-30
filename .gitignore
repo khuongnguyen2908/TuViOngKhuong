@@ -2,5 +2,7 @@ node_modules/
 _site/
 tests/browser/shots/
 worker/wrangler.toml
+worker/gop-y.wrangler.toml
+.local/
 worker/.wrangler/
 .dev.vars
