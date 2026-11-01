@@ -388,6 +388,7 @@ footer a { color: inherit; }
 .linkish:focus-visible { outline: 2px solid var(--cinnabar); }
 .recent-head { display: flex; justify-content: space-between; align-items: baseline; }
 .privacy { font-size: 12px; color: var(--muted); margin: 0; }
+.luu-y { font-size: 12px; line-height: 1.5; color: var(--muted); margin: 6px 0 0; }
 
 /* Màn không rõ giờ sinh: 12 giờ */
 .hours-view { max-width: 1240px; margin: 0 auto; padding-block: clamp(20px, 4vw, 44px) 56px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; }

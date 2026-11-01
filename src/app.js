@@ -266,6 +266,8 @@
     return list.length ? `<div class="advice"><b>Lời khuyên</b><ul>${list.map((n) => `<li><i>${esc(n)}:</i> ${esc(LK.SAO[n])}</li>`).join('')}</ul></div>` : '';
   };
   const info = (key) => C.INFO[key] ? `<button type="button" class="info" data-info="${key}" aria-label="Giải thích: ${esc(C.INFO[key][0])}" aria-expanded="false">i</button>` : '';
+  // Dòng lưu ý cuối mỗi phần luận giải (cùng câu với dưới nút An lá số)
+  const LUU_Y = '<p class="luu-y">Nội dung mang tính tham khảo, giải trí và tìm hiểu văn hóa truyền thống. Không dùng thay cho lời khuyên chuyên môn hay để ra quyết định quan trọng.</p>';
   const starHtml = (s, cls = '') => `<span class="star ${HANH_CLASS[s.hanh] || ''} ${cls}${state.found === s.name ? ' hit' : ''}" data-star="${esc(s.name)}" title="${esc(s.name)}${s.amDuong ? (s.amDuong > 0 ? ', dương' : ', âm') : ''}${s.hanh ? ' ' + s.hanh : ''}${s.bright ? ', ' + BRIGHT_WORD[s.bright].toLowerCase() : ''}">${s.amDuong ? `<span class="sg">${SIGN(s.amDuong)}</span>` : ''}${esc(s.name)}${s.bright ? `<span class="br">(${s.bright})</span>` : ''}</span>`;
   // Tháng âm lịch hôm nay (để đánh dấu nguyệt vận)
   function thangNay() {
@@ -577,7 +579,8 @@
         <p>Tiểu hạn năm ${tb.namXemCanChi} ở cung ${th.cung} (${th.chiTen}): ${nameList(th)}${catIn(th).length ? `, có ${catIn(th).join(', ')}` : ''}${hungIn(th).length ? `, gặp ${hungIn(th).join(', ')}` : ''}.</p>
         ${adviceStars(hungIn(th))}
       </section>
-      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao theo sách truyền thống. Tử Vi chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')} Muốn luận sâu hơn, dùng tab Luận giải AI.</p>`;
+      <p class="note">Phần này ghép từ nghĩa cơ bản của từng sao theo sách truyền thống. Tử Vi chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')} Muốn luận sâu hơn, dùng tab Luận giải AI.</p>
+      ${LUU_Y}`;
   }
 
   // ---------- Không rõ giờ sinh: xem nhanh 12 giờ ----------
@@ -681,6 +684,7 @@
       ${lq ? `<section><h3>Cung ${SS.QUAN_HE[qh].cung.join(' và ')}</h3><ul>${lq}</ul></section>` : ''}
       ${thieu.length ? `<p class="note">Chưa rõ giờ sinh của ${esc(thieu.join(' và '))} nên bỏ qua phần cần cung Mệnh của người đó.</p>` : ''}
       <p class="note">Xem tuổi là cách nhìn truyền thống, chưa được khoa học chứng minh. Hợp hay không phụ thuộc nhiều nhất vào cách hai người đối xử với nhau; đừng dùng kết quả này để quyết định hôn nhân hay hợp tác. ${info('docDung')}</p>
+      ${LUU_Y}
       <p class="ai-bar"><button type="button" class="btn" id="btn-copy-cmp">Sao chép thông tin so sánh</button></p>`;
   }
   function compareText() {
@@ -801,6 +805,7 @@
         <ul>${r.thanSat.map((t) => `<li><b>${t.ten}</b> (${t.chi.join(', ')}): ${t.tru.length ? `có ở trụ ${t.tru.join(', ')}` : '<span class="muted">không có trong tứ trụ</span>'}. ${BT.THAN_SAT_Y[t.ten]}${t.tru.length ? advice(BT.THAN_SAT_KHUYEN[t.ten]) : ''}</li>`).join('')}</ul>
       </section>
       <p class="note">Bát Tự là một cách diễn giải truyền thống, chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')}</p>
+      ${LUU_Y}
       <p class="ai-bar"><button type="button" class="btn" id="bt-copy">Sao chép thông tin</button></p>`;
   }
   // Biểu đồ ngũ giác ngũ hành: Hỏa trên cùng, đi theo vòng tương sinh Hỏa → Thổ → Kim → Thủy → Mộc
@@ -1013,6 +1018,7 @@
       <section><h3>Các hành tinh</h3><ul class="bds-list">${hanhTinh}</ul></section>
       <section><h3>Góc chiếu ${info('bdsGoc')}</h3>${nhomGoc ? `<ul class="bds-list">${nhomGoc}</ul>` : '<p class="muted">Không có góc chiếu chính nào trong giới hạn cho phép.</p>'}</section>
       <p class="note">Chiêm tinh là một cách diễn giải truyền thống, chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')}</p>
+      ${LUU_Y}
       <p class="ai-bar"><button type="button" class="btn" id="bds-copy">Sao chép thông tin</button></p>`;
   }
   function bdsText() {
@@ -1101,6 +1107,7 @@
       <section><h3>Bốn đỉnh cao và thử thách</h3><p class="muted">Đời chia bốn chặng; chặng đầu kết thúc ở tuổi 36 trừ số chủ đạo. Năm ${r.namXem} bạn ${tuoiNay} tuổi.</p>
         <table class="bds-tbl tsh-tbl"><thead><tr><th>Chặng</th><th>Tuổi</th><th>Đỉnh cao</th><th>Thử thách</th></tr></thead><tbody>${chang}</tbody></table></section>
       <p class="note">Thần số học là một cách diễn giải truyền thống, chưa được khoa học chứng minh: hãy đọc như một góc nhìn để suy ngẫm, không dùng để quyết định việc lớn. ${info('docDung')}</p>
+      ${LUU_Y}
       <p class="ai-bar"><button type="button" class="btn" id="tsh-copy">Sao chép thông tin</button></p>`;
   }
   function tshText() {
@@ -1201,6 +1208,7 @@
         <table class="bds-tbl th-tbl"><thead><tr><th>Bát Tự</th><th></th><th>Bản đồ sao</th><th></th></tr></thead><tbody>${ghep}</tbody></table>
       </section>
       <p class="note">Ba hệ trùng nhau một phần vì nhiều nét tính cách rất chung, ai đọc cũng thấy đúng (hiệu ứng Barnum). Nhiều hệ cùng nói không làm điều đó chắc chắn hơn; hãy đọc như gợi ý để tự soi xét. ${info('docDung')}</p>
+      ${LUU_Y}
       <p class="ai-bar"><button type="button" class="btn" id="th-copy">Sao chép thông tin</button></p>`;
   }
   function thText() {
